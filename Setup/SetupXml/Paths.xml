@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Paths>
+    <bin_Dir>bin/</bin_Dir>
+    <server_cmds_Xml>Setup/ServerCmds.xml</server_cmds_Xml>
+    <client_cmds_Xml>Setup/ClientCmds.xml</client_cmds_Xml>
+    <config_Xml>Setup/Config.xml</config_Xml>
+</Paths>

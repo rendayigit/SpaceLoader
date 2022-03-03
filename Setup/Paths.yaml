@@ -1,0 +1,5 @@
+Paths:
+  bin_Dir: bin/
+  server_cmds_Yaml: Setup/ServerCmds.yaml
+  client_cmds_Yaml: Setup/ClientCmds.yaml
+  config_Yaml: Setup/Config.yaml

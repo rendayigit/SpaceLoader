@@ -1,0 +1,2 @@
+add_subdirectory(Server/getUserList)
+add_subdirectory(Server/addUser)

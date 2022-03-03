@@ -1,0 +1,6 @@
+Config:
+  Ips:
+    debugpc:
+      ip: 192.168.1.2
+      port: '1234'
+      name: debugpc

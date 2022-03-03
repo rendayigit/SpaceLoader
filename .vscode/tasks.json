@@ -1,0 +1,181 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build tests",
+            "type": "shell",
+            "linux": {
+                "command": "./scripts/build.sh"
+            },
+            "windows": {
+                "command": "./scripts/build.bat"
+            },
+            "args": [
+                "test"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "build source",
+            "type": "shell",
+            "linux": {
+                "command": "./scripts/build.sh"
+            },
+            "windows": {
+                "command": "./scripts/build.bat"
+            },
+            "args": [
+                "source"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "build all",
+            "type": "shell",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOrder": "parallel",
+            "dependsOn": [
+                "build tests",
+                "build source"
+            ]
+        },
+        {
+            "label": "run unit tests",
+            "type": "shell",
+            "linux": {
+                "command": "./build/XMLTEST"
+            },
+            "windows": {
+                "command": "./build/XMLTEST.exe"
+            },
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "test",
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "revealProblems": "onProblem"
+            }
+        },
+        {
+            "label": "run server",
+            "type": "process",
+            "linux": {
+                "command": "./build/SERVER",
+            },
+            "windows": {
+                "command": "./build/SERVER.exe"
+            },
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "focus": true,
+                "echo": true,
+                "showReuseMessage": false,
+                "clear": true,
+                "group": "client-server",
+                "revealProblems": "always"
+            },
+            "dependsOn": [
+                "build all",
+            ]
+        },
+        {
+            "label": "run client",
+            "type": "process",
+            "linux": {
+                "command": "./build/CLIENT",
+            },
+            "windows": {
+                "command": "./build/CLIENT.exe"
+            },
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new",
+                "focus": true,
+                "echo": true,
+                "showReuseMessage": false,
+                "clear": true,
+                "group": "client-server",
+                "revealProblems": "always"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "build all",
+                "run server"
+            ]
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "linux": {
+                "command": "./scripts/clean.sh",
+            },
+            "windows": {
+                "command": "./scripts/clean.bat",
+            },
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "none"
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "linux": {
+                "command": "./build/${input:PickExecutableToRun}"
+            },
+            "windows": {
+                "command": "./build/${input:PickExecutableToRun}.exe"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+    ],
+    "inputs": [
+        {
+            "type": "pickString",
+            "id": "PickExecutableToRun",
+            "description": "Select executable:",
+            "options": [
+                "XMLTEST",
+                "SERVER",
+                "CLIENT",
+                "LOGGER",
+            ],
+            "default": "XMLTEST"
+        },
+        {
+            "type": "promptString",
+            "id": "ProvideExecutableToRun",
+            "description": "Executable name:",
+            "default": "executableName"
+        }
+    ]
+}

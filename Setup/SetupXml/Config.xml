@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Config>
+    <Ips>
+        <debugpc name="debugpc">
+            <ip>192.168.1.2</ip>
+            <port>1234</port>
+        </debugpc>
+    </Ips>
+</Config>

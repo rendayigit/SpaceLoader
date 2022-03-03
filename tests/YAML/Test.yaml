@@ -1,0 +1,54 @@
+RootNode:
+  MultipleItemsNode:
+    "-name": MultipleItemsNodeName
+    Item:
+    -
+      "-name": item1name
+      "#text": item1
+    -
+      "-name": item2name
+      "#text": item2
+  SingleItemNode:
+    "-name": SingleItemNodeName
+    "#text": This is a single item
+  NestedItems:
+    "-name": NestedItemsName
+    Level2:
+      "-name": Level2Name
+      Level3:
+        "-name": Level3Name
+        Level3Item:
+        -
+          "-name": Level3Item1Name
+          "#text": Level3Item1
+        -
+          "-name": Level3Item2Name
+          "#text": Level3Item2
+        -
+          "-name": Level3Item3Name
+          "#text": Level3Item3
+        Leve4:
+          "-attributeName1": AttributeValue1
+          "-name": Leve4Name
+          Level4Item:
+          -
+            "-name": Level4Item1Name
+            "#text": Level4Item1
+          -
+            "-name": Level4Item2Name
+            "#text": Level4Item2
+          -
+            "-name": Level4Item3Name
+            "#text": Level4Item3
+      Level2Item:
+      -
+        "-attributeName2": AttributeValue2
+        "-name": Level2Item1Name
+        "#text": Level2Item1
+      -
+        "-attributeName2": AttributeValue2Diff
+        "-name": Level2Item2Name
+        "#text": Level2Item2
+      -
+        "-name": Level2Item3Name
+        "#text": Level2Item3

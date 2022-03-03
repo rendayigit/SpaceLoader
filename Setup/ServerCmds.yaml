@@ -1,0 +1,127 @@
+Cmds:
+  Cmd:
+    - CmdCallString: help
+      Description: >-
+        Display the help menu. `help _cmd_` to display help to only _cmd_ or
+        `help` for full list.
+      id: help
+      type: internal
+    - CmdCallString: StarkitOn
+      Description: 'Turns on target: Starkit.'
+      ScriptDir: 'C:\Program Files'
+      ScriptFileName: StarkitOn.bat
+      id: starkiton
+      type: call
+    - CmdCallString: StarkitOff
+      Description: 'Turns off target: Starkit.'
+      ScriptDir: 'C:\Program Files'
+      ScriptFileName: StarkitOff.bat
+      id: starkitoff
+      type: call
+    - CmdCallString: TransmitImg
+      Description: Send provided .elf image file to debug pc.
+      DestinationDir: 'D:\t\'
+      id: transmitimg
+      type: filetransfer
+    - CmdCallString: SendConfig
+      Description: Sends provided ServerCmds.yaml to server.
+      DestinationDir: 'D:\'
+      id: sendconfig
+      type: filetransfer
+    - CmdCallString: SendFolder
+      Description: Sends provided folder to server.
+      DestinationDir: 'D:\'
+      id: sendFolder
+      type: filetransfer
+    - CmdCallString: GetUserList
+      Description: Get the list of users connected to the server.
+      id: getuserlist
+      type: internal
+      auth: 'true'
+    - CmdCallString: addUser
+      Description: 'Sets username in server. Syntax: "addUser renda ip 127.0.0.1"'
+      id: addUser
+      type: internal
+    - CmdCallString: UpdateCmds
+      Description: Tells the server to reparse the ServerCmds.yaml.
+      id: updatecmds
+      type: internal
+    - CmdCallString: deneme1
+      Description: deneme.
+      TriggererId: starkiton
+      Call: getUserlist
+      id: deneme1
+      type: trigger
+    - CmdCallString: deneme2
+      Description: deneme2.
+      TriggererId: sa
+      Call: getuserlist
+      id: deneme2
+      type: trigger
+    - CmdCallString: deneme3
+      Description: deneme3.
+      TriggererId: ping
+      Call: hello
+      id: deneme3
+      type: trigger
+    - CmdCallString: echo
+      Description: echo deneme.
+      ScriptDir: echo
+      ScriptFileName: ''
+      id: echo
+      type: call
+    - CmdCallString: run
+      Description: runs the provided bat
+      ScriptDir: custom
+      ScriptFileName: ''
+      TimerTime: '20:00'
+      id: run
+      type: call
+      timer: 'true'
+    - CmdCallString: trigger1
+      Description: trigger1
+      ScriptDir: 'D:\\SpaceLoader Source\scripts\'
+      ScriptFileName: hello.bat
+      TimerTime: '13:44'
+      id: trigger1
+      type: call
+      timer: 'true'
+    - CmdCallString: hello
+      Description: hello deneme.
+      ScriptDir: 'D:\\SpaceLoader Source\scripts\'
+      ScriptFileName: hello.bat
+      id: hello
+      type: call
+      auth: 'true'
+    - CmdCallString: SA
+      Description: >-
+        Server replies `AS` to this message. Can be used to check if server is
+        up.
+      id: sa
+      type: internal
+    - CmdCallString: createFolder
+      Description: 'Creates a folder in D:\ with the given name.'
+      id: createFolder
+      type: internal
+    - CmdCallString: clearAuth
+      Description: Server clears the clients authorization.
+      id: clearAuth
+      type: internal
+    - CmdCallString: getAuth
+      Description: Sends authorization request to server.
+      id: getAuth
+      type: internal
+    - CmdCallString: forceAuth
+      Description: Gets the given command's authorization by force.
+      id: forceAuth
+      type: internal
+    - CmdCallString: ReadLog
+      Description: >-
+        Returns the provided log file line by line. Can use `ListLog` to view
+        available log files.
+      id: readlog
+      type: internal
+    - CmdCallString: ListLog
+      Description: View available log files in the server.
+      id: listlog
+      type: internal
