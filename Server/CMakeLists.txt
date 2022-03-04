@@ -52,3 +52,8 @@ target_link_libraries(SERVER
         Qt${QT_VERSION_MAJOR}::Quick
         yaml-cpp
         )
+if (UNIX AND NOT APPLE) # FOR LINUX ONLY
+        target_link_libraries(SERVER PRIVATE 
+        stdc++fs
+        )
+endif ()
