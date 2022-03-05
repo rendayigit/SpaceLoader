@@ -4,7 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:/msys64/mingw32/include/**"
+                "C:/msys64/mingw64/include/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -14,7 +14,7 @@
             "intelliSenseMode": "${default}",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "compilerPath": "C:/msys64/mingw32/bin/clang++.exe",
+            "compilerPath": "C:/msys64/mingw64/bin/clang++.exe",
             "compileCommands": "${workspaceFolder}/build/compile_commands.json",
             "configurationProvider": "ms-vscode.cmake-tools"
         },
