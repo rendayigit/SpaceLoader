@@ -42,31 +42,11 @@ jobs:
 
     - name: Setup build environment
       run: |
-        cmake -E make_directory ${{ github.workspace }}/lib/Logger/tests/build
-        cmake -E make_directory ${{ github.workspace }}/lib/TCP/tests/build
-        cmake -E make_directory ${{ github.workspace }}/lib/XML/tests/build
-        cmake -E make_directory ${{ github.workspace }}/Client_console/build
-        cmake -E make_directory ${{ github.workspace }}/Server/build
+        cmake -E make_directory ${{ github.workspace }}/build
         
     - name: Build All
       run: |
-        cd ${{ github.workspace }}/lib/Logger/tests/build
-        cmake  ..
-        make
-        
-        cd ${{ github.workspace }}/lib/TCP/tests/build
-        cmake  ..
-        make
-
-        cd ${{ github.workspace }}/lib/XML/tests/build
-        cmake  ..
-        make
-        
-        cd ${{ github.workspace }}/Client_console/build
-        cmake  ..
-        make
-        
-        cd ${{ github.workspace }}/Server/build
+        cd ${{ github.workspace }}/build
         cmake  ..
         make
    
@@ -85,5 +65,5 @@ jobs:
         #cd ${{ github.workspace }}/lib/Logger/tests/build
         #sudo ./Logger
 
-        cd ${{ github.workspace }}/lib/XML/tests/build
-        sudo ./XMLTEST
+        #cd ${{ github.workspace }}/lib/XML/tests/build
+        #sudo ./XMLTEST
