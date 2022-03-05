@@ -24,6 +24,10 @@ jobs:
         cmake ..             # Generate native build scripts for GoogleTest.
         make
         sudo make install    # Install in /usr/local/ by default
+
+    - name: Install yaml-cpp 
+      run:  |
+        sudo apt install libyaml-cpp-dev
           
     - name: Checkout
       uses: actions/checkout@v2
