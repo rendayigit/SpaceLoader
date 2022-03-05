@@ -1,4 +1,4 @@
-# [SpaceLoader](https://github.com/rendayigit/SpaceLoader)
+# [Scripter](https://github.com/rendayigit/Scripter)
 
 A project where a Client can call batch scripts located in the Server PC. These commands including the batch script locations are located in an xml file therefore configuration doesn't require recompilation. Written using the Qt framework.
 
@@ -35,13 +35,16 @@ A project where a Client can call batch scripts located in the Server PC. These 
 | 1 | ```pacman -Scc``` | clear cache |
 | 2 | ```pacman -Ss <package>``` | search package |
 | 3 | ```pacman -S <package>``` | install package |
-| 4 | ```pacman -Syy``` | update |
-| 5 | ```pacman -Su``` | update |
-| 6 | ```pacman -Syu``` | update |
+| 4 | ```pacman -R <package>``` | uninstall package |
+| 5 | ```pacman -Qet``` | list installed packages |
+| 6 | ```pacman -Syyu``` | update |
+| 7 | ```pacman -Syyu --disable-download-timeout``` | update (use this if ur network is slow) |
 
 ## msys packages
 
 - mingw-w64-qt5
+- mingw-w64-qt5-base
+- mingw-w64-qt5-declarative
 - mingw-w64-clang
 - mingw-w64-cmake
 - mingw-w64-make
@@ -49,3 +52,4 @@ A project where a Client can call batch scripts located in the Server PC. These 
 - mingw-w64-clang-tools-extra
 - mingw-w64-clang-analyzer
 - mingw-w64-gtest
+- mingw-w64-yaml-cpp
