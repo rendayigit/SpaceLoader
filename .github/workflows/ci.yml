@@ -1,9 +1,7 @@
 name: CI
 
 on:
-  push:
-  pull_request:
-    types: [opened, reopened]
+  push
 
 defaults:
   run:
@@ -44,12 +42,9 @@ jobs:
       with:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
 
-    - name: Setup build environment
-      run: |
-        cmake -E make_directory ${{ github.workspace }}/build
-        
     - name: Build All
       run: |
+        cmake -E make_directory ${{ github.workspace }}/build
         cd ${{ github.workspace }}/build
         cmake  ..
         make
