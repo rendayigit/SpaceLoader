@@ -86,9 +86,30 @@
     "qelapsedtimer": "cpp",
     "qsharedmemory": "cpp"
   },
-  // "terminal.integrated.shell.windows": "C:/msys64/usr/bin/bash.exe",
-  // "terminal.integrated.shellArgs.windows": ["-i"],
-  // "terminal.integrated.env.windows": {"PATH" : "/c/msys64/mingw64/bin:/c/msys64/usr/local/bin:/c/msys64/usr/bin:${env:windir}:${env:path}"},
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "icon": "terminal-powershell"
+    },
+    "Command Prompt": {
+      "path": [
+        "${env:windir}\\Sysnative\\cmd.exe",
+        "${env:windir}\\System32\\cmd.exe"
+      ],
+      "args": [],
+      "icon": "terminal-cmd"
+    },
+    "Git Bash": {
+      "source": "Git Bash"
+    },
+    "MSYS Bash": {
+      "path": "C:/msys64/usr/bin/bash.exe",
+      "icon": "terminal-bash",
+      "args": ["-i"]
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "MSYS Bash",
+  "terminal.integrated.env.windows": {"PATH" : "/c/msys64/mingw64/bin:/c/msys64/usr/local/bin:/c/msys64/usr/bin:${env:windir}:${env:path}"},
   "clangd.path": "C:/msys64/mingw64/bin/clangd.exe",
   "clangd.arguments": [
     "--compile-commands-dir=${workspaceFolder}/build/compile_commands.json"
