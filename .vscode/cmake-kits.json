@@ -16,8 +16,8 @@
     {
       "name": "Qt Linux Kit",
       "compilers": {
-          "CC": "/usr/bin/gcc",
-          "CXX": "/usr/bin/g++"
+          "CC": "/usr/bin/gcc-8",
+          "CXX": "/usr/bin/g++-8"
       }
     }
 ]
