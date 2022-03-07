@@ -20,8 +20,8 @@ find_package(Qt5Widgets REQUIRED)
 add_executable(tests
                 ../lib/Logger/logger.cpp
                 Logger/test_logger.cpp
+                YAML/test_yaml.cpp
                 ../lib/YAML/yaml.cpp
-                    YAML/test_yaml.cpp
                 ../lib/TCP/client/tcpClient.cpp
                 ../lib/TCP/server/tcpServer.cpp
                 TCP/testClient.cpp
