@@ -1,9 +1,7 @@
 name: CI
 
 on:
-  push:
-  pull_request:
-    types: [opened, reopened]
+  push
 
 defaults:
   run:
@@ -24,6 +22,10 @@ jobs:
         cmake ..             # Generate native build scripts for GoogleTest.
         make
         sudo make install    # Install in /usr/local/ by default
+
+    - name: Install yaml-cpp 
+      run:  |
+        sudo apt install libyaml-cpp-dev
           
     - name: Checkout
       uses: actions/checkout@v2
@@ -40,50 +42,14 @@ jobs:
       with:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
 
-    - name: Setup build environment
-      run: |
-        cmake -E make_directory ${{ github.workspace }}/lib/Logger/tests/build
-        cmake -E make_directory ${{ github.workspace }}/lib/TCP/tests/build
-        cmake -E make_directory ${{ github.workspace }}/lib/XML/tests/build
-        cmake -E make_directory ${{ github.workspace }}/Client_console/build
-        cmake -E make_directory ${{ github.workspace }}/Server/build
-        
     - name: Build All
       run: |
-        cd ${{ github.workspace }}/lib/Logger/tests/build
-        cmake  ..
-        make
-        
-        cd ${{ github.workspace }}/lib/TCP/tests/build
+        cmake -E make_directory ${{ github.workspace }}/build
+        cd ${{ github.workspace }}/build
         cmake  ..
         make
 
-        cd ${{ github.workspace }}/lib/XML/tests/build
-        cmake  ..
-        make
-        
-        cd ${{ github.workspace }}/Client_console/build
-        cmake  ..
-        make
-        
-        cd ${{ github.workspace }}/Server/build
-        cmake  ..
-        make
-   
-   #TODO
     - name: Run Unit Tests
       run: |       
-        #cd ${{ github.workspace }}/Client_console/build
-        #sudo ./CONSOLE
-        
-        #cd ${{ github.workspace }}/Server/build
-        #sudo ./SERVER
-        
-        #cd ${{ github.workspace }}/lib/TCP/tests/build
-        #sudo ./TCP
-        
-        #cd ${{ github.workspace }}/lib/Logger/tests/build
-        #sudo ./Logger
-
-        cd ${{ github.workspace }}/lib/XML/tests/build
-        sudo ./XMLTEST
+        cd ${{ github.workspace }}/build/tests/
+        sudo ./tests
