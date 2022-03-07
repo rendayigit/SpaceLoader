@@ -1,9 +1,7 @@
 name: CI
 
 on:
-  push:
-  pull_request:
-    types: [opened, reopened]
+  push
 
 defaults:
   run:
@@ -44,30 +42,14 @@ jobs:
       with:
         cached: ${{ steps.cache-qt.outputs.cache-hit }}
 
-    - name: Setup build environment
-      run: |
-        cmake -E make_directory ${{ github.workspace }}/build
-        
     - name: Build All
       run: |
+        cmake -E make_directory ${{ github.workspace }}/build
         cd ${{ github.workspace }}/build
         cmake  ..
         make
-   
-   #TODO
+
     - name: Run Unit Tests
       run: |       
-        #cd ${{ github.workspace }}/Client_console/build
-        #sudo ./CONSOLE
-        
-        #cd ${{ github.workspace }}/Server/build
-        #sudo ./SERVER
-        
-        #cd ${{ github.workspace }}/lib/TCP/tests/build
-        #sudo ./TCP
-        
-        #cd ${{ github.workspace }}/lib/Logger/tests/build
-        #sudo ./Logger
-
-        #cd ${{ github.workspace }}/lib/XML/tests/build
-        #sudo ./XMLTEST
+        cd ${{ github.workspace }}/build/tests/
+        sudo ./tests
