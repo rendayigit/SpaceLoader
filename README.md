@@ -1,4 +1,4 @@
-# [Scripter](https://github.com/rendayigit/Scripter)
+# [SpaceLoader](https://github.com/rendayigit/SpaceLoader)
 
 A project where a Client can call batch scripts located in the Server PC. These commands including the batch script locations are located in an xml file therefore configuration doesn't require recompilation. Written using the Qt framework.
 
