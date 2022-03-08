@@ -13,7 +13,7 @@ T Yaml::getNodeByTag(const string &yamlFilePath, const string &tagName,
 }
 
 template <typename T>
-T Yaml::getNodeVectorByTag(const string &yamlFilePath, const string &tagName,
+T Yaml::getNodeListByTag(const string &yamlFilePath, const string &tagName,
                              const string &tagValue) {
     YAML::Node config = YAML::LoadFile(yamlFilePath);
     vector<YAML::Node> nodes = {};
@@ -30,7 +30,7 @@ T Yaml::getNodeByTag(const string &yamlFilePath, const string &tagName) {
 }
 
 template <typename T>
-T Yaml::getNodeVectorByTag(const string &yamlFilePath, const string &tagName) {
+T Yaml::getNodeListByTag(const string &yamlFilePath, const string &tagName) {
     YAML::Node config = YAML::LoadFile(yamlFilePath);
     vector<YAML::Node> nodes = {};
 
@@ -47,7 +47,7 @@ T Yaml::getText(const YAML::Node &node, const string &tagName) {
 }
 
 template <typename T>
-T Yaml::getVectorText(const YAML::Node &node, const string &tagName) {
+T Yaml::getTextList(const YAML::Node &node, const string &tagName) {
     vector<string> texts = {};
     if (node.IsScalar()) {
         texts.push_back(node.as<string>());
@@ -65,7 +65,7 @@ T Yaml::getText(const std::string &yamlFilePath, const std::string &tagName) {
 }
 
 template <typename T>
-T Yaml::getVectorText(const std::string &yamlFilePath, const std::string &tagName) {
+T Yaml::getTextList(const std::string &yamlFilePath, const std::string &tagName) {
     YAML::Node config = YAML::LoadFile(yamlFilePath);
     vector<string> texts = {};
 
@@ -82,7 +82,7 @@ T Yaml::getNodeByPath(const string &yamlFilePath, const string &path) {
 }
 
 template <typename T>
-T Yaml::getNodeVectorByPath(const string &yamlFilePath, const string &path) {
+T Yaml::getNodeListByPath(const string &yamlFilePath, const string &path) {
     YAML::Node config = YAML::LoadFile(yamlFilePath);
     vector<string> pathOrder = Yaml::splitPath(path, '.');
     vector<YAML::Node> nodes = {};
@@ -187,26 +187,26 @@ vector<YAML::Node> Yaml::searchNodeByTag_(const YAML::Node config, const string 
     return nodes;
 }
 
-template vector<YAML::Node> Yaml::getNodeVectorByTag<vector<YAML::Node>>(
+template vector<YAML::Node> Yaml::getNodeListByTag<vector<YAML::Node>>(
     const string &yamlFilePath, const string &tagName, const string &tagValue);
 template YAML::Node Yaml::getNodeByTag<YAML::Node>(const string &yamlFilePath,
                                                          const string &tagName,
                                                          const string &tagValue);
 
-template vector<YAML::Node> Yaml::getNodeVectorByTag(const string &yamlFilePath,
+template vector<YAML::Node> Yaml::getNodeListByTag(const string &yamlFilePath,
                                                        const string &tagName);
 template YAML::Node Yaml::getNodeByTag<YAML::Node>(const string &yamlFilePath,
                                                          const string &tagName);
 
-template vector<string> Yaml::getVectorText<vector<string>>(const YAML::Node &node,
+template vector<string> Yaml::getTextList<vector<string>>(const YAML::Node &node,
                                                               const string &tagName);
 template string Yaml::getText<string>(const YAML::Node &node, const string &tagName);
 
-template vector<string> Yaml::getVectorText<vector<string>>(const string &yamlFilePath,
+template vector<string> Yaml::getTextList<vector<string>>(const string &yamlFilePath,
                                                               const string &tagName);
 template string Yaml::getText<string>(const string &yamlFilePath, const string &tagName);
 
-template vector<YAML::Node> Yaml::getNodeVectorByPath<vector<YAML::Node>>(
+template vector<YAML::Node> Yaml::getNodeListByPath<vector<YAML::Node>>(
     const string &yamlFilePath, const string &path);
 template YAML::Node Yaml::getNodeByPath<YAML::Node>(const string &yamlFilePath,
                                                           const string &path);

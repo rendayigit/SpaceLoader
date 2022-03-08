@@ -78,17 +78,17 @@ void Operations::populateCmdLists() {
     cmdList.clear();
 
     auto cmdsWithTheTimerFlagSetNodeList =
-        Yaml::getNodeVectorByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "timer", "true");
+        Yaml::getNodeListByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "timer", "true");
     auto cmdsWithTheAuthFlagSetNodeList =
-        Yaml::getNodeVectorByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "auth", "true");
+        Yaml::getNodeListByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "auth", "true");
     auto callCmdsNodeList =
-        Yaml::getNodeVectorByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "type", "call");
+        Yaml::getNodeListByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "type", "call");
     auto fileTransferCmdsNodeList =
-        Yaml::getNodeVectorByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "type", "filetransfer");
+        Yaml::getNodeListByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "type", "filetransfer");
     auto triggerCmdsNodeList =
-        Yaml::getNodeVectorByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "type", "trigger");
+        Yaml::getNodeListByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "type", "trigger");
     auto internalCmdsNodeList =
-        Yaml::getNodeVectorByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "type", "internal");
+        Yaml::getNodeListByTag<vector<YAML::Node>>(cmdsYamlFile.toStdString(), "type", "internal");
 
     for (auto &i : callCmdsNodeList) {
         auto *callCmd = new CallCmd();

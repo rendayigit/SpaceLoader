@@ -23,7 +23,7 @@ TEST(yaml_test, ByMultipleItemNode) {
     YAML::Node resultNodes =
         Yaml::getNodeByTag<YAML::Node>("../../tests/YAML/Test.yaml", "Item");
 
-    vector<string> resulttexts = Yaml::getVectorText<vector<string>>(resultNodes, "#text");
+    vector<string> resulttexts = Yaml::getTextList<vector<string>>(resultNodes, "#text");
     ASSERT_EQ(resulttexts.at(0), "item1");
     ASSERT_EQ(resulttexts.at(1), "item2");
 }
@@ -47,7 +47,7 @@ TEST(yaml_test, ByMultipleAttribute) {
     config = YAML::LoadFile("../../tests/YAML/Test.yaml");
     YAML::Node resultNode = Yaml::getNodeByTag<YAML::Node>(
         "../../tests/YAML/Test.yaml", "-attributeName1", "AttributeValue1");
-    vector<string> resultText = Yaml::getVectorText<vector<string>>(resultNode, "#text");
+    vector<string> resultText = Yaml::getTextList<vector<string>>(resultNode, "#text");
     ASSERT_EQ(resultText.at(0), "Level4Item1");
     ASSERT_EQ(resultText.at(1), "Level4Item2");
     ASSERT_EQ(resultText.at(2), "Level4Item3");
@@ -57,7 +57,7 @@ TEST(yaml_test, ByMultipleAttribute) {
 TEST(yaml_test, ByPath) {
     YAML::Node resultNode = Yaml::getNodeByPath<YAML::Node>(
         "../../tests/YAML/Test.yaml", "NestedItems.Level2.Level3.Leve4.Level4Item");
-    vector<string> resultText = Yaml::getVectorText<vector<string>>(resultNode, "#text");
+    vector<string> resultText = Yaml::getTextList<vector<string>>(resultNode, "#text");
     ASSERT_EQ(resultText.at(0), "Level4Item1");
     ASSERT_EQ(resultText.at(1), "Level4Item2");
     ASSERT_EQ(resultText.at(2), "Level4Item3");
