@@ -122,11 +122,5 @@
     "qsharedmemory": "cpp"
   },
    "C_Cpp.errorSquiggles": "Disabled",
-   "testMate.cpp.test.executables": "{build,Build,BUILD,out,Out,OUT}/**/*{test,Test,TEST}*",
-   "testMate.cpp.test.advancedExecutables": [
-     {
-       "pattern" : "{build,Build,BUILD,out,Out,OUT}/**/*{test,Test,TEST}*",
-       "gtest" : {"ignoreTestEnumerationStdErr": true}
-     }
-   ]
+   "testMate.cpp.test.executables": "{build,Build,BUILD,out,Out,OUT}/**/*{test,tests,Test,Tests,TEST,TESTS}*"
  }
