@@ -8,35 +8,36 @@
 class Yaml {
    public:
     template <typename T>
-    static T getSingleNodeByTag(const std::string &yamlFilePath, const std::string &tagName,
+    static T getNodeByTag(const std::string &yamlFilePath, const std::string &tagName,
+                          const std::string &tagValue);
+
+    template <typename T>
+    static T getNodeVectorByTag(const std::string &yamlFilePath, const std::string &tagName,
                                 const std::string &tagValue);
-    
-    template <typename T>
-    static T getMultipleNodeByTag(const std::string &yamlFilePath, const std::string &tagName,
-                                  const std::string &tagValue);
 
     template <typename T>
-    static T getSingleNodeByTag(const std::string &yamlFilePath, const std::string &tagName);
-    
-    template <typename T>
-    static T getMultipleNodeByTag(const std::string &yamlFilePath, const std::string &tagName);
+    static T getNodeByTag(const std::string &yamlFilePath, const std::string &tagName);
 
     template <typename T>
-    static T getSingleText(const YAML::Node &node, const std::string &tagName);
-    template <typename T>
-    static T getMultipleText(const YAML::Node &node, const std::string &tagName);
+    static T getNodeVectorByTag(const std::string &yamlFilePath, const std::string &tagName);
 
     template <typename T>
-    static T getSingleText(const std::string &yamlFilePath, const std::string &tagName);
+    static T getText(const YAML::Node &node, const std::string &tagName);
+    
     template <typename T>
-    static T getMultipleText(const std::string &yamlFilePath, const std::string &tagName);
+    static T getVectorText(const YAML::Node &node, const std::string &tagName);
 
     template <typename T>
-    static T getSingleNodeByPath(const std::string &yamlFilePath, const std::string &path);
-    
+    static T getText(const std::string &yamlFilePath, const std::string &tagName);
+
     template <typename T>
-    static T getMultipleNodeByPath(const std::string &yamlFilePath, const std::string &path);
-    
+    static T getVectorText(const std::string &yamlFilePath, const std::string &tagName);
+
+    template <typename T>
+    static T getNodeByPath(const std::string &yamlFilePath, const std::string &path);
+
+    template <typename T>
+    static T getNodeVectorByPath(const std::string &yamlFilePath, const std::string &path);
 
    private:
     Yaml() = default;
