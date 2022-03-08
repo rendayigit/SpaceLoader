@@ -90,15 +90,6 @@ T Yaml::getNodeListByPath(const string &yamlFilePath, const string &path) {
     return Yaml::searchByNodePath(config, pathOrder, 0, nodes);
 }
 
-template <typename T>
-T Yaml::getNodeByPath(const string &yamlFilePath, const string &path) {
-    YAML::Node config = YAML::LoadFile(yamlFilePath);
-    vector<string> pathOrder = Yaml::splitPath(path, '.');
-    vector<YAML::Node> nodes = {};
-
-    return Yaml::searchByNodePath(config, pathOrder, 0, nodes).at(0);
-}
-
 vector<string> Yaml::splitPath(const string &path, char delimiter) {
     vector<string> result;
     stringstream ss(path);
