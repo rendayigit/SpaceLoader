@@ -38,6 +38,9 @@ class Yaml {
 
     template <typename T>
     static T getNodeListByPath(const std::string &yamlFilePath, const std::string &path);
+    
+    template <typename T>
+    static T getNodeByPath(const std::string &yamlFilePath, const std::string &path);
 
    private:
     Yaml() = default;
