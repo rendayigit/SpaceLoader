@@ -89,9 +89,9 @@ TEST(Logger, ThreadSafety) {
     for (int i = 0; i < 201; i++) {
         if (arr[i] == 0) allTrue = false;
     }
-
+    sleep(3);
     // TODO uncomment and fix this
-    // EXPECT_TRUE(allTrue);
+     EXPECT_TRUE(allTrue);
 
     file.close();
 
