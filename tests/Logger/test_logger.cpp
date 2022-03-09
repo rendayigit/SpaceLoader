@@ -1,3 +1,5 @@
+#include <gtest/gtest.h>
+
 #include <QtConcurrent/QtConcurrent>
 #include <QtCore/QDebug>
 #include <QtCore/QElapsedTimer>
@@ -14,9 +16,16 @@
 using namespace std;
 
 QString logString = "Testing Logger";
-QByteArray buffer;
+
+void deleteLogFile() {
+    QFile file(log()->LogFilePath);
+    if (file.exists()) {
+        file.remove();
+    }
+}
 
 TEST(Logger, Write) {
+    deleteLogFile();
     log()->Info(logString);
     log()->Flush();
 }
@@ -24,21 +33,25 @@ TEST(Logger, Write) {
 TEST(Logger, Read) {
     QFile file(log()->LogFilePath);
 
-    EXPECT_TRUE(file.exists());
-    EXPECT_TRUE(file.open(QIODevice::ReadOnly));
+    if (file.exists()) {
+        file.open(QIODevice::ReadOnly);
 
-    bool logStringFound = false;
+        bool logStringFound = false;
 
-    while (not file.atEnd()) {
-        QString line(file.readLine());
+        while (not file.atEnd()) {
+            QString line(file.readLine());
 
-        if (line.trimmed().contains(logString)) {
-            logStringFound = true;
+            if (line.trimmed().contains(logString)) {
+                logStringFound = true;
+            }
         }
-    }
 
-    EXPECT_TRUE(logStringFound);
-    file.close();
+        EXPECT_TRUE(logStringFound);
+        file.close();
+        deleteLogFile();
+    } else {
+        GTEST_FAIL() << "Log file not found: " + log()->LogFilePath.toStdString();
+    }
 }
 
 TEST(Logger, Benchmark) {
@@ -47,61 +60,62 @@ TEST(Logger, Benchmark) {
 }
 
 void writeThreadFirst() {
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; i++) {
         log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
+    }
 }
+
 void writeThreadSecond() {
-    for (int i = 100; i < 201; i++)
+    for (int i = 100; i < 200; i++) {
         log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
+    }
 }
 
 TEST(Logger, ThreadSafety) {
-    if (not QString(log()->LogFilePath).isNull()) QFile::remove(log()->LogFilePath);
-
     std::thread first(writeThreadFirst);
     std::thread second(writeThreadSecond);
 
-    first.join();
-    second.join();
+    int logCount = 200;
 
-    bool arr[201], allTrue = true;
-    for (int i = 0; i < 201; i++) arr[i] = false;
+    bool arr[logCount];
+    bool allTrue = true;
+
+    for (bool& i : arr) {
+        i = false;
+    }
 
     QFile file(log()->LogFilePath);
 
-    EXPECT_TRUE(file.exists());
-    EXPECT_TRUE(file.open(QIODevice::ReadOnly));
-
-    for (int i = 0; i < 201; i++) arr[i] = false;
+    if (file.exists()) {
+        file.open(QIODevice::ReadOnly);
+        first.join();
+        second.join();
+    } else {
+        GTEST_FAIL() << "Log file not found: " + log()->LogFilePath.toStdString();
+    }
 
     while (not file.atEnd()) {
         QString line(file.readLine());
         if (line.trimmed().contains("Thread")) {
-            QString neededWord = "";
-
             QRegExp rx("^.*[0-9]+$");
-            rx.setMinimal(false);
-            rx.setCaseSensitivity(Qt::CaseSensitive);  // or use Qt::CaseInsensitive
-            if (rx.indexIn(line) != -1) {
-                neededWord = rx.cap(0);
-                arr[neededWord.toInt()] = true;
+            if (rx.indexIn(line) > -1) {
+                arr[rx.cap(0).toInt()] = true;
             }
         }
     }
 
-    for (int i = 0; i < 201; i++) {
-        if (arr[i] == 0) allTrue = false;
+    for (bool i : arr) {
+        if (not i) {
+            allTrue = false;
+        }
     }
 
-    while (first.joinable() || second.joinable())
-        ;
+    while (first.joinable() || second.joinable());
 
     first.detach();
     second.detach();
-    // TODO uncomment and fix this
+
     EXPECT_TRUE(allTrue);
 
     file.close();
-
-    // TODO - read every number twice from 0 to 99
 }

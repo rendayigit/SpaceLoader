@@ -2,13 +2,16 @@
 
 #include <stdlib.h>
 
+#include <QtConcurrent/QtConcurrent>
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QSharedMemory>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QString>
-#include <QtConcurrent/QtConcurrent>
+#include <filesystem>
+
+using std::filesystem::current_path;
 
 #ifdef log
 #undef log

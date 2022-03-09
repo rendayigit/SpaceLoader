@@ -2,13 +2,11 @@
 
 Logger *Logger::m_instance = Logger::getInstance();
 
-void exit() {
-    log() -> Flush();
-}
+void exit() { log()->Flush(); }
 
-Logger::Logger() {
-    LogsPath = QDir::currentPath() + QDir::separator() + "Logs";
+Logger::Logger() : LogsPath(QString::fromStdString(current_path().string()) + QDir::separator() + "Logs") {
     createLogsDirectory();
+    updateLogFilePath();
     enableLogging = true;
     buffer.reserve(FLUSHRATE + 1000);
     atexit(exit);
