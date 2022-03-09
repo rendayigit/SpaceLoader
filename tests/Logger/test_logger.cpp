@@ -46,7 +46,6 @@ TEST(Logger, Benchmark) {
     log()->Flush();
 }
 
-
 void writeThreadFirst() {
     for (int i = 0; i < 100; i++)
         log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
@@ -57,8 +56,7 @@ void writeThreadSecond() {
 }
 
 TEST(Logger, ThreadSafety) {
-    if (not QString(log()->LogFilePath).isNull())
-     QFile::remove(log()->LogFilePath);
+    if (not QString(log()->LogFilePath).isNull()) QFile::remove(log()->LogFilePath);
 
     std::thread first(writeThreadFirst);
     std::thread second(writeThreadSecond);
@@ -78,20 +76,30 @@ TEST(Logger, ThreadSafety) {
 
     while (not file.atEnd()) {
         QString line(file.readLine());
-        if (line.trimmed().contains("Thread 1")) {
-            arr[line.right(3).toInt()] = true;
-        }
-        if (line.trimmed().contains("Thread 2")) {
-            arr[line.right(4).toInt()] = true;
+        if (line.trimmed().contains("Thread")) {
+            QString neededWord = "";
+
+            QRegExp rx("^.*[0-9]+$");
+            rx.setMinimal(false);
+            rx.setCaseSensitivity(Qt::CaseSensitive);  // or use Qt::CaseInsensitive
+            if (rx.indexIn(line) != -1) {
+                neededWord = rx.cap(0);
+                arr[neededWord.toInt()] = true;
+            }
         }
     }
 
     for (int i = 0; i < 201; i++) {
         if (arr[i] == 0) allTrue = false;
     }
-    sleep(3);
+
+    while (first.joinable() || second.joinable())
+        ;
+
+    first.detach();
+    second.detach();
     // TODO uncomment and fix this
-     EXPECT_TRUE(allTrue);
+    EXPECT_TRUE(allTrue);
 
     file.close();
 
