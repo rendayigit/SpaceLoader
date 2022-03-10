@@ -72,48 +72,56 @@ void writeThreadSecond() {
 }
 
 TEST(Logger, ThreadSafety) {
-    std::thread first(writeThreadFirst);
-    std::thread second(writeThreadSecond);
-
     int logCount = 200;
 
-    bool arr[logCount];
+    std::vector<bool> arr;
     bool allTrue = true;
 
-    for (bool& i : arr) {
-        i = false;
+    for (int i = 0; i < arr.size(); i++) {
+        arr.at(i) = false;
     }
 
+    // deleteLogFile();
     QFile file(log()->LogFilePath);
 
     if (file.exists()) {
         file.open(QIODevice::ReadOnly);
+        std::thread first(writeThreadFirst);
+        std::thread second(writeThreadSecond);
         first.join();
         second.join();
     } else {
         GTEST_FAIL() << "Log file not found: " + log()->LogFilePath.toStdString();
     }
 
-    while (not file.atEnd()) {
-        QString line(file.readLine());
+    file.close();
+
+    QFile file2(log()->LogFilePath);
+    file2.open(QIODevice::ReadOnly);
+    if (!file2.isOpen()) return;
+
+    QTextStream stream(&file2);
+    for (QString line = stream.readLine(); !line.isNull(); line = stream.readLine()) {
         if (line.trimmed().contains("Thread")) {
-            QRegExp rx("^.*[0-9]+$");
+            QRegExp rx("\'s(\'w+)$");
             if (rx.indexIn(line) > -1) {
                 int idx = rx.cap(0).toInt();
-                arr[idx] = true;
+                qDebug() << idx;
+                arr.at(idx) = true;
             }
         }
-    }
+    };
 
-    for (bool i : arr) {
-        if (not i) {
+    std::vector<int> missing = {0, 0, 0};
+
+    for (int i = 0; i < arr.size(); i++) {
+        if (not arr.at(i)) {
             allTrue = false;
+            missing.push_back(i);
         }
     }
-
-    while (first.joinable() || second.joinable());
 
     EXPECT_TRUE(allTrue);
 
-    file.close();
+    file2.close();
 }

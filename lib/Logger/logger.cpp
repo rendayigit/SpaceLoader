@@ -128,7 +128,7 @@ void Logger::writer(QString data) {
 
         if (semaphore.lock()) {
             Logger::writer(data);
-        } else if(not buffer.isNull()) {
+        } else {
             buffer.append(data.toLocal8Bit());
 
             if (buffer.size() + data.size() > FLUSHRATE or errorLog) {
