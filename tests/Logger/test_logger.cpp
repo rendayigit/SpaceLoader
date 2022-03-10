@@ -112,7 +112,7 @@ TEST(Logger, ThreadSafety) {
         }
     };
 
-    std::vector<int> missing = {0, 0, 0};
+    std::vector<int> missing = {};
 
     for (int i = 0; i < arr.size(); i++) {
         if (not arr.at(i)) {
