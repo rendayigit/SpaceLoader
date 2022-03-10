@@ -1,4 +1,5 @@
 #include "logger.h"
+#include <cstddef>
 
 Logger *Logger::m_instance = Logger::getInstance();
 
@@ -127,7 +128,7 @@ void Logger::writer(QString data) {
 
         if (semaphore.lock()) {
             Logger::writer(data);
-        } else {
+        } else if(not buffer.isNull()) {
             buffer.append(data.toLocal8Bit());
 
             if (buffer.size() + data.size() > FLUSHRATE or errorLog) {

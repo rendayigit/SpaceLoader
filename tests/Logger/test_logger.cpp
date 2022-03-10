@@ -99,7 +99,8 @@ TEST(Logger, ThreadSafety) {
         if (line.trimmed().contains("Thread")) {
             QRegExp rx("^.*[0-9]+$");
             if (rx.indexIn(line) > -1) {
-                arr[rx.cap(0).toInt()] = true;
+                int idx = rx.cap(0).toInt();
+                arr[idx] = true;
             }
         }
     }
@@ -111,9 +112,6 @@ TEST(Logger, ThreadSafety) {
     }
 
     while (first.joinable() || second.joinable());
-
-    first.detach();
-    second.detach();
 
     EXPECT_TRUE(allTrue);
 
