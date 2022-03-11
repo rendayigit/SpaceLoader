@@ -5,6 +5,7 @@
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QFile>
 #include <QtCore/QObject>
+#include <cmath>
 #include <iostream>
 #include <numeric>
 #include <string>
@@ -74,14 +75,13 @@ void writeThreadSecond() {
 TEST(Logger, ThreadSafety) {
     int logCount = 200;
 
-    std::vector<bool> arr;
+    bool arr[200];
     bool allTrue = true;
 
-    for (int i = 0; i < arr.size(); i++) {
-        arr.at(i) = false;
+    for (int i = 0; i < 201; i++) {
+        arr[i] = false;
     }
 
-    // deleteLogFile();
     QFile file(log()->LogFilePath);
 
     if (file.exists()) {
@@ -94,34 +94,25 @@ TEST(Logger, ThreadSafety) {
         GTEST_FAIL() << "Log file not found: " + log()->LogFilePath.toStdString();
     }
 
-    file.close();
-
-    QFile file2(log()->LogFilePath);
-    file2.open(QIODevice::ReadOnly);
-    if (!file2.isOpen()) return;
-
-    QTextStream stream(&file2);
-    for (QString line = stream.readLine(); !line.isNull(); line = stream.readLine()) {
-        if (line.trimmed().contains("Thread")) {
-            QRegExp rx("\'s(\'w+)$");
-            if (rx.indexIn(line) > -1) {
-                int idx = rx.cap(0).toInt();
-                qDebug() << idx;
-                arr.at(idx) = true;
+    QString lines;
+     QRegExp rx;
+     rx.setPattern("log (.*)");
+    while (!file.atEnd()) {
+        lines = file.readLine();
+        if(lines.contains("Thread")){
+             if (rx.indexIn(lines) != -1) {
+                int idx = rx.cap(1).toInt();
+                //QString s = QString::number(idx); for printing the values with log
+                arr[idx] = true;
             }
-        }
-    };
-
-    std::vector<int> missing = {};
-
-    for (int i = 0; i < arr.size(); i++) {
-        if (not arr.at(i)) {
-            allTrue = false;
-            missing.push_back(i);
         }
     }
 
+    for (int i = 0; i <200; i++) {
+        if (not arr[i]) {
+            allTrue = false;
+            break;
+        }
+    }
     EXPECT_TRUE(allTrue);
-
-    file2.close();
 }
