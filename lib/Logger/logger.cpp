@@ -1,11 +1,11 @@
 #include "logger.h"
-#include <cstddef>
 
 Logger *Logger::m_instance = Logger::getInstance();
 
 void exit() { log()->Flush(); }
 
-Logger::Logger() : LogsPath(QString::fromStdString(current_path().string()) + QDir::separator() + "Logs") {
+Logger::Logger()
+    : LogsPath(QString::fromStdString(current_path().string()) + QDir::separator() + "Logs") {
     createLogsDirectory();
     updateLogFilePath();
     enableLogging = true;
@@ -109,8 +109,11 @@ void Logger::flusher() {
 
     if (file.open(QIODevice::WriteOnly | QIODevice::Append) && !buffer.isEmpty()) {
         file.write(buffer);
-        buffer.clear();
         file.close();
+
+        if (not buffer.isNull()) {
+            buffer.clear();
+        }
     }
 }
 

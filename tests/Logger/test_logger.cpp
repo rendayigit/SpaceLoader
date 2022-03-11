@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <unistd.h>
 
 #include <QtConcurrent/QtConcurrent>
 #include <QtCore/QDebug>
@@ -21,7 +22,7 @@ QString logString = "Testing Logger";
 void deleteLogFile() {
     QFile file(log()->LogFilePath);
     if (file.exists()) {
-        file.remove();
+        file.resize(0);
     }
 }
 
@@ -73,6 +74,8 @@ void writeThreadSecond() {
 }
 
 TEST(Logger, ThreadSafety) {
+    deleteLogFile();
+
     int logCount = 200;
 
     bool arr[200];
@@ -90,29 +93,31 @@ TEST(Logger, ThreadSafety) {
         std::thread second(writeThreadSecond);
         first.join();
         second.join();
+        
     } else {
         GTEST_FAIL() << "Log file not found: " + log()->LogFilePath.toStdString();
     }
 
     QString lines;
-     QRegExp rx;
-     rx.setPattern("log (.*)");
+    QRegExp rx;
+    rx.setPattern("log (.*)");
     while (!file.atEnd()) {
         lines = file.readLine();
-        if(lines.contains("Thread")){
-             if (rx.indexIn(lines) != -1) {
+        if (lines.contains("Thread")) {
+            if (rx.indexIn(lines) != -1) {
                 int idx = rx.cap(1).toInt();
-                //QString s = QString::number(idx); for printing the values with log
+                // QString s = QString::number(idx); for printing the values with log
                 arr[idx] = true;
             }
         }
     }
 
-    for (int i = 0; i <200; i++) {
+    for (int i = 0; i < 200; i++) {
         if (not arr[i]) {
             allTrue = false;
             break;
         }
     }
+
     EXPECT_TRUE(allTrue);
 }
