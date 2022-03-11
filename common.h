@@ -8,7 +8,7 @@
 using std::filesystem::current_path;
 
 namespace Path {
-const QString project_root = QString::fromStdString(current_path().string());
+const QString project_root = QString::fromStdString(current_path().string()) + "/../../";
 const QString paths_Yaml = project_root + "Setup/Paths.yaml";
 const QString bin_Dir = project_root + QString::fromStdString(Yaml::getText<std::vector<std::string>>(Yaml::getNodeByTag<std::vector<YAML::Node>>(paths_Yaml.toStdString(), "bin_Dir").at(0), "bin_Dir").at(0));
 const QString server_cmds_Yaml = project_root + QString::fromStdString(Yaml::getText<std::vector<std::string>>(Yaml::getNodeByTag<std::vector<YAML::Node>>(paths_Yaml.toStdString(), "server_cmds_Yaml").at(0), "server_cmds_Yaml").at(0));

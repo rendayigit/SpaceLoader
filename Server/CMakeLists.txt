@@ -51,4 +51,5 @@ target_link_libraries(SERVER
         PRIVATE Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::Quick
         yaml-cpp
+        stdc++fs
         )

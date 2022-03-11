@@ -14,10 +14,10 @@
                 "environment": [
                     {
                         "name": "PATH",
-                        "value": "%PATH%;C:/msys64/mingw32/bin/"
+                        "value": "%PATH%;C:/msys64/mingw64/bin/"
                     }
                 ],
-                "miDebuggerPath": "C:/msys64/mingw32/bin/gdb.exe",
+                "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
             },
             "linux": {
                 "program": "${workspaceFolder}/build/Server/SERVER",
@@ -47,10 +47,10 @@
                 "environment": [
                     {
                         "name": "PATH",
-                        "value": "%PATH%;C:/msys64/mingw32/bin/"
+                        "value": "%PATH%;C:/msys64/mingw64/bin/"
                     }
                 ],
-                "miDebuggerPath": "C:/msys64/mingw32/bin/gdb.exe",
+                "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
             },
             "linux": {
                 "program": "${workspaceFolder}/build/Client_console/CONSOLE",

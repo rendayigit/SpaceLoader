@@ -43,4 +43,5 @@ target_link_libraries(CONSOLE
         PRIVATE Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::Quick
         yaml-cpp
+        stdc++fs
         )
