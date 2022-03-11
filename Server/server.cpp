@@ -143,8 +143,41 @@ User *Server::getUser(QTcpSocket *socket) {
     return nullptr;
 }
 
+QList<QString> Server::getDlibs(QString path) {
+    QList<QString> libList;
+
+    QDirIterator iterator(path, QDirIterator::Subdirectories);
+
+    while (iterator.hasNext()) {
+        QFile file(iterator.next());
+        if (file.open(QIODevice::ReadOnly) and QLibrary::isLibrary(file.fileName())) {
+            libList.append(file.fileName());
+        }
+    }
+
+    return libList;
+}
+
 void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
-    // TODO implement
+    QList<QString> commandLibs = getDlibs(Path::bin_Dir);
+    if (commandLibs.isEmpty()) {
+        log()->Error("no libs found at " + Path::bin_Dir);
+    } else {
+        for (auto &lib : commandLibs) {
+            if (lib.contains(message, Qt::CaseInsensitive)) {
+                QPluginLoader loader(lib);
+                if (auto *instance = loader.instance()) {
+                    if (auto *plugin = qobject_cast<PluginInterface *>(instance)) {
+                        plugin->run(sender, message);
+                    } else {
+                        log()->Error("qobject_cast<> returned nullptr");
+                    }
+                } else {
+                    log()->Error(loader.errorString());
+                }
+            }
+        }
+    }
 }
 
 void Server::connectProcess(QTcpSocket *sender, QProcess *process) {
