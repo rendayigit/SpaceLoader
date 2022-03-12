@@ -1,6 +1,3 @@
 ./scripts/clean.sh
 mkdir build
-cd test
-echo $PWD
-cmake -S . -B ../build/
-make
+cmake --build ./build --config Debug --target all -j 18 --

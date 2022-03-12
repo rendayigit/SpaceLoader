@@ -1,2 +1,1 @@
-echo $PWD
-rm -rf ./build
+cmake --build ./build --config Debug --target clean

@@ -4,6 +4,8 @@
         {
             "label": "build tests",
             "type": "shell",
+            // TODO option to only build tests
+            "command": "./scripts/build.bat",
             "linux": {
                 "command": "./scripts/build.sh"
             },
@@ -20,6 +22,7 @@
         {
             "label": "build source",
             "type": "shell",
+            "command": "./scripts/build.bat",
             "linux": {
                 "command": "./scripts/build.sh"
             },
@@ -49,11 +52,12 @@
         {
             "label": "run unit tests",
             "type": "shell",
+            "command": "./build/tests/tests.exe",
             "linux": {
-                "command": "./build/XMLTEST"
+                "command": "./build/tests/tests"
             },
             "windows": {
-                "command": "./build/XMLTEST.exe"
+                "command": "./build/tests/tests.exe"
             },
             "args": [],
             "options": {
@@ -69,11 +73,12 @@
         {
             "label": "run server",
             "type": "process",
+            "command": "./build/Server/SERVER.exe",
             "linux": {
-                "command": "./build/SERVER",
+                "command": "./build/Server/SERVER",
             },
             "windows": {
-                "command": "./build/SERVER.exe"
+                "command": "./build/Server/SERVER.exe"
             },
             "args": [],
             "options": {
@@ -97,11 +102,12 @@
         {
             "label": "run client",
             "type": "process",
+            "command": "./build/Client_console/CONSOLE.exe",
             "linux": {
-                "command": "./build/CLIENT",
+                "command": "./build/Client_console/CONSOLE",
             },
             "windows": {
-                "command": "./build/CLIENT.exe"
+                "command": "./build/Client_console/CONSOLE.exe"
             },
             "args": [],
             "options": {
@@ -127,6 +133,7 @@
         {
             "label": "clean",
             "type": "shell",
+            "command": "./scripts/clean.bat",
             "linux": {
                 "command": "./scripts/clean.sh",
             },
@@ -164,12 +171,11 @@
             "id": "PickExecutableToRun",
             "description": "Select executable:",
             "options": [
-                "XMLTEST",
-                "SERVER",
-                "CLIENT",
-                "LOGGER",
+                "tests/tests",
+                "Server/SERVER",
+                "Client_console/CONSOLE",
             ],
-            "default": "XMLTEST"
+            "default": "tests/tests"
         },
         {
             "type": "promptString",
