@@ -1,63 +1,95 @@
-#pragma once
+#ifndef YAML_H
+#define YAML_H
 
 #include <yaml-cpp/yaml.h>
 
-#include <iostream>
-#include <sstream>
-
 class Yaml {
    public:
-    template <typename T>
-    static T getNodeByTag(const std::string &yamlFilePath, const std::string &tagName,
-                          const std::string &tagValue);
+    Yaml(const Yaml &) = delete;
+    Yaml &operator=(Yaml const &) = delete;
+    Yaml(Yaml &&) = delete;
+    Yaml &operator=(Yaml &&) = delete;
 
-    template <typename T>
-    static T getNodeListByTag(const std::string &yamlFilePath, const std::string &tagName,
-                                const std::string &tagValue);
+    static YAML::Node getNodeByTag(const std::string &yamlFilePath, const std::string &tagName);
 
-    template <typename T>
-    static T getNodeByTag(const std::string &yamlFilePath, const std::string &tagName);
+    static YAML::Node getNodeByTag(const std::string &yamlFilePath, const std::string &tagName,
+                                   const std::string &tagValue);
 
-    template <typename T>
-    static T getNodeListByTag(const std::string &yamlFilePath, const std::string &tagName);
+    static std::vector<YAML::Node> getNodeListByTag(const std::string &yamlFilePath,
+                                                    const std::string &tagName);
 
-    template <typename T>
-    static T getText(const YAML::Node &node, const std::string &tagName);
-    
-    template <typename T>
-    static T getTextList(const YAML::Node &node, const std::string &tagName);
+    static std::vector<YAML::Node> getNodeListByTag(const std::string &yamlFilePath,
+                                                    const std::string &tagName,
+                                                    const std::string &tagValue);
 
-    template <typename T>
-    static T getText(const std::string &yamlFilePath, const std::string &tagName);
+    static YAML::Node getNodeByPath(const std::string &yamlFilePath, const std::string &path);
 
-    template <typename T>
-    static T getTextList(const std::string &yamlFilePath, const std::string &tagName);
+    static std::vector<YAML::Node> getNodeListByPath(const std::string &yamlFilePath,
+                                                     const std::string &path);
 
-    template <typename T>
-    static T getNodeByPath(const std::string &yamlFilePath, const std::string &path);
+    // TODO: add doxygen comments like this to the rest of the file. Note that typing /** then
+    // hitting enter fills out most of the comments.
+    /**
+     * @brief Get the text of the given yaml node.
+     *
+     * @param node - The yaml node to retrieve the text from.
+     * @return string - The text of the given yaml node.
+     */
+    static std::string getText(const YAML::Node &node);
 
-    template <typename T>
-    static T getNodeListByPath(const std::string &yamlFilePath, const std::string &path);
+    static std::string getText(const YAML::Node &node, const std::string &tagName);
+
+    /**
+     * @brief Get the text of the given yaml node.
+     *
+     * @param node - The yaml node to start searching for the node to retrieve the text from.
+     * @param tagName - The tag name the desired node must have.
+     * @param tagValue - The tag value the desired node must have.
+     * @return string - The text of the found yaml node.
+     */
+    static std::string getText(const YAML::Node &node, const std::string &tagName,
+                               const std::string &tagValue);
+
+    static std::string getText(const std::string &yamlFilePath, const std::string &tagName);
+
+    static std::string getText(const std::string &yamlFilePath, const std::string &tagName,
+                               const std::string &tagValue);
+
+    static std::vector<std::string> getTextList(const YAML::Node &node, const std::string &tagName);
+
+    static std::vector<std::string> getTextList(const YAML::Node &node, const std::string &tagName,
+                                                const std::string &tagValue);
+
+    static std::vector<std::string> getTextList(const std::string &yamlFilePath,
+                                                const std::string &tagName);
+
+    static std::vector<std::string> getTextList(const std::string &yamlFilePath,
+                                                const std::string &tagName,
+                                                const std::string &tagValue);
 
    private:
     Yaml() = default;
     ~Yaml() = default;
 
-    static std::vector<YAML::Node> searchByNodePath(const YAML::Node config,
+    static std::vector<YAML::Node> searchByNodePath(YAML::Node node,
                                                     std::vector<std::string> pathOrder, int idx,
-                                                    std::vector<YAML::Node> &snodes);
+                                                    std::vector<YAML::Node> &nodeList);
+
+    static std::vector<YAML::Node> searchNodeByTag(YAML::Node node, const std::string &tagName,
+                                                   const std::string &tagValue,
+                                                   std::vector<YAML::Node> &nodeList);
+
+    static std::vector<YAML::Node> searchNodeByTag(YAML::Node node, const std::string &tagName,
+                                                   std::vector<YAML::Node> &nodeList);
 
     static std::vector<std::string> searchText(const YAML::Node &node, const std::string &tagName,
-                                               std::vector<std::string> &texts);
+                                               std::vector<std::string> &textList);
 
-    static std::vector<YAML::Node> searchNodeByTag(const YAML::Node config,
-                                                   const std::string &tagName,
-                                                   const std::string &tagValue,
-                                                   std::vector<YAML::Node> &nodes);
-
-    static std::vector<YAML::Node> searchNodeByTag_(const YAML::Node config,
-                                                    const std::string &tagName,
-                                                    std::vector<YAML::Node> &nodes);
+    static std::vector<std::string> searchText(const YAML::Node &node, const std::string &tagName,
+                                               const std::string &tagValue,
+                                               std::vector<std::string> &textList);
 
     static std::vector<std::string> splitPath(const std::string &path, char delimiter);
 };
+
+#endif  // YAML_H

@@ -1,78 +1,68 @@
-#include <unistd.h>
-
-#include <iostream>
 #include "../../lib/YAML/yaml.h"
 #include "../Test_common.h"
 #include "yaml-cpp/yaml.h"
 
-using namespace std;
+using std::string;
+using std::vector;
+using YAML::Node;
 
-YAML::Node config = YAML::LoadFile("../../tests/YAML/Test.yaml");
+// TODO add tests for the new functions
 
-TEST(yaml_test, ByTestPath) {
+TEST(YamlTest, ByTestPath) {
     string path = "../../tests/YAML/Test.yaml";
-    if (access(path.c_str(), F_OK) == 0) {
-        config = YAML::LoadFile(path);
-    } else {
-        cout << "cannot find " << path;
-        FAIL();
+    if (access(path.c_str(), F_OK) != 0) {
+        GTEST_FAIL() << "cannot find " << path;
     }
 }
 
-TEST(yaml_test, ByMultipleItemNode) {
-    YAML::Node resultNodes =
-        Yaml::getNodeByTag<YAML::Node>("../../tests/YAML/Test.yaml", "Item");
+TEST(YamlTest, ByMultipleItemNode) {
+    Node resultNodes = Yaml::getNodeByTag("../../tests/YAML/Test.yaml", "Item");
 
-    vector<string> resulttexts = Yaml::getTextList<vector<string>>(resultNodes, "#text");
+    vector<string> resulttexts = Yaml::getTextList(resultNodes, "#text");
     ASSERT_EQ(resulttexts.at(0), "item1");
     ASSERT_EQ(resulttexts.at(1), "item2");
 }
 
-TEST(yaml_test, ByAttribute) {
-    YAML::Node result = Yaml::getNodeByTag<YAML::Node>(
-        "../../tests/YAML/Test.yaml", "-attributeName2", "AttributeValue2");
-    string resultText = Yaml::getText<string>(result, "#text");
+TEST(YamlTest, ByAttribute) {
+    Node result =
+        Yaml::getNodeByTag("../../tests/YAML/Test.yaml", "-attributeName2", "AttributeValue2");
+    string resultText = Yaml::getText(result, "#text");
     ASSERT_EQ(resultText, "Level2Item1");
 }
 
-TEST(yaml_test, BySingleItemNode) {
-    config = YAML::LoadFile("../../tests/YAML/Test.yaml");
-    YAML::Node resultNode =
-        Yaml::getNodeByTag<YAML::Node>("../../tests/YAML/Test.yaml", "SingleItemNode");
-    string resultText = Yaml::getText<string>(resultNode, "#text");
+TEST(YamlTest, BySingleItemNode) {
+    Node resultNode = Yaml::getNodeByTag("../../tests/YAML/Test.yaml", "SingleItemNode");
+    string resultText = Yaml::getText(resultNode, "#text");
     ASSERT_EQ(resultText, "This is a single item");
 }
 
-TEST(yaml_test, ByMultipleAttribute) {
-    config = YAML::LoadFile("../../tests/YAML/Test.yaml");
-    YAML::Node resultNode = Yaml::getNodeByTag<YAML::Node>(
-        "../../tests/YAML/Test.yaml", "-attributeName1", "AttributeValue1");
-    vector<string> resultText = Yaml::getTextList<vector<string>>(resultNode, "#text");
+TEST(YamlTest, ByMultipleAttribute) {
+    Node resultNode =
+        Yaml::getNodeByTag("../../tests/YAML/Test.yaml", "-attributeName1", "AttributeValue1");
+    vector<string> resultText = Yaml::getTextList(resultNode, "#text");
     ASSERT_EQ(resultText.at(0), "Level4Item1");
     ASSERT_EQ(resultText.at(1), "Level4Item2");
     ASSERT_EQ(resultText.at(2), "Level4Item3");
     ASSERT_EQ(resultText.size(), 3);
 }
 
-TEST(yaml_test, ByPath) {
-    YAML::Node resultNode = Yaml::getNodeByPath<YAML::Node>(
-        "../../tests/YAML/Test.yaml", "NestedItems.Level2.Level3.Leve4.Level4Item");
-    vector<string> resultText = Yaml::getTextList<vector<string>>(resultNode, "#text");
+TEST(YamlTest, ByPath) {
+    Node resultNode = Yaml::getNodeByPath("../../tests/YAML/Test.yaml",
+                                          "NestedItems.Level2.Level3.Leve4.Level4Item");
+    vector<string> resultText = Yaml::getTextList(resultNode, "#text");
     ASSERT_EQ(resultText.at(0), "Level4Item1");
     ASSERT_EQ(resultText.at(1), "Level4Item2");
     ASSERT_EQ(resultText.at(2), "Level4Item3");
 }
 
-TEST(yaml_test, ByRealResult) {
-    YAML::Node resultNode =
-        Yaml::getNodeByTag<YAML::Node>("../../Setup/Paths.yaml", "bin_Dir");
-    string resultText = Yaml::getText<string>(resultNode, "bin_Dir");
+TEST(YamlTest, ByRealResult) {
+    Node resultNode = Yaml::getNodeByTag("../../Setup/Paths.yaml", "bin_Dir");
+    string resultText = Yaml::getText(resultNode, "bin_Dir");
     ASSERT_EQ(resultText, "bin/");
 }
 
-TEST(yaml_test, ByRealResult1) {
-    YAML::Node resultNode = Yaml::getNodeByTag<YAML::Node>(
-        "../../Setup/Paths.yaml", "server_cmds_Yaml");
-    string resultText = Yaml::getText<string>(resultNode, "server_cmds_Yaml");
+TEST(YamlTest, ByRealResult1) {
+    Node resultNode = Yaml::getNodeByTag("../../Setup/Paths.yaml", "server_cmds_Yaml");
+    string resultText = Yaml::getText(resultNode, "server_cmds_Yaml");
     ASSERT_EQ(resultText, "Setup/ServerCmds.yaml");
 }
