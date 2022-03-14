@@ -1,5 +1,7 @@
 #include "yaml.h"
 
+#include <vector>
+
 using std::string;
 using std::stringstream;
 using std::vector;
@@ -9,23 +11,22 @@ using YAML::Node;
 
 Node Yaml::getNodeByTag(const string &yamlFilePath, const string &tagName) {
     Node rootNode = LoadFile(yamlFilePath);
-    vector<Node> nodeList = {};
 
-    return searchNodeByTag(rootNode, tagName, nodeList).at(0);
+    return searchNodeByTag(rootNode, tagName).at(0);
 }
 
 Node Yaml::getNodeByTag(const string &yamlFilePath, const string &tagName, const string &tagValue) {
     Node rootNode = LoadFile(yamlFilePath);
     vector<Node> nodeList = {};
 
-    return searchNodeByTag(rootNode, tagName, tagValue, nodeList).at(0);
+    return searchNodeByTag(rootNode, tagName, tagValue).at(0);
 }
 
 vector<Node> Yaml::getNodeListByTag(const string &yamlFilePath, const string &tagName) {
     Node rootNode = LoadFile(yamlFilePath);
     vector<Node> nodeList = {};
 
-    return searchNodeByTag(rootNode, tagName, nodeList);
+    return searchNodeByTag(rootNode, tagName);
 }
 
 vector<Node> Yaml::getNodeListByTag(const string &yamlFilePath, const string &tagName,
@@ -33,29 +34,21 @@ vector<Node> Yaml::getNodeListByTag(const string &yamlFilePath, const string &ta
     Node rootNode = LoadFile(yamlFilePath);
     vector<Node> nodeList = {};
 
-    return searchNodeByTag(rootNode, tagName, tagValue, nodeList);
+    return searchNodeByTag(rootNode, tagName, tagValue);
 }
 
 Node Yaml::getNodeByPath(const string &yamlFilePath, const string &path) {
     Node rootNode = LoadFile(yamlFilePath);
     vector<string> pathOrder = splitPath(path, '.');
-    vector<Node> nodeList = {};
 
-    return searchByNodePath(rootNode, pathOrder, 0, nodeList).at(0);
+    return searchByNodePath(rootNode, pathOrder).at(0);
 }
 
 vector<Node> Yaml::getNodeListByPath(const string &yamlFilePath, const string &path) {
     Node rootNode = LoadFile(yamlFilePath);
     vector<string> pathOrder = splitPath(path, '.');
-    vector<Node> nodeList = {};
 
-    return searchByNodePath(rootNode, pathOrder, 0, nodeList);
-}
-
-string getText(const Node &node) {
-    // TODO implement
-
-    return "";
+    return searchByNodePath(rootNode, pathOrder);
 }
 
 string Yaml::getText(const Node &node, const string &tagName) {
@@ -65,32 +58,14 @@ string Yaml::getText(const Node &node, const string &tagName) {
         return node.as<string>();
     }
 
-    return searchText(node, tagName, textList).at(0);
-}
-
-string getText(const Node &node, const std::string &tagName, const std::string &tagValue) {
-    vector<string> textList = {};
-
-    if (node.IsScalar()) {
-        return node.as<string>();
-    }
-
-    return searchText(node, tagName, tagValue, textList).at(0);
+    return searchText(node, tagName).at(0);
 }
 
 string Yaml::getText(const std::string &yamlFilePath, const std::string &tagName) {
     Node rootNode = LoadFile(yamlFilePath);
     vector<string> textList = {};
 
-    return searchText(rootNode, tagName, textList).at(0);
-}
-
-string getText(const std::string &yamlFilePath, const std::string &tagName,
-               const std::string &tagValue) {
-    Node rootNode = LoadFile(yamlFilePath);
-    vector<string> textList = {};
-
-    return searchText(rootNode, tagName, tagValue, textList).at(0);
+    return searchText(rootNode, tagName).at(0);
 }
 
 vector<string> Yaml::getTextList(const Node &node, const string &tagName) {
@@ -101,129 +76,97 @@ vector<string> Yaml::getTextList(const Node &node, const string &tagName) {
         return textList;
     }
 
-    return searchText(node, tagName, textList);
+    return searchText(node, tagName);
 }
 
-vector<string> getTextList(const Node &node, const std::string &tagName,
-                           const std::string &tagValue) {
-    vector<string> textList = {};
-
-    if (node.IsScalar()) {
-        textList.push_back(node.as<string>());
-        return textList;
-    }
-
-    return searchText(node, tagName, tagValue, textList);
-}
-
-vector<string> getTextList(const std::string &yamlFilePath, const std::string &tagName) {
+vector<string> Yaml::getTextList(const std::string &yamlFilePath, const std::string &tagName) {
     Node rootNode = LoadFile(yamlFilePath);
     vector<string> textList = {};
 
-    return searchText(rootNode, tagName, textList);
+    return searchText(rootNode, tagName);
 }
 
-vector<string> getTextList(const std::string &yamlFilePath, const std::string &tagName,
-                           const std::string &tagValue) {
-    Node rootNode = LoadFile(yamlFilePath);
-    vector<string> textList = {};
+vector<Node> Yaml::searchByNodePath(const Node node, vector<string> pathOrder) {
+    vector<Node> resultList;
 
-    return searchText(rootNode, tagName, tagValue, textList);
-}
-
-vector<Node> Yaml::searchByNodePath(const Node node, vector<string> pathOrder, int idx,
-                                    vector<Node> &nodeList) {
-    // TODO This algorithm is too hard to read. Instead of doing it this way, simple pop an item
-    // from pathOrder each time we recurse. (Basically remove the idx parameter.)
-
-    if (idx == pathOrder.size()) {
-        return nodeList;
+    if (pathOrder.empty()) {
+        return resultList;
     }
 
     if (node.IsSequence()) {
         for (const_iterator it = node.begin(); it != node.end(); ++it) {
-            searchByNodePath(*it, pathOrder, idx,
-                             nodeList);  // TODO what happens to returned list ?
+            vector<Node> temp = searchByNodePath(*it, pathOrder);
+            for (const Node &i : temp) resultList.push_back(i);
         }
     } else if (node.IsMap()) {
         for (const_iterator it = node.begin(); it != node.end(); ++it) {
-            if (it->first.as<string>() == pathOrder.at(idx)) {
-                if (idx == pathOrder.size() - 1) {
-                    nodeList.push_back(it->second);
+            if (it->first.as<string>() == pathOrder.at(0)) {
+                if (pathOrder.size() == 1) {
+                    resultList.push_back(it->second);
                 }
-                searchByNodePath(it->second, pathOrder, idx + 1,
-                                 nodeList);  // TODO what happens to returned list ?
+                pathOrder.erase(pathOrder.begin());
+                vector<Node> temp = searchByNodePath(it->second, pathOrder);
+                for (const Node &i : temp) resultList.push_back(i);
             } else {
-                searchByNodePath(it->second, pathOrder, idx,
-                                 nodeList);  // TODO what happens to returned list ?
+                vector<Node> temp = searchByNodePath(it->second, pathOrder);
+                for (const Node &i : temp) resultList.push_back(i);
             }
         }
-    }  // TODO check for scalar necessary ?
-
-    return nodeList;
+    }
+    return resultList;
 }
 
-vector<Node> Yaml::searchNodeByTag(const Node node, const string &tagName, const string &tagValue,
-                                   vector<Node> &nodeList) {
+vector<Node> Yaml::searchNodeByTag(const Node node, const string &tagName, const string &tagValue) {
     vector<Node> resultList;
-    resultList.insert(resultList.end(), nodeList.begin(), nodeList.end());
 
     if (node.IsSequence()) {
         for (const_iterator it = node.begin(); it != node.end(); ++it) {
-            vector<Node> temp = searchNodeByTag(*it, tagName, tagValue, resultList);
-            resultList.insert(resultList.end(), temp.begin(), temp.end());
+            vector<Node> temp = searchNodeByTag(*it, tagName, tagValue);
+            for (const Node &i : temp) resultList.push_back(i);
         }
     } else if (node.IsMap()) {
         for (const_iterator it = node.begin(); it != node.end(); ++it) {
             if (it->first.as<string>() == tagName and it->second.as<string>() == tagValue) {
                 resultList.push_back(node);
             } else {
-                vector<Node> temp = searchNodeByTag(it->second, tagName, tagValue, resultList);
-                resultList.insert(resultList.end(), temp.begin(), temp.end());
+                vector<Node> temp = searchNodeByTag(it->second, tagName, tagValue);
+                for (const Node &i : temp) resultList.push_back(i);
             }
         }
-    } else if (node.IsScalar()) {
-        // TODO: shouldn't we check for this?
-        resultList.push_back(node.as<Node>());
     }
 
     return resultList;
 }
 
-vector<Node> Yaml::searchNodeByTag(const Node node, const string &tagName, vector<Node> &nodeList) {
+vector<Node> Yaml::searchNodeByTag(const Node node, const string &tagName) {
     vector<Node> resultList;
-    resultList.insert(resultList.end(), nodeList.begin(), nodeList.end());
 
     if (node.IsSequence()) {
         for (const_iterator it = node.begin(); it != node.end(); ++it) {
-            vector<Node> temp = searchNodeByTag(*it, tagName, resultList);
-            resultList.insert(resultList.end(), temp.begin(), temp.end());
+            vector<Node> temp = searchNodeByTag(*it, tagName);
+            for (const Node &i : temp) resultList.push_back(i);
         }
     } else if (node.IsMap()) {
         for (const_iterator it = node.begin(); it != node.end(); ++it) {
             if (it->first.as<string>() == tagName) {
                 resultList.push_back(it->second);
             } else {
-                vector<Node> temp = searchNodeByTag(it->second, tagName, resultList);
-                resultList.insert(resultList.end(), temp.begin(), temp.end());
+                vector<Node> temp = searchNodeByTag(it->second, tagName);
+                for (const Node &i : temp) resultList.push_back(i);
             }
         }
-    } else if (node.IsScalar()) {
-        // TODO: shouldn't we check for this?
-        resultList.push_back(node.as<Node>());
     }
 
     return resultList;
 }
 
-vector<string> Yaml::searchText(const Node &node, const string &tagName, vector<string> &textList) {
+vector<string> Yaml::searchText(const Node &node, const string &tagName) {
     vector<string> resultList;
-    resultList.insert(resultList.end(), textList.begin(), textList.end());
 
     if (node.IsSequence()) {
         for (const_iterator it = node.begin(); it != node.end(); ++it) {
-            vector<string> temp = searchText(*it, tagName, resultList);
-            resultList.insert(resultList.end(), temp.begin(), temp.end());
+            vector<string> temp = searchText(*it, tagName);
+            for (const string &i : temp) resultList.push_back(i);
         }
     } else if (node.IsMap()) {
         for (const_iterator it = node.begin(); it != node.end(); ++it) {
@@ -232,23 +175,13 @@ vector<string> Yaml::searchText(const Node &node, const string &tagName, vector<
                     resultList.push_back(it->second.as<string>());
                 }
             } else {
-                vector<string> temp = searchText(it->second, tagName, resultList);
-                resultList.insert(resultList.end(), temp.begin(), temp.end());
+                vector<string> temp = searchText(it->second, tagName);
+                for (const string &i : temp) resultList.push_back(i);
             }
         }
-    } else if (node.IsScalar()) {
-        // TODO: shouldn't we check for this?
-        resultList.push_back(node.as<string>());
     }
 
     return resultList;
-}
-
-vector<string> Yaml::searchText(const Node &node, const string &tagName, const string &tagValue,
-                                vector<string> &textList) {
-    // TODO implement
-
-    return textList;
 }
 
 vector<string> Yaml::splitPath(const string &path, char delimiter) {

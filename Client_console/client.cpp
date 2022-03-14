@@ -79,7 +79,7 @@ void Client::listenTo(QString msg) {
     QString ip;
     QString port;
 
-    vector<YAML::Node> nodeList = Yaml::getNodeListByTag<vector<YAML::Node>>(
+    vector<YAML::Node> nodeList = Yaml::getNodeListByTag(
         Path::config_Yaml.toStdString(), "name", msg.mid(idx1, msg.size()).toStdString());
     if (nodeList.size() < 1) {
         int idx2 = msg.indexOf(":", idx1, Qt::CaseInsensitive);
@@ -88,8 +88,8 @@ void Client::listenTo(QString msg) {
         ip = msg.mid(idx1, idx2 - idx1);
         port = msg.mid(idx2 + 1, idx3 - idx2 - 1);
     } else {
-        ip = QString::fromStdString(Yaml::getText<string>(nodeList.at(0), "ip"));
-        port = QString::fromStdString(Yaml::getText<string>(nodeList.at(0), "port"));
+        ip = QString::fromStdString(Yaml::getText(nodeList.at(0), "ip"));
+        port = QString::fromStdString(Yaml::getText(nodeList.at(0), "port"));
     }
 
     auto *newclient = new Client();
@@ -104,7 +104,7 @@ void Client::stopListen(QString ipPort) {
 
     int idx1 = ipPort.indexOf(" ", QString("StopListeningTo").size(), Qt::CaseInsensitive) + 1;
 
-    vector<YAML::Node> nodeList = Yaml::getNodeListByTag<vector<YAML::Node>>(
+    vector<YAML::Node> nodeList = Yaml::getNodeListByTag(
         Path::config_Yaml.toStdString(), "name", ipPort.mid(idx1, ipPort.size()).toStdString());
     if (nodeList.size() < 1) {
         int idx2 = ipPort.indexOf(":", idx1, Qt::CaseInsensitive);
@@ -112,9 +112,9 @@ void Client::stopListen(QString ipPort) {
 
         ipPort = ipPort.mid(idx1, idx2 - idx1) + ":" + ipPort.mid(idx2 + 1, idx3 - idx2 - 1);
     } else {
-        ipPort = QString::fromStdString(Yaml::getText<string>(nodeList.at(0), "ip")) +
+        ipPort = QString::fromStdString(Yaml::getText(nodeList.at(0), "ip")) +
                  ":" +
-                 QString::fromStdString(Yaml::getText<string>(nodeList.at(0), "port"));
+                 QString::fromStdString(Yaml::getText(nodeList.at(0), "port"));
     }
 
     for (auto &listener : listeners) {
@@ -144,17 +144,17 @@ void Client::help(QByteArray message) {
     } else {
         QString requestedCmd = message.mid(message.indexOf("help ") + 5, message.size());
         requestedCmd = requestedCmd.toLower();
-        vector<YAML::Node> nodeList = Yaml::getNodeListByTag<vector<YAML::Node>>(
+        vector<YAML::Node> nodeList = Yaml::getNodeListByTag(
             Path::client_cmds_Yaml.toStdString(), "id", requestedCmd.toStdString());
         if (nodeList.size() < 1) {
             m_instance->sendCommand(message);
             return;
         }
 
-        QString helpString = "\t" + QString::fromStdString(Yaml::getText<string>(
+        QString helpString = "\t" + QString::fromStdString(Yaml::getText(
                                         nodeList.at(0), "Description"));
         helpString.insert(25, "- " + QString::fromStdString(
-                                         Yaml::getText<string>(nodeList.at(0), "type")));
+                                         Yaml::getText(nodeList.at(0), "type")));
         helpString = helpFormatter(helpString);
         std::cout << helpString.toStdString() << std::endl;
     }

@@ -1,4 +1,3 @@
-
 #include <QtConcurrent/QtConcurrent>
 #include <QtCore/QObject>
 
@@ -13,17 +12,15 @@ using namespace std;
 
 Server *server;
 Client *client1, *client2, *client3, *client4;
+bool allClientsInitiated = false;
 QString testString1 = "TEST STRING 1";
 QString testString2 = "TEST STRING 2";
-bool allClientsInitiated = false;
 
 TEST(tcp_test, startServer) {
     server = new Server();
     qint32 serverPort = 1234;
     server->startServer(serverPort);
-}
 
-TEST(tcp_test, startClients) {
     QFuture<void> future = QtConcurrent::run([=]() {
         client1 = new Client();
         client1->attemptConnection("127.0.0.1", 1234);
@@ -39,23 +36,19 @@ TEST(tcp_test, startClients) {
 
         allClientsInitiated = true;
     });
-}
 
-TEST(tcp_test, transmitFromClient) {
     while (allClientsInitiated != true) QThread::msleep(10);
     client2->sendCommand(testString1.toLocal8Bit());
-}
 
-TEST(tcp_test, ReceiveFromServer) {
     // TODO uncomment and fix this
-    // EXPECT_TRUE(server->receivedString == testString1)
-    //     << "String received from the server and string transmitted from one of the clients are not "
-    //        "identical!";
-}
+    TEST_COUT(server->receivedString.toStdString());
 
-TEST(tcp_test, broadcastFromServer) { server->broadcast(testString2.toLocal8Bit()); }
+    EXPECT_TRUE(server->receivedString == testString1)
+        << "String received from the server and string transmitted from one of the clients are not "
+           "identical!";
 
-TEST(tcp_test, ReceiveFromClients) {
+    server->broadcast(testString2.toLocal8Bit());
+
     client1->waitForData();
     client2->waitForData();
     client3->waitForData();
