@@ -1,5 +1,9 @@
 #include "yaml.h"
 
+#include <iostream>
+#include <iterator>
+#include <ostream>
+
 using std::string;
 using std::stringstream;
 using std::vector;
@@ -39,13 +43,6 @@ Node Yaml::getNodeByPath(const string &yamlFilePath, const string &path) {
     return searchByNodePath(rootNode, pathOrder).at(0);
 }
 
-vector<Node> Yaml::getNodeListByPath(const string &yamlFilePath, const string &path) {
-    Node rootNode = LoadFile(yamlFilePath);
-    vector<string> pathOrder = splitPath(path, '.');
-
-    return searchByNodePath(rootNode, pathOrder);
-}
-
 string Yaml::getText(const Node &node, const string &key) {
     if (node.IsScalar()) {
         return node.as<string>();
@@ -78,35 +75,12 @@ vector<string> Yaml::getTextList(const std::string &yamlFilePath, const std::str
 }
 
 vector<Node> Yaml::searchByNodePath(const Node node, vector<string> pathOrder) {
-    if (pathOrder.empty() or node.IsScalar()) {
-        return {};
+    if (pathOrder.size() == 1) {
+        return Yaml::searchNodeByKey(node, pathOrder.at(0));
     }
-
-    vector<Node> resultList;
-
-    if (node.IsSequence()) {
-        for (const_iterator it = node.begin(); it != node.end(); ++it) {
-            vector<Node> temp = searchByNodePath(*it, pathOrder);
-            resultList.insert(resultList.end(), temp.begin(), temp.end());
-        }
-    } else {
-        for (const_iterator it = node.begin(); it != node.end(); ++it) {
-            if (it->first.as<string>() == pathOrder.at(0)) {
-                if (pathOrder.size() == 1) {
-                    resultList.push_back(it->second);
-                    // TODO: return here?
-                }
-                pathOrder.erase(pathOrder.begin());
-                vector<Node> temp = searchByNodePath(it->second, pathOrder);
-                resultList.insert(resultList.end(), temp.begin(), temp.end());
-            } else {
-                vector<Node> temp = searchByNodePath(it->second, pathOrder);
-                resultList.insert(resultList.end(), temp.begin(), temp.end());
-            }
-        }
-    }
-
-    return resultList;
+    vector<Node> resultNode = Yaml::searchNodeByKey(node, pathOrder.at(0));
+    pathOrder.erase(pathOrder.begin());
+    return Yaml::searchByNodePath(resultNode.at(0), pathOrder);
 }
 
 vector<Node> Yaml::searchNodeByKey(const Node node, const string &key, const string &value) {

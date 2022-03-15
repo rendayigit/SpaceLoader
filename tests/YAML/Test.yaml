@@ -1,6 +1,9 @@
+# RootNode.SıngleItemNode.name
+
 RootNode:
   MultipleItemsNode:
     "-name": MultipleItemsNodeName
+    "ip" : "1234"
     Item:
     -
       "-name": item1name
@@ -13,6 +16,7 @@ RootNode:
     "#text": This is a single item
   NestedItems:
     "-name": NestedItemsName
+    "ip": 123456
     Level2:
       "-name": Level2Name
       Level3:
@@ -23,13 +27,14 @@ RootNode:
           "#text": Level3Item1
         -
           "-name": Level3Item2Name
-          "#text": Level3Item2
+          "#text": Level3Item3
         -
           "-name": Level3Item3Name
           "#text": Level3Item3
         Leve4:
           "-attributeName1": AttributeValue1
           "-name": Leve4Name
+          "ip": 1234567
           Level4Item:
           -
             "-name": Level4Item1Name

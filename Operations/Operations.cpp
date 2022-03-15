@@ -78,17 +78,17 @@ void Operations::populateCmdLists() {
     cmdList.clear();
 
     auto cmdsWithTheTimerFlagSetNodeList =
-        Yaml::getNodeListByTag(cmdsYamlFile.toStdString(), "timer", "true");
+        Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "timer", "true");
     auto cmdsWithTheAuthFlagSetNodeList =
-        Yaml::getNodeListByTag(cmdsYamlFile.toStdString(), "auth", "true");
+        Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "auth", "true");
     auto callCmdsNodeList =
-        Yaml::getNodeListByTag(cmdsYamlFile.toStdString(), "type", "call");
+        Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "type", "call");
     auto fileTransferCmdsNodeList =
-        Yaml::getNodeListByTag(cmdsYamlFile.toStdString(), "type", "filetransfer");
+        Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "type", "filetransfer");
     auto triggerCmdsNodeList =
-        Yaml::getNodeListByTag(cmdsYamlFile.toStdString(), "type", "trigger");
+        Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "type", "trigger");
     auto internalCmdsNodeList =
-        Yaml::getNodeListByTag(cmdsYamlFile.toStdString(), "type", "internal");
+        Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "type", "internal");
 
     for (auto &i : callCmdsNodeList) {
         auto *callCmd = new CallCmd();

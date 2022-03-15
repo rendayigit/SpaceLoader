@@ -62,18 +62,6 @@ class Yaml {
      */
     static YAML::Node getNodeByPath(const std::string &yamlFilePath, const std::string &path);
 
-    // TODO: check if this is possible
-    /**
-     * @brief Get the yaml node list in the given yaml file with the given node path.
-     *
-     * @param    yamlFilePath        The path where the yaml file is located.
-     * @param    path                The path to the desired nodes. Nodes must be separated by '.'
-     *                               (...grandParentNode.parentNode.desiredNode)
-     * @return   std::vector<YAML::Node>
-     */
-    static std::vector<YAML::Node> getNodeListByPath(const std::string &yamlFilePath,
-                                                     const std::string &path);
-
     /**
      * @brief Get the text of the given yaml node with the given key.
      *
