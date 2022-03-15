@@ -1,6 +1,5 @@
 #include "Operations.h"
 
-
 Operations::Operations(QString yamlFile) {
     cmdsYamlFile = yamlFile;
     log()->FLUSHRATE = 0;
@@ -57,7 +56,7 @@ QString Operations::helpFormatter(QString message) {
 bool Operations::checkTimerFlag(vector<YAML::Node> cmdsWithTheTimerFlagSetNodeList,
                                 QString cmdCallString) {
     for (auto &i : cmdsWithTheTimerFlagSetNodeList) {
-        if (Yaml::getText(i, "CmdCallString") == cmdCallString.toStdString()) {
+        if (Yaml::getValue(i, "CmdCallString") == cmdCallString.toStdString()) {
             return true;
         }
     }
@@ -67,7 +66,7 @@ bool Operations::checkTimerFlag(vector<YAML::Node> cmdsWithTheTimerFlagSetNodeLi
 bool Operations::checkAuthFlag(vector<YAML::Node> cmdsWithTheAuthFlagSetNodeList,
                                QString cmdCallString) {
     for (auto &i : cmdsWithTheAuthFlagSetNodeList) {
-        if (Yaml::getText(i, "CmdCallString") == cmdCallString.toStdString()) {
+        if (Yaml::getValue(i, "CmdCallString") == cmdCallString.toStdString()) {
             return true;
         }
     }
@@ -94,17 +93,17 @@ void Operations::populateCmdLists() {
         auto *callCmd = new CallCmd();
         callCmd->setCmdId("");
         callCmd->setCmdType(CmdType::call);
-        callCmd->setCmdCallString(QString::fromStdString(Yaml::getText(i, "CmdCallString")));
-        callCmd->setCmdDescription(QString::fromStdString(Yaml::getText(i, "Description")));
-        callCmd->setScriptDir(QString::fromStdString(Yaml::getText(i, "ScriptDir")));
-        callCmd->setScriptFileName(QString::fromStdString(Yaml::getText(i, "id")));
+        callCmd->setCmdCallString(QString::fromStdString(Yaml::getValue(i, "CmdCallString")));
+        callCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
+        callCmd->setScriptDir(QString::fromStdString(Yaml::getValue(i, "ScriptDir")));
+        callCmd->setScriptFileName(QString::fromStdString(Yaml::getValue(i, "id")));
         callCmd->setIsTimerSet(
             checkTimerFlag(cmdsWithTheTimerFlagSetNodeList, callCmd->getCmdCallString()));
         callCmd->setIsAuthRequired(
             checkAuthFlag(cmdsWithTheAuthFlagSetNodeList, callCmd->getCmdCallString()));
 
         if (callCmd->getIsTimerSet()) {
-            callCmd->setTriggerTime(QString::fromStdString(Yaml::getText(i, "type")));
+            callCmd->setTriggerTime(QString::fromStdString(Yaml::getValue(i, "type")));
         }
 
         cmdList.append(callCmd);
@@ -114,9 +113,9 @@ void Operations::populateCmdLists() {
         auto *fileTransferCmd = new FileTransferCmd();
         fileTransferCmd->setCmdId("");
         fileTransferCmd->setCmdType(CmdType::fileTransfer);
-        fileTransferCmd->setCmdCallString(QString::fromStdString(Yaml::getText(i, "CmdCallString")));
-        fileTransferCmd->setCmdDescription(QString::fromStdString(Yaml::getText(i, "Description")));
-        fileTransferCmd->setDestinationDir(QString::fromStdString(Yaml::getText(i, "DestinationDir")));
+        fileTransferCmd->setCmdCallString(QString::fromStdString(Yaml::getValue(i, "CmdCallString")));
+        fileTransferCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
+        fileTransferCmd->setDestinationDir(QString::fromStdString(Yaml::getValue(i, "DestinationDir")));
         fileTransferCmd->setIsTimerSet(false);
         fileTransferCmd->setIsAuthRequired(
             checkAuthFlag(cmdsWithTheAuthFlagSetNodeList, fileTransferCmd->getCmdCallString()));
@@ -129,10 +128,10 @@ void Operations::populateCmdLists() {
         auto *triggerCmd = new TriggerCmd();
         triggerCmd->setCmdId("");
         triggerCmd->setCmdType(CmdType::trigger);
-        triggerCmd->setCmdCallString(QString::fromStdString(Yaml::getText(i, "CmdCallString")));
-        triggerCmd->setCmdDescription(QString::fromStdString(Yaml::getText(i, "Description")));
-        triggerCmd->setTriggererId(QString::fromStdString(Yaml::getText(i, "id")));
-        triggerCmd->setCallString(QString::fromStdString(Yaml::getText(i, "type")));
+        triggerCmd->setCmdCallString(QString::fromStdString(Yaml::getValue(i, "CmdCallString")));
+        triggerCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
+        triggerCmd->setTriggererId(QString::fromStdString(Yaml::getValue(i, "id")));
+        triggerCmd->setCallString(QString::fromStdString(Yaml::getValue(i, "type")));
         triggerCmd->setIsTimerSet(false);
         triggerCmd->setIsAuthRequired(
             checkAuthFlag(cmdsWithTheAuthFlagSetNodeList, triggerCmd->getCmdCallString()));
@@ -145,15 +144,15 @@ void Operations::populateCmdLists() {
         auto *internalCmd = new InternalCmd();
         internalCmd->setCmdId("");
         internalCmd->setCmdType(CmdType::internal);
-        internalCmd->setCmdCallString(QString::fromStdString(Yaml::getText(i, "CmdCallString")));
+        internalCmd->setCmdCallString(QString::fromStdString(Yaml::getValue(i, "CmdCallString")));
         internalCmd->setIsTimerSet(
             checkTimerFlag(cmdsWithTheTimerFlagSetNodeList, internalCmd->getCmdCallString()));
         internalCmd->setIsAuthRequired(
             checkAuthFlag(cmdsWithTheAuthFlagSetNodeList, internalCmd->getCmdCallString()));
-        internalCmd->setCmdDescription(QString::fromStdString(Yaml::getText(i, "Description")));
+        internalCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
 
         if (internalCmd->getIsTimerSet()) {
-            internalCmd->setTriggerTime(QString::fromStdString(Yaml::getText(i, "id")));
+            internalCmd->setTriggerTime(QString::fromStdString(Yaml::getValue(i, "id")));
         }
 
         cmdList.append(internalCmd);

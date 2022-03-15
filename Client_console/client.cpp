@@ -1,7 +1,5 @@
 #include "client.h"
 
-#include <QDebug>
-
 using namespace std;
 
 Client *Client::m_instance = Client::getInstance();
@@ -88,8 +86,8 @@ void Client::listenTo(QString msg) {
         ip = msg.mid(idx1, idx2 - idx1);
         port = msg.mid(idx2 + 1, idx3 - idx2 - 1);
     } else {
-        ip = QString::fromStdString(Yaml::getText(nodeList.at(0), "ip"));
-        port = QString::fromStdString(Yaml::getText(nodeList.at(0), "port"));
+        ip = QString::fromStdString(Yaml::getValue(nodeList.at(0), "ip"));
+        port = QString::fromStdString(Yaml::getValue(nodeList.at(0), "port"));
     }
 
     auto *newclient = new Client();
@@ -112,9 +110,9 @@ void Client::stopListen(QString ipPort) {
 
         ipPort = ipPort.mid(idx1, idx2 - idx1) + ":" + ipPort.mid(idx2 + 1, idx3 - idx2 - 1);
     } else {
-        ipPort = QString::fromStdString(Yaml::getText(nodeList.at(0), "ip")) +
+        ipPort = QString::fromStdString(Yaml::getValue(nodeList.at(0), "ip")) +
                  ":" +
-                 QString::fromStdString(Yaml::getText(nodeList.at(0), "port"));
+                 QString::fromStdString(Yaml::getValue(nodeList.at(0), "port"));
     }
 
     for (auto &listener : listeners) {
@@ -151,10 +149,10 @@ void Client::help(QByteArray message) {
             return;
         }
 
-        QString helpString = "\t" + QString::fromStdString(Yaml::getText(
+        QString helpString = "\t" + QString::fromStdString(Yaml::getValue(
                                         nodeList.at(0), "Description"));
         helpString.insert(25, "- " + QString::fromStdString(
-                                         Yaml::getText(nodeList.at(0), "type")));
+                                         Yaml::getValue(nodeList.at(0), "type")));
         helpString = helpFormatter(helpString);
         std::cout << helpString.toStdString() << std::endl;
     }

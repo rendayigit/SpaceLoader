@@ -1,9 +1,5 @@
 #include "yaml.h"
 
-#include <iostream>
-#include <iterator>
-#include <ostream>
-
 using std::string;
 using std::stringstream;
 using std::vector;
@@ -43,35 +39,35 @@ Node Yaml::getNodeByPath(const string &yamlFilePath, const string &path) {
     return searchByNodePath(rootNode, pathOrder).at(0);
 }
 
-string Yaml::getText(const Node &node, const string &key) {
+string Yaml::getValue(const Node &node, const string &key) {
     if (node.IsScalar()) {
         return node.as<string>();
     }
 
-    return searchText(node, key).at(0);
+    return searchValue(node, key).at(0);
 }
 
-string Yaml::getText(const std::string &yamlFilePath, const std::string &key) {
+string Yaml::getValue(const std::string &yamlFilePath, const std::string &key) {
     Node rootNode = LoadFile(yamlFilePath);
 
-    return searchText(rootNode, key).at(0);
+    return searchValue(rootNode, key).at(0);
 }
 
-vector<string> Yaml::getTextList(const Node &node, const string &key) {
-    vector<string> textList = {};
+vector<string> Yaml::getValueList(const Node &node, const string &key) {
+    vector<string> valueList = {};
 
     if (node.IsScalar()) {
-        textList.push_back(node.as<string>());
-        return textList;
+        valueList.push_back(node.as<string>());
+        return valueList;
     }
 
-    return searchText(node, key);
+    return searchValue(node, key);
 }
 
-vector<string> Yaml::getTextList(const std::string &yamlFilePath, const std::string &key) {
+vector<string> Yaml::getValueList(const std::string &yamlFilePath, const std::string &key) {
     Node rootNode = LoadFile(yamlFilePath);
 
-    return searchText(rootNode, key);
+    return searchValue(rootNode, key);
 }
 
 vector<Node> Yaml::searchByNodePath(const Node node, vector<string> pathOrder) {
@@ -127,12 +123,12 @@ vector<Node> Yaml::searchNodeByKey(const Node node, const string &key) {
     return resultList;
 }
 
-vector<string> Yaml::searchText(const Node &node, const string &key) {
+vector<string> Yaml::searchValue(const Node &node, const string &key) {
     vector<string> resultList;
 
     if (node.IsSequence()) {
         for (const_iterator it = node.begin(); it != node.end(); ++it) {
-            vector<string> temp = searchText(*it, key);
+            vector<string> temp = searchValue(*it, key);
             resultList.insert(resultList.end(), temp.begin(), temp.end());
         }
     } else if (node.IsMap()) {
@@ -140,7 +136,7 @@ vector<string> Yaml::searchText(const Node &node, const string &key) {
             if (it->first.as<string>() == key and it->second.IsScalar()) {
                 resultList.push_back(it->second.as<string>());
             } else {
-                vector<string> temp = searchText(it->second, key);
+                vector<string> temp = searchValue(it->second, key);
                 resultList.insert(resultList.end(), temp.begin(), temp.end());
             }
         }

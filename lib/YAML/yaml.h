@@ -56,47 +56,47 @@ class Yaml {
      * @brief Get the yaml node in the given yaml file with the given node path.
      *
      * @param    yamlFilePath        The path where the yaml file is located.
-     * @param    path                The path to the desired node. Nodes must be separated by '.'
+     * @param    path                The path to the desired node. Nodes must be separated by a '.'
      *                               (...grandParentNode.parentNode.desiredNode)
      * @return   YAML::Node
      */
     static YAML::Node getNodeByPath(const std::string &yamlFilePath, const std::string &path);
 
     /**
-     * @brief Get the text of the given yaml node with the given key.
+     * @brief Get the value of the given yaml node with the given key.
      *
-     * @param    node                The yaml node to retrieve the text from.
+     * @param    node                The yaml node to retrieve the value from.
      * @param    key                 The yaml node key the desired node must have.
      * @return   std::string
      */
-    static std::string getText(const YAML::Node &node, const std::string &key);
+    static std::string getValue(const YAML::Node &node, const std::string &key);
 
     /**
-     * @brief Get the text of the yaml node in the given yaml file with the given key.
+     * @brief Get the value of the yaml node in the given yaml file with the given key.
      *
      * @param    yamlFilePath        The path where the yaml file is located.
      * @param    key                 The yaml node key the desired node must have.
      * @return   std::string
      */
-    static std::string getText(const std::string &yamlFilePath, const std::string &key);
+    static std::string getValue(const std::string &yamlFilePath, const std::string &key);
 
     /**
-     * @brief Get the text list of the given yaml node with the given key.
+     * @brief Get the value list of the given yaml node with the given key.
      *
-     * @param    node                The yaml node to retrieve the texts from.
+     * @param    node                The yaml node to retrieve the values from.
      * @param    key                 The yaml node key the desired node must have.
      * @return   std::vector<std::string>
      */
-    static std::vector<std::string> getTextList(const YAML::Node &node, const std::string &key);
+    static std::vector<std::string> getValueList(const YAML::Node &node, const std::string &key);
 
     /**
-     * @brief Get the text list of the yaml node in the given yaml file with the given key.
+     * @brief Get the value list of the yaml node in the given yaml file with the given key.
      *
      * @param    yamlFilePath        The path where the yaml file is located.
      * @param    key                 The yaml node key the desired node must have.
      * @return   std::vector<std::string>
      */
-    static std::vector<std::string> getTextList(const std::string &yamlFilePath,
+    static std::vector<std::string> getValueList(const std::string &yamlFilePath,
                                                 const std::string &key);
 
    private:
@@ -112,7 +112,7 @@ class Yaml {
 
     static std::vector<YAML::Node> searchNodeByKey(YAML::Node node, const std::string &key);
 
-    static std::vector<std::string> searchText(const YAML::Node &node, const std::string &key);
+    static std::vector<std::string> searchValue(const YAML::Node &node, const std::string &key);
 
     static std::vector<std::string> splitPath(const std::string &path, char delimiter);
 };
