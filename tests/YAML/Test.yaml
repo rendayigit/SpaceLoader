@@ -21,7 +21,7 @@ RootNode:
           - "name": Level4Item1Name
             "text": Level4Item1
           - "name": Level4Item2Name
-            "text": Level4Item3
+            "text": Level4Item2
           - "name": Level4Item3Name
             "text": Level4Item3
         Leve4Sibling:
