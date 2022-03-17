@@ -6,11 +6,17 @@
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QFile>
 #include <QtCore/QObject>
+#include <atomic>
 #include <cmath>
+#include <condition_variable>
 #include <iostream>
+#include <mutex>
 #include <numeric>
 #include <string>
 #include <thread>
+std::condition_variable condition_;
+std::mutex mutex_;
+bool flag = false;
 
 #include "../../lib/Logger/logger.h"
 #include "../Test_common.h"
@@ -62,26 +68,32 @@ TEST(Logger, Benchmark) {
 }
 
 void writeThreadFirst() {
+    unique_lock<mutex> lock(mutex_);
     for (int i = 0; i < 100; i++) {
+        condition_.wait(lock, [] { return flag ? true : false; });
         log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
+        flag = !flag;
+        condition_.notify_one();
     }
 }
 
 void writeThreadSecond() {
+    unique_lock<mutex> lock(mutex_);
     for (int i = 100; i < 200; i++) {
+        condition_.wait(lock, [] { return !flag ? true : false; });
+        
         log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
+        flag = !flag;
+        condition_.notify_one();
     }
 }
 
 TEST(Logger, ThreadSafety) {
     deleteLogFile();
-
-    int logCount = 200;
-
     bool arr[200];
     bool allTrue = true;
 
-    for (int i = 0; i < 201; i++) {
+    for (int i = 0; i < 200; i++) {
         arr[i] = false;
     }
 
@@ -93,12 +105,12 @@ TEST(Logger, ThreadSafety) {
         std::thread second(writeThreadSecond);
         first.join();
         second.join();
-        
     } else {
         GTEST_FAIL() << "Log file not found: " + log()->LogFilePath.toStdString();
     }
 
     QString lines;
+
     QRegExp rx;
     rx.setPattern("log (.*)");
     while (!file.atEnd()) {
@@ -106,7 +118,8 @@ TEST(Logger, ThreadSafety) {
         if (lines.contains("Thread")) {
             if (rx.indexIn(lines) != -1) {
                 int idx = rx.cap(1).toInt();
-                // QString s = QString::number(idx); for printing the values with log
+                //  QString s = QString::number(idx);// for printing the values with log
+                //  log()->Info(s);
                 arr[idx] = true;
             }
         }
