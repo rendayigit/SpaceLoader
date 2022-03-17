@@ -20,13 +20,17 @@ find_package(Qt5Widgets REQUIRED)
 add_executable(tests
                 ../lib/Logger/logger.cpp
                 Logger/test_logger.cpp
-                # ../lib/YAML/yaml.cpp
+                ../lib/YAML/yaml.cpp
                 #     YAML/test_yaml.cpp
                 ../lib/TCP/client/tcpClient.cpp
                 ../lib/TCP/server/tcpServer.cpp
                 TCP/testClient.cpp
                 TCP/testServer.cpp
                 TCP/test_tcp.cpp
+                ../Server/server.cpp
+                ../Client_console/client.cpp
+                ../Operations/Operations.cpp
+                Commands/test_commands.cpp
 )   
 
 target_compile_definitions(tests PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
@@ -39,6 +43,7 @@ target_link_libraries(tests
         yaml-cpp
         Qt5::Core
         Qt5::Quick
+        stdc++fs
         )
 
 if (UNIX AND NOT APPLE) # FOR LINUX ONLY

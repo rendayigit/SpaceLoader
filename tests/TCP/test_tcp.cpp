@@ -11,30 +11,31 @@
 
 using namespace std;
 
-Server *server;
-Client *client1, *client2, *client3, *client4;
+TestServer *server;
+TestClient *client1, *client2, *client3, *client4;
 QString testString1 = "TEST STRING 1";
 QString testString2 = "TEST STRING 2";
 bool allClientsInitiated = false;
 
 TEST(tcp_test, startServer) {
-    server = new Server();
+    server = new TestServer();
     qint32 serverPort = 1234;
     server->startServer(serverPort);
+    
 }
 
 TEST(tcp_test, startClients) {
     QFuture<void> future = QtConcurrent::run([=]() {
-        client1 = new Client();
+        client1 = new TestClient();
         client1->attemptConnection("127.0.0.1", 1234);
 
-        client2 = new Client();
+        client2 = new TestClient();
         client2->attemptConnection("127.0.0.1", 1234);
 
-        client3 = new Client();
+        client3 = new TestClient();
         client3->attemptConnection("127.0.0.1", 1234);
 
-        client4 = new Client();
+        client4 = new TestClient();
         client4->attemptConnection("127.0.0.1", 1234);
 
         allClientsInitiated = true;
@@ -63,10 +64,13 @@ TEST(tcp_test, ReceiveFromClients) {
 
     EXPECT_TRUE(QString::compare(client1->receivedString, testString2))
         << "String received from client1 and string transmitted from the server are not identical!";
+        qDebug()<<client1->receivedString<<": received";
     EXPECT_TRUE(QString::compare(client2->receivedString, testString2))
         << "String received from client2 and string transmitted from the server are not identical!";
     EXPECT_TRUE(QString::compare(client3->receivedString, testString2))
         << "String received from client3 and string transmitted from the server are not identical!";
     EXPECT_TRUE(QString::compare(client4->receivedString, testString2))
         << "String received from client4 and string transmitted from the server are not identical!";
+
+    
 }
