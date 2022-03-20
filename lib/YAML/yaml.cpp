@@ -1,5 +1,4 @@
 #include "yaml.h"
-#include <iostream>
 
 using std::string;
 using std::stringstream;
@@ -7,7 +6,6 @@ using std::vector;
 using YAML::const_iterator;
 using YAML::LoadFile;
 using YAML::Node;
-using std::cout;
 
 Node Yaml::getNodeByKey(const string &yamlFilePath, const string &key) {
     Node rootNode = LoadFile(yamlFilePath);
@@ -75,14 +73,18 @@ vector<string> Yaml::getValueList(const std::string &yamlFilePath, const std::st
 vector<Node> Yaml::searchByNodePath(const Node node, vector<string> pathOrder) {
     if (pathOrder.size() == 1) {
         vector<Node> temp = Yaml::searchNodeByKey(node, pathOrder.at(0));
+
+        // TODO turn this block into a function. Call it getNodeList(). Also create getNode.
+        // use here as: getNodeList(pathOrder.at(0));
         for (const_iterator it = temp.at(0).begin(); it != temp.at(0).end(); ++it) {
-             if (it->first.as<string>() == pathOrder.at(0)) {
-                 vector<Node> resultNodes;
-                 resultNodes.push_back(it->second);
-                 return resultNodes;
-             } 
+            if (it->first.as<string>() == pathOrder.at(0)) {
+                vector<Node> resultNodes;
+                resultNodes.push_back(it->second);
+                return resultNodes;
+            }
         }
     }
+
     vector<Node> resultNode = Yaml::searchNodeByKey(node, pathOrder.at(0));
     pathOrder.erase(pathOrder.begin());
     return Yaml::searchByNodePath(resultNode.at(0), pathOrder);
