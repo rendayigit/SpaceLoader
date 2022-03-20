@@ -265,8 +265,8 @@ modernize-use-auto,
 modernize-use-bool-literals,
 modernize-use-default-member-init,
 modernize-use-emplace,
-modernize-use-equals-default,
-modernize-use-equals-delete,
+modernize-use-equals-default, # keep this
+modernize-use-equals-delete, # keep this
 modernize-use-nodiscard,
 modernize-use-noexcept,
 modernize-use-nullptr,
@@ -287,7 +287,7 @@ objc-super-self,
 openmp-exception-escape,
 openmp-use-default-none,
 performance-faster-string-find,
-performance-for-range-copy,
+performance-for-range-copy, # keep this
 performance-implicit-conversion-in-loop,
 performance-inefficient-algorithm,
 performance-inefficient-string-concatenation,
@@ -341,6 +341,9 @@ readability-uniqueptr-delete-release,
 readability-uppercase-literal-suffix,
 #readability-use-anyofallof, # maybe keep
 zircon-temporary-objects,
+// TODO unnecessary includes
+// TODO unnecessary usings
+// TODO no single line ifs and fors
 ##########################################################################
 --suggest-missing-includes,
 --header-insertion=iwyu,
