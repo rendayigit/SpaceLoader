@@ -30,7 +30,7 @@ jobs:
 #     use these env variables in cmakelists
     - name: Set Environment Variables
       run:  |
-        setx PATH "%PATH%;S:\gtest\lib"  
+        setx PATH "%PATH%;D:\gtest\lib"  
         setx /M path "%path%;D:\gtest\include" 
           
     - name: Checkout
