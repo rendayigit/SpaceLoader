@@ -23,6 +23,8 @@ jobs:
        mkdir build
        cd build
        cmake .. -G "Visual Studio 14 2015" -DCMAKE_GENERATOR_PLATFORM=x64
+       make 
+       make install
        cd ..
 
         
