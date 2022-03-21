@@ -97,4 +97,9 @@ TEST(yaml_test, ByRealResult6){
         Yaml::getNodeByTag<vector<YAML::Node>>("../../Setup/Paths.yaml", "config_Yaml");
     vector<string> resultText = Yaml::getText<vector<string>>(resultNode.at(0), "config_Yaml");
     ASSERT_EQ(resultText.at(0), "Setup/Config.yaml");
+}TEST(yaml_test, ByRealResult6){
+    vector<YAML::Node> resultNode =
+        Yaml::getNodeByTag<vector<YAML::Node>>("../../Setup/Paths.yaml", "config_Yaml");
+    vector<string> resultText = Yaml::getText<vector<string>>(resultNode.at(0), "config_Yaml");
+    ASSERT_EQ(resultText.at(0), "Setup/Config.yaml");
 }
