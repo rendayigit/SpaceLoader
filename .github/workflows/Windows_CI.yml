@@ -31,7 +31,7 @@ jobs:
     - name: Set Environment Variables
       run:  |
         setx /M path "D:\gtest\lib"
-        setx /M path2 "D:\gtest\include"
+        # setx /M path2 "D:\gtest\include"
           
     - name: Checkout
       uses: actions/checkout@v2
