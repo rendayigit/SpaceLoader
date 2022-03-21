@@ -20,11 +20,9 @@ jobs:
        cd /tmp/
        git clone "https://github.com/jbeder/yaml-cpp.git"
        cd yaml-cpp
-       mkdir build
+       cmake -S . -B build/ -G "Visual Studio 15 2017"
        cd build
-       cmake .. -G "Visual Studio 14 2015" -DCMAKE_GENERATOR_PLATFORM=x64
-       make 
-       make install
+       make
        cd ..
 
         
