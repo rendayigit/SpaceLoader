@@ -15,9 +15,16 @@ jobs:
     - name: Install gtest
       uses: MarkusJx/googletest-installer@v1.1
       
-#    - name: Install yaml-cpp 
-#      run:  |
-#        sudo apt install libyaml-cpp-dev
+    - name: Install yaml-cpp 
+      run:  |
+       cd /tmp/
+       git clone "https://github.com/jbeder/yaml-cpp.git"
+       cd yaml-cpp
+       mkdir build
+       cd build
+       cmake .. -G "Visual Studio 14 2015" -DCMAKE_GENERATOR_PLATFORM=x64
+       cd ..
+
         
 #     use these env variables in cmakelists
     - name: Set Environment Variables
