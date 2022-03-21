@@ -97,8 +97,15 @@ class Yaml {
      * @return   std::vector<std::string>
      */
     static std::vector<std::string> getValueList(const std::string &yamlFilePath,
-                                                const std::string &key);
+                                                 const std::string &key);
 
+    /**
+     * @brief Get the seconds of a given node.
+     * 
+     * @param node                   The yaml node to retrieve the values from.
+     * @param key                    The yaml node key the desired node must have.
+     * @return std::vector<YAML::Node> 
+     */
     static std::vector<YAML::Node> getSeconds(const YAML::Node &node, const std::string &key);
 
    private:

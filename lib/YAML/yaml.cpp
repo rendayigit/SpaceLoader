@@ -72,12 +72,14 @@ vector<string> Yaml::getValueList(const std::string &yamlFilePath, const std::st
 
 vector<Node> Yaml::getSeconds(const Node &node, const string &key) {
     vector<Node> resultNodes;
+    
     for (const_iterator it = node.begin(); it != node.end(); ++it) {
         if (it->first.as<string>() == key) {
             resultNodes.push_back(it->second);
-            break;
+            break; // TODO ?
         }
     }
+    
     return resultNodes;
 }
 
