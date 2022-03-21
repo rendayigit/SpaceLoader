@@ -8,6 +8,7 @@ using std::count;
 using std::string;
 using std::vector;
 using YAML::Node;
+using YAML::const_iterator;
 
 char const* testYamlFile = "../../tests/YAML/Test.yaml";
 
@@ -26,6 +27,8 @@ TEST(YamlTest, getNodeByKeyAndValue) {
     Node node = Yaml::getNodeByKey(testYamlFile, "aKey", "123456");
     vector<string> resultTexts = Yaml::getValueList(node, "name");
 
+    EXPECT_EQ("Leve4SiblingName", node["name"].as<string>());
+
     EXPECT_TRUE(count(resultTexts.begin(), resultTexts.end(), "Level5Item1Name"));
     EXPECT_TRUE(count(resultTexts.begin(), resultTexts.end(), "Leve4SiblingName"));
     EXPECT_TRUE(count(resultTexts.begin(), resultTexts.end(), "Level5Item2Name"));
@@ -34,15 +37,15 @@ TEST(YamlTest, getNodeByKeyAndValue) {
 
 TEST(YamlTest, getNodeListByKey) {
     vector<Node> nodes = Yaml::getNodeListByKey(testYamlFile, "aKey");
-    bool isEqual = false;
+    bool valueCheck = false;
 
     for (const auto& i : nodes) {
         string value = Yaml::getValue(i, "aKey");
         if (value == "1234" or value == "12345" or value == "123456") {
-            isEqual = true;
+            valueCheck = true;
         }
     }
-    EXPECT_TRUE(isEqual);
+    EXPECT_TRUE(valueCheck);
 
     vector<string> values = {"1234", "12345", "123456"};
     EXPECT_TRUE(count(values.begin(), values.end(), nodes.at(0)["aKey"].as<string>()));
@@ -52,15 +55,15 @@ TEST(YamlTest, getNodeListByKey) {
 
 TEST(YamlTest, getNodeListByKeyAndValue) {
     vector<Node> nodes = Yaml::getNodeListByKey(testYamlFile, "key", "value");
-    bool isEqual = true;
+    bool valueCheck = true;
     for (const auto& i : nodes) {
         string value = Yaml::getValue(i, "key");
         if (value != "value") {
-            isEqual = false;
+            valueCheck = false;
         }
     }
 
-    EXPECT_TRUE(isEqual);
+    EXPECT_TRUE(valueCheck);
     EXPECT_EQ(nodes.at(0)["key"].as<string>(), "value");
     EXPECT_EQ(nodes.at(1)["key"].as<string>(), "value");
 
@@ -94,15 +97,11 @@ TEST(YamlTest, getValueList) {
     EXPECT_TRUE(count(values.begin(), values.end(), "Level4Item2"));
     EXPECT_TRUE(count(values.begin(), values.end(), "Level4Item3"));
 
-    // TODO getValue(node,..) vs node[".."].as<..>()
-
     EXPECT_EQ(values.size(), 3);
 }
 
 TEST(YamlTest, getValueListViaYamlFile) {
     vector<string> values = Yaml::getValueList(testYamlFile, "aKey");
-
-    // TODO getValue(node,..) vs node[".."].as<..>()
 
     EXPECT_TRUE(count(values.begin(), values.end(), "1234"));
     EXPECT_TRUE(count(values.begin(), values.end(), "12345"));

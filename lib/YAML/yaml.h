@@ -99,7 +99,7 @@ class Yaml {
     static std::vector<std::string> getValueList(const std::string &yamlFilePath,
                                                 const std::string &key);
 
-    static std::vector<YAML::Node> getNodeSecondsListByKey(const YAML::Node &node, const std::string &key);
+    static std::vector<YAML::Node> getSeconds(const YAML::Node &node, const std::string &key);
 
    private:
     Yaml() = default;

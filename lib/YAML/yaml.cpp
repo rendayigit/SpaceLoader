@@ -70,7 +70,7 @@ vector<string> Yaml::getValueList(const std::string &yamlFilePath, const std::st
     return searchValue(rootNode, key);
 }
 
-vector<Node> Yaml::getNodeSecondsListByKey(const Node &node, const string &key) {
+vector<Node> Yaml::getSeconds(const Node &node, const string &key) {
     vector<Node> resultNodes;
     for (const_iterator it = node.begin(); it != node.end(); ++it) {
         if (it->first.as<string>() == key) {
@@ -84,7 +84,7 @@ vector<Node> Yaml::getNodeSecondsListByKey(const Node &node, const string &key) 
 vector<Node> Yaml::searchByNodePath(const Node node, vector<string> pathOrder) {
     if (pathOrder.size() == 1) {
         vector<Node> temp = Yaml::searchNodeByKey(node, pathOrder.at(0));
-        return Yaml::getNodeSecondsListByKey(temp.at(0), pathOrder.at(0));
+        return Yaml::getSeconds(temp.at(0), pathOrder.at(0));
     }
 
     vector<Node> resultNode = Yaml::searchNodeByKey(node, pathOrder.at(0));
