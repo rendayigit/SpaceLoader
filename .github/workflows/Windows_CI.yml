@@ -13,8 +13,8 @@ jobs:
     runs-on: windows-latest
       
     steps:
-    # - name: Install gtest
-    #   uses: MarkusJx/googletest-installer@v1.1
+    - name: Install gtest
+      uses: MarkusJx/googletest-installer@v1.1
       
     - name: Install yaml-cpp 
       run:  |
