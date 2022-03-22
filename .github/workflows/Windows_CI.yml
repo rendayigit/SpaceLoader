@@ -48,11 +48,11 @@ jobs:
 
       - name: Build All
         run: |
-          cmake -E make_directory  ${GITHUB_WORKSPACE} /build
-          cd  ${GITHUB_WORKSPACE}/build
+          cmake -E make_directory  ${GITHUB_WORKSPACE}/build
+          cd  ${GITHUB_WORKSPACE}\build
           cmake  ..
           make
       - name: Run Unit Tests
         run: |
-          cd  ${GITHUB_WORKSPACE} /build/tests/
+          cd  ${GITHUB_WORKSPACE}/build/tests/
           ./tests.exe
