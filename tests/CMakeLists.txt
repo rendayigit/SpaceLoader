@@ -17,7 +17,7 @@ find_package(QT NAMES Qt5 COMPONENTS Core Quick Qt5XmlPatterns REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED) # if error run: sudo apt-get install libgl1-mesa-dev
 find_package(Qt5Widgets REQUIRED)
 
-if (DEFINED ENV{CI})
+if (DEFINED ENV{GITHUB_ACTIONS})
     link_directories("D:/gtest/lib")
     include_directories("D:/gtest/include")
 
