@@ -78,8 +78,8 @@ TEST(YamlTest, getValue) {
     Node node = Yaml::getNodeByPath(testYamlFile, "NestedItems.Level2.Level3.Leve4Sibling");
     string value = Yaml::getValue(node, "name");
 
-    EXPECT_EQ(node["name"].as<string>(), "Leve4SiblingName");
     EXPECT_EQ(value, "Leve4SiblingName");
+    EXPECT_EQ(node["name"].as<string>(), "Leve4SiblingName");
 }
 
 TEST(YamlTest, getValueViaYamlFile) {
