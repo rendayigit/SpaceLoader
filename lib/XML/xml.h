@@ -1,7 +1,6 @@
 #ifndef XML_H
 #define XML_H
 
-
 #include <QtXml/QDomDocument>
 #include <QtXml/QtXml>
 
@@ -32,8 +31,7 @@ class Xml {
      * @param NodeName Node tag name
      * @return List of texts found in the specified node(s)
      */
-    static QList<QString> getNodeTextsByNodeName(const QString &xmlFile,
-                                                 const QString &NodeName);
+    static QList<QString> getNodeTextsByNodeName(const QString &xmlFile, const QString &NodeName);
 
     /**
      * @brief Returns a list of texts found in the given node
@@ -43,8 +41,7 @@ class Xml {
      * Do not specify the root node of the xml file
      * @return List of texts found in the specified node(s)
      */
-    static QList<QString> getNodeTextsByNodePath(const QString &xmlFile,
-                                                 const QString &NodePath);
+    static QList<QString> getNodeTextsByNodePath(const QString &xmlFile, const QString &NodePath);
 
     /**
      * @brief Returns a list of texts found in the given node
@@ -54,9 +51,9 @@ class Xml {
      * @param AttributeValue Attribute Value
      * @return List of texts found in the specified node(s)
      */
-    static QList<QDomElement> getNodeTextsByNodeAttribute(
-        const QString &xmlFile, const QString &AttributeName,
-        const QString &AttributeValue);
+    static QList<QDomElement> getNodeTextsByNodeAttribute(const QString &xmlFile,
+                                                          const QString &AttributeName,
+                                                          const QString &AttributeValue);
 
    private:
     Xml() = default;
@@ -66,4 +63,4 @@ class Xml {
     static QList<QDomNode> GetChildNodes(const QDomNode &parentNode);
 };
 
-#endif
+#endif  // XML_H
