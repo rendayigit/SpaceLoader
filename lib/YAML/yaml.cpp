@@ -44,6 +44,10 @@ string Yaml::getValue(const Node &node, const string &key) {
         return node.as<string>();
     }
 
+    if(node[key]) {
+        return node[key].as<string>();
+    }
+
     return searchValue(node, key).at(0);
 }
 
@@ -76,7 +80,6 @@ vector<Node> Yaml::getSeconds(const Node &node, const string &key) {
     for (const_iterator it = node.begin(); it != node.end(); ++it) {
         if (it->first.as<string>() == key) {
             resultNodes.push_back(it->second);
-            break; // TODO ?
         }
     }
     
