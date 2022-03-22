@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
+#include <yaml-cpp/yaml.h>
 
 #include "../../lib/YAML/yaml.h"
 #include "../Test_common.h"
-#include "yaml-cpp/yaml.h"
 
 using std::count;
 using std::string;
