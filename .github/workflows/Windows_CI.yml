@@ -48,8 +48,8 @@ jobs:
 
       - name: Build All
         run: |
-          cmake -E make_directory ${{ github.workspace }}/build
-          cd ${{ github.workspace }}/build
+          cmake -E make_directory ${{ github.workspace }}\build
+          cd ${{ github.workspace }}\build
           cmake  ..
           make
       - name: Run Unit Tests
