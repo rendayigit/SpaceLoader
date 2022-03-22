@@ -76,18 +76,13 @@ TEST(YamlTest, getNodeByPath) {
 
 TEST(YamlTest, getValue) {
     Node node = Yaml::getNodeByPath(testYamlFile, "NestedItems.Level2.Level3.Leve4Sibling");
-    
-    EXPECT_EQ(node["name"].as<string>(), "Leve4SiblingName");
+    string value = Yaml::getValue(node, "name");
 
-    vector<string> values = Yaml::getValueList(node, "name");
-
-    EXPECT_TRUE(count(values.begin(), values.end(), "Leve4SiblingName"));
-    EXPECT_TRUE(count(values.begin(), values.end(), "Level5Item1Name"));
-    EXPECT_TRUE(count(values.begin(), values.end(), "Level5Item2Name"));
-    EXPECT_TRUE(count(values.begin(), values.end(), "Level5Item3Name"));
+    EXPECT_EQ(value, "Leve4SiblingName");
 }
 
 TEST(YamlTest, getValueViaYamlFile) {
+    Node node = Yaml::getNodeByPath(testYamlFile, "NestedItems.Level2.Level3.Leve4Sibling");
     string value = Yaml::getValue(testYamlFile, "uniqueKey");
     EXPECT_EQ(value, "unique value");
 }
