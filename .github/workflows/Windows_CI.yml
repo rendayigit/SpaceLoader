@@ -1,61 +1,58 @@
 name: CI
 
-on:
-  push
+on: push
 
 defaults:
   run:
     shell: bash
 
 jobs:
-
   CI:
     runs-on: windows-latest
-      
+
     steps:
-    - name: Install gtest
-      uses: MarkusJx/googletest-installer@v1.1
-      
-    - name: Install yaml-cpp 
-      run:  |
-       cd /tmp/
-       git clone "https://github.com/jbeder/yaml-cpp.git"
-       cd yaml-cpp
-       cmake -S . -B build/ -G "Visual Studio 17 2022"
-       cd build
-       cmake --build .
-       cd ..
+      - name: Install gtest
+        uses: MarkusJx/googletest-installer@v1.1
 
-        
-#     use these env variables in cmakelists
-    - name: Set Environment Variables
-      run:  |
-        script_env: CI
-          
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Install yaml-cpp
+        run: |
+          cd /tmp/
+          git clone "https://github.com/jbeder/yaml-cpp.git"
+          cd yaml-cpp
+          cmake -S . -B build/ -G "Visual Studio 17 2022"
+          cd build
+          cmake --build .
+          cd ..
 
-    - name: Cache Qt
-      id: cache-qt
-      uses: actions/cache@v2
-      with:
-        path: ${{ runner.workspace }}/Qt
-        key: ${{ runner.os }}-QtCache
+      #     use these env variables in cmakelists
+      - name: Set Environment Variables
+        run: |
+          script_env: CI
 
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2
-      with:
-        cached: ${{ steps.cache-qt.outputs.cache-hit }}
-        host: 'windows'
-        target: 'desktop'
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Build All
-      run: |
-        cmake -E make_directory ${{ github.workspace }}/build
-        cd ${{ github.workspace }}/build
-        cmake  ..
-        make
-    - name: Run Unit Tests
-      run: |       
-        cd ${{ github.workspace }}/build/tests/
-        ./tests.exe
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.workspace }}/Qt
+          key: ${{ runner.os }}-QtCache
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          host: "windows"
+          target: "desktop"
+
+      - name: Build All
+        run: |
+          cmake -E make_directory ${{ github.workspace }}/build
+          cd ${{ github.workspace }}/build
+          cmake  ..
+          make
+      - name: Run Unit Tests
+        run: |
+          cd ${{ github.workspace }}/build/tests/
+          ./tests.exe
