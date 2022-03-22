@@ -1,4 +1,4 @@
-name: CI
+name: WINDOWS_CI
 
 on: push
 
@@ -25,9 +25,9 @@ jobs:
           cd ..
 
       #     use these env variables in cmakelists
-      - name: Set Environment Variables
-        run: |
-          script_env: CI
+      # - name: Set Environment Variables
+      #   run: |
+      #     script_env: CI
 
       - name: Checkout
         uses: actions/checkout@v2
