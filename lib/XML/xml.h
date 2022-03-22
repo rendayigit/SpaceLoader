@@ -1,4 +1,6 @@
-#pragma once
+#ifndef XML_H
+#define XML_H
+
 
 #include <QtXml/QDomDocument>
 #include <QtXml/QtXml>
@@ -63,3 +65,5 @@ class Xml {
 
     static QList<QDomNode> GetChildNodes(const QDomNode &parentNode);
 };
+
+#endif

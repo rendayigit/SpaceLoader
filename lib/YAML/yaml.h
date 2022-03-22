@@ -1,4 +1,5 @@
-#pragma once
+#ifndef YAML_H
+#define YAML_H
 
 #include <yaml-cpp/yaml.h>
 
@@ -41,3 +42,5 @@ class Yaml {
 
     static std::vector<std::string> splitPath(const std::string &path, char delimiter);
 };
+
+#endif
