@@ -1,14 +1,15 @@
-#pragma once
+#ifndef LOGGER_H
+#define LOGGER_H
 
 #include <stdlib.h>
 
+#include <QtConcurrent/QtConcurrent>
 #include <QtCore/QDateTime>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QSharedMemory>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QString>
-#include <QtConcurrent/QtConcurrent>
 
 #ifdef log
 #undef log
@@ -49,3 +50,5 @@ class Logger {
     QByteArray buffer;
     bool errorLog;
 };
+
+#endif  // YAML_H
