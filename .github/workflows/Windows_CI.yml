@@ -27,6 +27,7 @@ jobs:
           cd ..
           cd ..
           cp -R yaml-cpp/include/yaml-cpp D:/yaml-cpp/include
+          cd yaml-cpp
           ls
           cp yaml-cpp/build/libyaml-cppd.a D:/yaml-cpp/lib
 
