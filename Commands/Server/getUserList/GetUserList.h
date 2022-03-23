@@ -4,8 +4,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QtPlugin>
 
-#include "PluginInterface.h"
-#include "common/serverCommon.h"
+#include "../../PluginInterface.h"
+#include "../common/serverCommon.h"
 
 class GetUserList : public QObject, public PluginInterface {
     Q_OBJECT
