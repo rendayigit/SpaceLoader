@@ -19,7 +19,7 @@ find_package(Qt5Widgets REQUIRED)
 
 if (DEFINED ENV{GITHUB_ACTIONS})
     link_directories("D:/gtest/lib")
-#     link_directories("D:/yaml-cpp/lib")
+    link_directories("D:/yaml-cpp/lib")
     include_directories("D:/gtest/include")
     include_directories("D:/yaml-cpp/include")
 
