@@ -20,6 +20,7 @@ jobs:
           cd yaml-cpp
           cmake -S . -B build/ -G "Visual Studio 17 2022"
           cmake --build . --config Release
+          cd ..
           mkdir D:/yaml-cpp
           mkdir D:/yaml-cpp/lib
           mkdir D:/yaml-cpp/include
