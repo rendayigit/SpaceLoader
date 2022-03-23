@@ -21,12 +21,11 @@ jobs:
           cmake -S . -B build/ -G "Visual Studio 17 2022"
           cd build
           cmake --build . --config Release
-          cd ..
-          cd ..
           mkdir D:/yaml-cpp
           mkdir D:/yaml-cpp/lib
           mkdir D:/yaml-cpp/include
           cp -R yaml-cpp/include/yaml-cpp D:/yaml-cpp/include
+          ls
           cp yaml-cpp/build/libyaml-cppd.a D:/yaml-cpp/lib
 
       - name: Checkout
