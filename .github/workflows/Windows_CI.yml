@@ -24,6 +24,8 @@ jobs:
           mkdir D:/yaml-cpp
           mkdir D:/yaml-cpp/lib
           mkdir D:/yaml-cpp/include
+          cd ..
+          cd ..
           cp -R yaml-cpp/include/yaml-cpp D:/yaml-cpp/include
           ls
           cp yaml-cpp/build/libyaml-cppd.a D:/yaml-cpp/lib
