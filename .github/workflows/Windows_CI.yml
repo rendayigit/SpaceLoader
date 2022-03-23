@@ -27,6 +27,9 @@ jobs:
           mkdir D:/yaml-cpp/lib
           mkdir D:/yaml-cpp/include
           cp -R yaml-cpp/include/yaml-cpp D:/yaml-cpp/include
+          cd yaml-cpp/build/lib/Release
+          ls
+          cd ../../../../
           cp yaml-cpp/build/lib/Release/yaml-cpp.lib D:/yaml-cpp/lib
           # cd yaml-cpp
           # cmake -S . -B build/ -G "Visual Studio 17 2022"
