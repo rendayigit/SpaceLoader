@@ -4,7 +4,7 @@ on: push
 
 defaults:
   run:
-    shell: cmd
+    shell: bash
 
 jobs:
   CI:
@@ -54,4 +54,4 @@ jobs:
           cd  ${GITHUB_WORKSPACE}
           cd build
           cd tests
-          .\tests.exe
+          tests.exe
