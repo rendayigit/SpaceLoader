@@ -16,18 +16,13 @@ jobs:
 
       - name: Install yaml-cpp
         run: |
-          cd /tmp/
+          cd D:/
           git clone "https://github.com/jbeder/yaml-cpp.git"
           cd yaml-cpp
           cmake -S . -B build/ -G "Visual Studio 17 2022"
           cd build
           cmake --build .
           cd ..
-
-      #     use these env variables in cmakelists
-      # - name: Set Environment Variables
-      #   run: |
-      #     script_env: CI
 
       - name: Checkout
         uses: actions/checkout@v2
