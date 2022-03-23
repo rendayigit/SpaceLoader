@@ -28,15 +28,15 @@ if (DEFINED ENV{GITHUB_ACTIONS})
 endif ()
 
 add_executable(tests
-                ../lib/Logger/logger.cpp
-                Logger/test_logger.cpp
+                # ../lib/Logger/logger.cpp
+                # Logger/test_logger.cpp
                 YAML/test_yaml.cpp
                 ../lib/YAML/yaml.cpp
-                ../lib/TCP/client/tcpClient.cpp
-                ../lib/TCP/server/tcpServer.cpp
-                TCP/testClient.cpp
-                TCP/testServer.cpp
-                TCP/test_tcp.cpp
+                # ../lib/TCP/client/tcpClient.cpp
+                # ../lib/TCP/server/tcpServer.cpp
+                # TCP/testClient.cpp
+                # TCP/testServer.cpp
+                # TCP/test_tcp.cpp
 )   
 
 target_compile_definitions(tests PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)

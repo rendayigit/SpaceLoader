@@ -11,8 +11,8 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # - name: Install gtest
-      #   uses: MarkusJx/googletest-installer@v1.1
+      - name: Install gtest
+        uses: MarkusJx/googletest-installer@v1.1
 
       - name: Install yaml-cpp
         run: |
@@ -29,32 +29,32 @@ jobs:
           cp -R yaml-cpp/include/yaml-cpp D:/yaml-cpp/include
           cp yaml-cpp/build/Release/yaml-cpp.lib D:/yaml-cpp/lib
 
-      # - name: Checkout
-      #   uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      # - name: Cache Qt
-      #   id: cache-qt
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ${{ runner.workspace }}/Qt
-      #     key: ${{ runner.os }}-QtCache
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.workspace }}/Qt
+          key: ${{ runner.os }}-QtCache
 
-      # - name: Install Qt
-      #   uses: jurplel/install-qt-action@v2
-      #   with:
-      #     cached: ${{ steps.cache-qt.outputs.cache-hit }}
-      #     host: "windows"
-      #     target: "desktop"
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          host: "windows"
+          target: "desktop"
 
-      # - name: Build All
-      #   run: |
-      #     cmake -S . -B build/
-      #     cd build
-      #     cmake --build .
-      #     cd ..
-      # - name: Run Unit Tests
-      #   run: |
-      #     cd  ${GITHUB_WORKSPACE}
-      #     cd build
-      #     cd tests
-      #     ./tests.exe
+      - name: Build All
+        run: |
+          cmake -S . -B build/
+          cd build
+          cmake --build .
+          cd ..
+      - name: Run Unit Tests
+        run: |
+          cd  ${GITHUB_WORKSPACE}
+          cd build
+          cd tests
+          ./tests.exe
