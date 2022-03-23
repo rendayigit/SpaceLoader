@@ -10,7 +10,8 @@
 #include <QtCore/QStandardPaths>
 #include <QtCore/QString>
 #include <filesystem>
-
+#include <mutex>
+std::mutex mutex;
 using std::filesystem::current_path;
 
 #ifdef log

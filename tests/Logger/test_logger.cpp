@@ -68,23 +68,16 @@ TEST(Logger, Benchmark) {
 }
 
 void writeThreadFirst() {
-    unique_lock<mutex> lock(mutex_);
+    
     for (int i = 0; i < 100; i++) {
-        condition_.wait(lock, [] { return flag ? true : false; });
-        log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
-        flag = !flag;
-        condition_.notify_one();
+         log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
     }
 }
 
 void writeThreadSecond() {
-    unique_lock<mutex> lock(mutex_);
+    
     for (int i = 100; i < 200; i++) {
-        condition_.wait(lock, [] { return !flag ? true : false; });
-        
-        log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
-        flag = !flag;
-        condition_.notify_one();
+       log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
     }
 }
 

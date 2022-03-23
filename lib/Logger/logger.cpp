@@ -126,6 +126,7 @@ void Logger::updateLogFilePath() {
 }
 
 void Logger::writer(QString data) {
+    std::unique_lock<std::mutex> lock(mutex);
     if (Logger::enableLogging) {
         QSharedMemory semaphore("loggingInProgress");
 
