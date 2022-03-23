@@ -1,4 +1,3 @@
-
 #include <QtConcurrent/QtConcurrent>
 #include <QtCore/QObject>
 
@@ -71,6 +70,4 @@ TEST(tcp_test, ReceiveFromClients) {
         << "String received from client3 and string transmitted from the server are not identical!";
     EXPECT_TRUE(QString::compare(client4->receivedString, testString2))
         << "String received from client4 and string transmitted from the server are not identical!";
-
-    
 }
