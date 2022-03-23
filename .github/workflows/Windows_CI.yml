@@ -16,7 +16,6 @@ jobs:
 
       - name: Install yaml-cpp
         run: |
-          cd
           git clone "https://github.com/jbeder/yaml-cpp.git"
           cd yaml-cpp
           cmake -S . -B build/ -G "Visual Studio 17 2022"
@@ -30,11 +29,6 @@ jobs:
           cp -R yaml-cpp/include/yaml-cpp D:/yaml-cpp/include
           cd
           cp yaml-cpp/build/lib/Release/yaml-cpp.lib D:/yaml-cpp/lib
-          # cd yaml-cpp
-          # cmake -S . -B build/ -G "Visual Studio 17 2022"
-          # cd build
-          # cmake --build .
-          # cd ..
 
       - name: Checkout
         uses: actions/checkout@v2
