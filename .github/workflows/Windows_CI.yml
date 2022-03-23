@@ -28,7 +28,6 @@ jobs:
           cd ..
           cp -R yaml-cpp/include/yaml-cpp D:/yaml-cpp/include
           cp yaml-cpp/build/Release/yaml-cpp.lib D:/yaml-cpp/lib
-          cp yaml-cpp/build/Release/yaml-cppd.lib D:/yaml-cpp/lib
 
       - name: Checkout
         uses: actions/checkout@v2
