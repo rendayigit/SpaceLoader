@@ -1,5 +1,6 @@
 #include "logger.h"
-
+#include <mutex>
+std::mutex mutexLogger;
 Logger *Logger::m_instance = Logger::getInstance();
 
 void exit() { log()->Flush(); }
@@ -126,7 +127,7 @@ void Logger::updateLogFilePath() {
 }
 
 void Logger::writer(QString data) {
-    std::unique_lock<std::mutex> lock(mutex);
+    std::unique_lock<std::mutex> lock(mutexLogger);
     if (Logger::enableLogging) {
         QSharedMemory semaphore("loggingInProgress");
 

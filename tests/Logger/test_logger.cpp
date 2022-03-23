@@ -10,13 +10,10 @@
 #include <cmath>
 #include <condition_variable>
 #include <iostream>
-#include <mutex>
+
 #include <numeric>
 #include <string>
 #include <thread>
-std::condition_variable condition_;
-std::mutex mutex_;
-bool flag = false;
 
 #include "../../lib/Logger/logger.h"
 #include "../Test_common.h"
