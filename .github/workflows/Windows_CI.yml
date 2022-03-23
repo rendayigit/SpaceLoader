@@ -54,4 +54,4 @@ jobs:
           cd  ${GITHUB_WORKSPACE}
           cd build
           cd tests
-          ./tests.exe
+          .\tests.exe
