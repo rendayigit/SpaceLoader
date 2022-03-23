@@ -17,6 +17,7 @@ jobs:
       - name: Install yaml-cpp
         run: |
           git clone "https://github.com/jbeder/yaml-cpp.git"
+          cd yaml-cpp
           cmake --build . --config Release
           mkdir D:/yaml-cpp
           mkdir D:/yaml-cpp/lib
