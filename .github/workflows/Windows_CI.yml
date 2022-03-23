@@ -27,7 +27,7 @@ jobs:
           mkdir D:/yaml-cpp/lib
           mkdir D:/yaml-cpp/include
           cp -R yaml-cpp/include/yaml-cpp D:/yaml-cpp/include
-          cp yaml-cpp/build/yaml-cppd.a D:/yaml-cpp/lib
+          cp yaml-cpp/build/lib/yaml-cppd.a D:/yaml-cpp/lib
 
       - name: Checkout
         uses: actions/checkout@v2
