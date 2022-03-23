@@ -53,6 +53,6 @@ jobs:
         run: |
           cd  ${GITHUB_WORKSPACE}
           cd build
-          cd tests
+          cd Server
           ls
           tests.exe
