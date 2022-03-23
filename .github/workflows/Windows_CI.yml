@@ -4,7 +4,7 @@ on: push
 
 defaults:
   run:
-    shell: cmd
+    shell: bash
 
 jobs:
   CI:
@@ -49,10 +49,13 @@ jobs:
       - name: Build All
         run: |
           cmake -S . -B build/
+          cd build
+          cmake --build .
+          cd ..
       - name: Run Unit Tests
         run: |
           cd  ${GITHUB_WORKSPACE}
           cd build
           cd Server
           ls
-          tests.exe
+          ./tests.exe
