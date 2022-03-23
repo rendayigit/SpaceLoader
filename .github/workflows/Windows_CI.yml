@@ -51,5 +51,7 @@ jobs:
           cmake -S . -B build/
       - name: Run Unit Tests
         run: |
-          cd  ${GITHUB_WORKSPACE}/build/tests/
+          cd  ${GITHUB_WORKSPACE}
+          cd build
+          cd tests
           ./tests.exe
