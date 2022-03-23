@@ -18,7 +18,6 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED) # if error ru
 find_package(Qt5Widgets REQUIRED)
 
 if (DEFINED ENV{GITHUB_ACTIONS})
-    message("BURADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
     link_directories("D:/gtest/lib")
     include_directories("D:/gtest/include")
     link_directories("D:/yaml-cpp/lib")
