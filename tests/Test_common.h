@@ -4,6 +4,7 @@
 
 #include <QtCore/QtCore>
 #include <chrono>
+#include <cmath>
 #include <cstdint>
 #include <iostream>
 
@@ -16,27 +17,27 @@
 
 #define GET_ELAPSED_TIME(timeStart, timeEnd) ((double)timeEnd - (double)timeStart)
 
-#define TEST_BENCHMARK(test_name, test, func)                                       \
-    uint64_t timeStart = GET_TIME();                                                \
-    int i = 0, itr = 1000;                                                          \
-    for (; i < itr; i++) {                                                          \
-        func;                                                                       \
-    }                                                                               \
-    uint64_t timeEnd = GET_TIME();                                                  \
-    double timeResult = GET_ELAPSED_TIME(timeStart, timeEnd);                       \
-    std::string res = "";                                                           \
-    if (timeResult >= 1000000000) {                                                 \
-        res = "Average Time : " + std::to_string(timeResult * (10 ^ -9)) + " sn"; \
-        TEST_COUT(res);                                                             \
-    } else if (timeResult >= 1000000) {                                             \
-        res = "Average Time : " + std::to_string(timeResult * (10 ^ -6)) + " ms"; \
-        TEST_COUT(res);                                                             \
-    } else if (timeResult >= 1000) {                                                \
-        res = "Average Time : " + std::to_string(timeResult * (10 ^ -3)) + " μs"; \
-        TEST_COUT(res);                                                             \
-    } else {                                                                        \
-        res = "Average Time : " + std::to_string(timeResult) + " nsecs";            \
-        TEST_COUT(res);                                                             \
+#define TEST_BENCHMARK(test_name, test, func)                                         \
+    uint64_t timeStart = GET_TIME();                                                  \
+    int i = 0, itr = 1000;                                                            \
+    for (; i < itr; i++) {                                                            \
+        func;                                                                         \
+    }                                                                                 \
+    uint64_t timeEnd = GET_TIME();                                                    \
+    double timeResult = GET_ELAPSED_TIME(timeStart, timeEnd);                         \
+    std::string res = "";                                                             \
+    if (timeResult >= 1000000000) {                                                   \
+        res = "Average Time : " + std::to_string(timeResult * pow(10, -9)) + " secs"; \
+        TEST_COUT(res);                                                               \
+    } else if (timeResult >= 1000000) {                                               \
+        res = "Average Time : " + std::to_string(timeResult * pow(10, -6)) + " ms";   \
+        TEST_COUT(res);                                                               \
+    } else if (timeResult >= 1000) {                                                  \
+        res = "Average Time : " + std::to_string(timeResult * pow(10, -3)) + " μs";   \
+        TEST_COUT(res);                                                               \
+    } else {                                                                          \
+        res = "Average Time : " + std::to_string(timeResult) + " nsecs";              \
+        TEST_COUT(res);                                                               \
     }
 
 #endif  // TESTCOMMON_H
