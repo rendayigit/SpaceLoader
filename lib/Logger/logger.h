@@ -1,21 +1,15 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#include <stdlib.h>
-
-#include <QtConcurrent/QtConcurrent>
-#include <QtCore/QDateTime>
-#include <QtCore/QDebug>
-#include <QtCore/QDir>
-#include <QtCore/QSharedMemory>
-#include <QtCore/QStandardPaths>
-#include <QtCore/QString>
-
 #ifdef log
 #undef log
 #endif
 
-#define log Logger::getInstance
+#define Log Logger::getInstance
+
+#include <QtCore/QString>
+#include <filesystem>
+#include <mutex>
 
 class Logger {
    public:
@@ -43,7 +37,7 @@ class Logger {
     Logger();
     ~Logger();
     bool createLogsDirectory();
-    void writer(QString data);
+    void writer(QString data, QString type, bool error);
     void flusher();
 
     static Logger *m_instance;
@@ -51,4 +45,4 @@ class Logger {
     bool errorLog;
 };
 
-#endif  // YAML_H
+#endif  // LOGGER_H

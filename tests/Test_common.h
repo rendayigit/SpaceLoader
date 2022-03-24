@@ -4,7 +4,6 @@
 
 #include <QtCore/QtCore>
 #include <chrono>
-#include <cmath>
 #include <cstdint>
 #include <iostream>
 
@@ -27,13 +26,13 @@
     double timeResult = GET_ELAPSED_TIME(timeStart, timeEnd);                       \
     std::string res = "";                                                           \
     if (timeResult >= 1000000000) {                                                 \
-        res = "Average Time : " + std::to_string(timeResult * pow(10, -9)) + " sn"; \
+        res = "Average Time : " + std::to_string(timeResult * (10 ^ -9)) + " sn"; \
         TEST_COUT(res);                                                             \
     } else if (timeResult >= 1000000) {                                             \
-        res = "Average Time : " + std::to_string(timeResult * pow(10, -6)) + " ms"; \
+        res = "Average Time : " + std::to_string(timeResult * (10 ^ -6)) + " ms"; \
         TEST_COUT(res);                                                             \
     } else if (timeResult >= 1000) {                                                \
-        res = "Average Time : " + std::to_string(timeResult * pow(10, -3)) + " μs"; \
+        res = "Average Time : " + std::to_string(timeResult * (10 ^ -3)) + " μs"; \
         TEST_COUT(res);                                                             \
     } else {                                                                        \
         res = "Average Time : " + std::to_string(timeResult) + " nsecs";            \

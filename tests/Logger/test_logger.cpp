@@ -3,6 +3,8 @@
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QFile>
 #include <QtCore/QObject>
+#include <atomic>
+#include <condition_variable>
 #include <iostream>
 #include <numeric>
 #include <string>
