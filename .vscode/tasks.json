@@ -55,7 +55,7 @@
             "group": "build",
             "presentation": {
                 "reveal": "always",
-                "panel": "dedicated",
+                "panel": "shared",
                 "focus": true,
                 "echo": true,
                 "showReuseMessage": false,
@@ -83,9 +83,9 @@
             },
             "group": "build",
             "presentation": {
-                "reveal": "always",
-                "panel": "dedicated",
-                "focus": true,
+                "reveal": "silent",
+                "panel": "shared",
+                "focus": false,
                 "echo": true,
                 "showReuseMessage": false,
                 "clear": true,
