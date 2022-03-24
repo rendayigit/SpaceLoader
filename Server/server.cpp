@@ -12,7 +12,7 @@ Server::Server() : Operations(Path::server_cmds_Yaml) {
     QMetaObject::invokeMethod(
         this, [=]() -> void { triggerCmdTimer->start(); }, Qt::QueuedConnection);
 
-    log()->Info("Server Started");
+    Log()->Info("Server Started");
 }
 
 Server *Server::getInstance() {
@@ -31,7 +31,7 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
     }
 
     if (not isFileTransferInProgress) {  // No file transfer operations, regular operations
-        log()->Info("Received: '" + message + "' from " + ip4Address.toString());
+        Log()->Info("Received: '" + message + "' from " + ip4Address.toString());
 
         if (getCmd(cmdName) != nullptr && getCmd(cmdName)->getIsAuthRequired() &&
             not isAuthorized(sender, cmdName)) {
@@ -63,7 +63,7 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
             if (formerCurrTime.msecsTo(QDateTime::currentDateTime()) > 5000) {
                 isFileTransferInProgress = false;
                 transferredFileBuffer.clear();
-                log()->Info("File transfer timed out");
+                Log()->Info("File transfer timed out");
                 onReceived(sender, message);
             } else {
                 transmit(sender,
@@ -86,7 +86,7 @@ void Server::clientDisconnected(QTcpSocket *clientSocket) {
 
         userList.removeOne(getUser(clientSocket));
         QHostAddress clientAddress(clientSocket->localAddress().toIPv4Address());
-        log()->Info(clientAddress.toString() + " disconnected");
+        Log()->Info(clientAddress.toString() + " disconnected");
     }
 }
 
@@ -161,7 +161,7 @@ QList<QString> Server::getDlibs(QString path) {
 void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
     QList<QString> commandLibs = getDlibs(Path::bin_Dir);
     if (commandLibs.isEmpty()) {
-        log()->Error("no libs found at " + Path::bin_Dir);
+        Log()->Error("no libs found at " + Path::bin_Dir);
     } else {
         for (auto &lib : commandLibs) {
             if (lib.contains(message, Qt::CaseInsensitive)) {
@@ -170,10 +170,10 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
                     if (auto *plugin = qobject_cast<PluginInterface *>(instance)) {
                         plugin->run(sender, message);
                     } else {
-                        log()->Error("qobject_cast<> returned nullptr");
+                        Log()->Error("qobject_cast<> returned nullptr");
                     }
                 } else {
-                    log()->Error(loader.errorString());
+                    Log()->Error(loader.errorString());
                 }
             }
         }

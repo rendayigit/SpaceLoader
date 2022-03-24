@@ -1,144 +1,100 @@
 #include "logger.h"
+
+#include <QtCore/QDateTime>
+#include <QtCore/QDebug>
+#include <QtCore/QDir>
+#include <QtCore/QSharedMemory>
+#include <QtCore/QStandardPaths>
+#include <filesystem>
 #include <mutex>
-std::mutex mutexLogger;
+
+using std::filesystem::current_path;
+
+std::mutex fileMutex;
+std::mutex bufferMutex;
+
 Logger *Logger::m_instance = Logger::getInstance();
 
-void exit() { log()->Flush(); }
+void exit() { Log()->Flush(); }
 
 Logger::Logger()
-    : LogsPath(QString::fromStdString(current_path().string()) + QDir::separator() + "Logs") {
+    : isLoggingEnabled(true),
+      logDir(QDir::currentPath() + QDir::separator() + "Logs" + QDir::separator()),
+      logFileName(""),
+      flushRate(100000),
+      buffer({}),
+      errorLog(false) {
     createLogsDirectory();
-    updateLogFilePath();
-    enableLogging = true;
-    buffer.reserve(FLUSHRATE + 1000);
+    buffer.reserve(flushRate + 1000);
     atexit(exit);
 }
 
 Logger *Logger::getInstance() {
-    if (Logger::m_instance == nullptr) Logger::m_instance = new Logger;
-    return Logger::m_instance;
+    if (m_instance == nullptr) {
+        m_instance = new Logger;
+    }
+    return m_instance;
 }
-
-QString Logger::getTimeDate() { return QDateTime::currentDateTime().toString(); }
 
 /// Create /Logs directory if it does not already exist
 bool Logger::createLogsDirectory() {
-    QDir dir(Logger::LogsPath);
+    QDir dir(logDir);
 
     if (dir.exists()) {
         return true;
     }
 
-    if (dir.mkpath(Logger::LogsPath)) {
+    if (dir.mkpath(logDir)) {
         return true;
-    } else {
-        qWarning() << "Could not create '/Logs' path!";
-
-        return false;
     }
+
+    qWarning() << "Could not create '/Logs' path!";
+    return false;
 }
 
-void Logger::Fatal(QString msg) {
-    errorLog = true;
+void Logger::Fatal(QString msg) { writer(msg, "FATAL", true); }
 
-    msg = getTimeDate() + " FATAL: " + msg + "\n";
+void Logger::Error(QString msg) { writer(msg, "ERROR", true); }
 
-    writer(msg);
-}
+void Logger::Warn(QString msg) { writer(msg, "WARN", true); }
 
-void Logger::Error(QString msg) {
-    errorLog = true;
+void Logger::Info(QString msg) { writer(msg, "INFO", false); }
 
-    msg = getTimeDate() + " ERROR: " + msg + "\n";
+void Logger::Debug(QString msg) { writer(msg, "DEBUG", true); }
 
-    writer(msg);
-}
+void Logger::Trace(QString msg) { writer(msg, "TRACE", false); }
 
-void Logger::Warn(QString msg) {
-    errorLog = true;
-
-    msg = getTimeDate() + " WARN: " + msg + "\n";
-
-    writer(msg);
-}
-
-void Logger::Info(QString msg) {
-    errorLog = false;
-
-    msg = getTimeDate() + " INFO: " + msg + "\n";
-
-    writer(msg);
-}
-
-void Logger::Debug(QString msg) {
-    errorLog = true;
-
-    msg = getTimeDate() + " DEBUG: " + msg + "\n";
-
-    writer(msg);
-}
-
-void Logger::Trace(QString msg) {
-    errorLog = false;
-
-    msg = getTimeDate() + " TRACE: " + msg + "\n";
-
-    writer(msg);
-}
-
-void Logger::Event(QString msg) {
-    errorLog = true;
-
-    msg = getTimeDate() + " EVENT: " + msg + "\n";
-
-    writer(msg);
-}
+void Logger::Event(QString msg) { writer(msg, "EVENT", true); }
 
 void Logger::Flush() {
-    QSharedMemory semaphore("flushingInProgress");
+    std::unique_lock<std::mutex> lock(fileMutex);
 
-    if (semaphore.lock()) {
-        Logger::Flush();
-    } else {
-        Logger::flusher();
-    }
-}
-
-void Logger::flusher() {
     updateLogFilePath();
-    QFile file(Logger::LogFilePath);
+    QFile file(logDir + logFileName);
 
-    if (file.open(QIODevice::WriteOnly | QIODevice::Append) && !buffer.isEmpty()) {
+    if (file.open(QIODevice::WriteOnly | QIODevice::Append) and not buffer.isNull()) {
         file.write(buffer);
         file.close();
-
-        if (not buffer.isNull()) {
-            buffer.clear();
-        }
+        buffer.clear();
     }
 }
 
 // TODO call this func only at midnight
 void Logger::updateLogFilePath() {
     QDate currentDate = QDateTime::currentDateTime().date();
-    LogFilePath = Logger::LogsPath + QDir::separator() + QString::number(currentDate.day()) + "." +
-                  QString::number(currentDate.month()) + "." + QString::number(currentDate.year()) +
-                  ".log";
+    logFileName = QString::number(currentDate.day()) + "." + QString::number(currentDate.month()) +
+                  "." + QString::number(currentDate.year()) + ".log";
 }
 
-void Logger::writer(QString data) {
-    std::unique_lock<std::mutex> lock(mutexLogger);
-    if (Logger::enableLogging) {
-        QSharedMemory semaphore("loggingInProgress");
+void Logger::writer(QString logMsg, QString logType, bool isErrorLog) {
+    logMsg = QDateTime::currentDateTime().toString() + " " + logType + " " + logMsg + "\n";
 
-        if (semaphore.lock()) {
-            Logger::writer(data);
-        } else {
-            buffer.append(data.toLocal8Bit());
+    if (isLoggingEnabled) {
+        std::unique_lock<std::mutex> lock(bufferMutex);
+        buffer.append(logMsg.toLocal8Bit());
 
-            if (buffer.size() + data.size() > FLUSHRATE or errorLog) {
-                Logger::Flush();
-            }
+        if (buffer.size() + logMsg.size() > flushRate or isErrorLog) {
+            Flush();
         }
     }
 }

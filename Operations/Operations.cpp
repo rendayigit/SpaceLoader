@@ -2,7 +2,7 @@
 
 Operations::Operations(QString yamlFile) {
     cmdsYamlFile = yamlFile;
-    log()->FLUSHRATE = 0;
+    Log()->setFlushRate(0);
 }
 
 bool Operations::parseMessage(QTcpSocket *sender, QByteArray message, bool isExactMatch) {
@@ -29,8 +29,8 @@ bool Operations::parseMessage(QTcpSocket *sender, QByteArray message, bool isExa
                     auto *trigger = dynamic_cast<TriggerCmd *>(tcmd);
                     if (cmp(i->getCmdCallString(), trigger->getTriggererId())) {
                         QString triggerCmd = trigger->getCallString();
-                        log()->Info("Detected a trigger connected to " + i->getCmdCallString());
-                        log()->Info("Triggering " + triggerCmd);
+                        Log()->Info("Detected a trigger connected to " + i->getCmdCallString());
+                        Log()->Info("Triggering " + triggerCmd);
                         parseMessage(sender, triggerCmd.toLocal8Bit());
                         return true;
                     }
@@ -158,7 +158,7 @@ void Operations::populateCmdLists() {
         cmdList.append(internalCmd);
     }
 
-    log()->Info("Parsed ServerCmds.yaml");
+    Log()->Info("Parsed ServerCmds.yaml");
 }
 
 void Operations::runBatchScript(QTcpSocket *sender, CallCmd *cmd, QString message) {
@@ -198,7 +198,7 @@ void Operations::timerTrigger() {
 
     for (auto &cmd : cmdList) {
         if (cmd->getIsTimerSet() and cmd->getTriggerTime() == currentHMTime) {
-            log()->Info("Trigger by timer: " + cmd->getCmdCallString());
+            Log()->Info("Trigger by timer: " + cmd->getCmdCallString());
             parseMessage(nullptr, cmd->getCmdCallString().toLocal8Bit());
         }
     }

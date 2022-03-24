@@ -6,7 +6,7 @@
 QString logString = "Testing Logger";
 
 void deleteLogFile() {
-    QFile file(log()->LogFilePath);
+    QFile file(Log()->getLogDir() + Log()->getLogFileName());
     if (file.exists()) {
         file.resize(0);
     }
@@ -14,12 +14,12 @@ void deleteLogFile() {
 
 TEST(Logger, Write) {
     deleteLogFile();
-    log()->Info(logString);
-    log()->Flush();
+    Log()->Info(logString);
+    Log()->Flush();
 }
 
 TEST(Logger, Read) {
-    QFile file(log()->LogFilePath);
+    QFile file(Log()->getLogDir() + Log()->getLogFileName());
 
     if (file.exists()) {
         file.open(QIODevice::ReadOnly);
@@ -38,24 +38,25 @@ TEST(Logger, Read) {
         file.close();
         deleteLogFile();
     } else {
-        GTEST_FAIL() << "Log file not found: " + log()->LogFilePath.toStdString();
+        GTEST_FAIL() << "Log file not found: " +
+                            (Log()->getLogDir() + Log()->getLogFileName()).toStdString();
     }
 }
 
 TEST(Logger, Benchmark) {
-    TEST_BENCHMARK("Logger", "loggingManualBenchmark", log()->Info("benchmark log"));
-    log()->Flush();
+    TEST_BENCHMARK("Logger", "loggingManualBenchmark", Log()->Info("benchmark log"));
+    Log()->Flush();
 }
 
 void writeThreadFirst() {
     for (int i = 0; i < 100; i++) {
-        log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
+        Log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
     }
 }
 
 void writeThreadSecond() {
     for (int i = 100; i < 200; i++) {
-        log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
+        Log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
     }
 }
 
@@ -69,7 +70,7 @@ TEST(Logger, ThreadSafety) {
         logsArray.at(i) = false;
     }
 
-    QFile file(log()->LogFilePath);
+    QFile file(Log()->getLogDir() + Log()->getLogFileName());
 
     if (file.exists()) {
         file.open(QIODevice::ReadOnly);
@@ -78,7 +79,8 @@ TEST(Logger, ThreadSafety) {
         first.join();
         second.join();
     } else {
-        GTEST_FAIL() << "Log file not found: " + log()->LogFilePath.toStdString();
+        GTEST_FAIL() << "Log file not found: " +
+                            (Log()->getLogDir() + Log()->getLogFileName()).toStdString();
     }
 
     QRegExp rx;
