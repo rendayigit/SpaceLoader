@@ -72,10 +72,10 @@ void Logger::Flush() {
     updateLogFilePath();
     QFile file(logDir + logFileName);
 
-    if (file.open(QIODevice::WriteOnly | QIODevice::Append) and not buffer.isEmpty()) {
+    if (file.open(QIODevice::WriteOnly | QIODevice::Append) and not buffer.isNull()) {
         file.write(buffer);
-        buffer.clear();
         file.close();
+        buffer.clear();
     }
 }
 
