@@ -62,7 +62,7 @@ void writeThreadSecond() {
 TEST(Logger, ThreadSafety) {
     deleteLogFile();
     std::array<bool, 200> logsArray{};
-    bool allLogsFound = false;
+    bool allLogsFound = true;
     int logCount = 0;
 
     for (int i = 0; i < 200; i++) {
