@@ -14,7 +14,7 @@ std::mutex bufferMutex;
 Logger *Logger::m_instance = Logger::getInstance();
 
 void exit() {
-    log() -> Flush();
+    Log() -> Flush();
 }
 
 Logger::Logger() {

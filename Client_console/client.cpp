@@ -179,7 +179,7 @@ void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QB
     QByteArray fileData = file.readAll();
     if (fileData.isNull()) {
         std::cout << "An error occured: Cannot open the provided file" << std::endl;
-        log()->Error("Error opening" + fileNamePath);
+        Log()->Error("Error opening" + fileNamePath);
         return;
     }
     std::cout << "File size: " << fileData.size() / BYTE_TO_KILOBYTE << "KiloByte" << std::endl;
@@ -206,7 +206,7 @@ void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QB
         std::cout << " Transfer Complete" << std::endl;
     } else {
         std::cout << "An error occured white transferring the file." << std::endl;
-        log()->Error("An error occured white transferring file: " + fileNamePath);
+        Log()->Error("An error occured white transferring file: " + fileNamePath);
     }
 }
 

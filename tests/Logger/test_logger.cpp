@@ -19,12 +19,12 @@ QString logString = "Testing Logger";
 QByteArray buffer;
 
 TEST(Logger, Write) {
-    log()->Info(logString);
-    log()->Flush();
+    Log()->Info(logString);
+    Log()->Flush();
 }
 
 TEST(Logger, Read) {
-    QFile file(log()->LogFilePath);
+    QFile file(Log()->LogFilePath);
 
     EXPECT_TRUE(file.exists());
     EXPECT_TRUE(file.open(QIODevice::ReadOnly));
@@ -44,23 +44,23 @@ TEST(Logger, Read) {
 }
 
 TEST(Logger, Benchmark) {
-    TEST_BENCHMARK("Logger", "loggingManualBenchmark", log()->Info("benchmark log"));
-    log()->Flush();
+    TEST_BENCHMARK("Logger", "loggingManualBenchmark", Log()->Info("benchmark log"));
+    Log()->Flush();
 }
 
 
 void writeThreadFirst() {
     for (int i = 0; i < 100; i++)
-        log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
+        Log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
 }
 void writeThreadSecond() {
     for (int i = 100; i < 201; i++)
-        log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
+        Log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
 }
 
 TEST(Logger, ThreadSafety) {
-    if (not QString(log()->LogFilePath).isNull())
-     QFile::remove(log()->LogFilePath);
+    if (not QString(Log()->LogFilePath).isNull())
+     QFile::remove(Log()->LogFilePath);
 
     std::thread first(writeThreadFirst);
     std::thread second(writeThreadSecond);
@@ -71,7 +71,7 @@ TEST(Logger, ThreadSafety) {
     bool arr[201], allTrue = true;
     for (int i = 0; i < 201; i++) arr[i] = false;
 
-    QFile file(log()->LogFilePath);
+    QFile file(Log()->LogFilePath);
 
     EXPECT_TRUE(file.exists());
     EXPECT_TRUE(file.open(QIODevice::ReadOnly));
