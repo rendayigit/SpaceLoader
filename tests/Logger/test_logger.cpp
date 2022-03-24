@@ -1,99 +1,110 @@
-#include <QtConcurrent/QtConcurrent>
-#include <QtCore/QDebug>
-#include <QtCore/QElapsedTimer>
-#include <QtCore/QFile>
-#include <QtCore/QObject>
-#include <iostream>
-#include <numeric>
-#include <string>
-#include <thread>
+#include <gtest/gtest.h>
 
 #include "../../lib/Logger/logger.h"
 #include "../Test_common.h"
 
-using namespace std;
-
 QString logString = "Testing Logger";
-QByteArray buffer;
+
+void deleteLogFile() {
+    QFile file(Log()->getLogDir() + Log()->getLogFileName());
+    if (file.exists()) {
+        file.resize(0);
+    }
+}
 
 TEST(Logger, Write) {
-    log()->Info(logString);
-    log()->Flush();
+    deleteLogFile();
+    Log()->Info(logString);
+    Log()->Flush();
 }
 
 TEST(Logger, Read) {
-    QFile file(log()->LogFilePath);
+    QFile file(Log()->getLogDir() + Log()->getLogFileName());
 
-    EXPECT_TRUE(file.exists());
-    EXPECT_TRUE(file.open(QIODevice::ReadOnly));
+    if (file.exists()) {
+        file.open(QIODevice::ReadOnly);
 
-    bool logStringFound = false;
+        bool logStringFound = false;
 
-    while (not file.atEnd()) {
-        QString line(file.readLine());
+        while (not file.atEnd()) {
+            QString line(file.readLine());
 
-        if (line.trimmed().contains(logString)) {
-            logStringFound = true;
+            if (line.trimmed().contains(logString)) {
+                logStringFound = true;
+            }
         }
-    }
 
-    EXPECT_TRUE(logStringFound);
-    file.close();
+        EXPECT_TRUE(logStringFound);
+        file.close();
+        deleteLogFile();
+    } else {
+        GTEST_FAIL() << "Log file not found: " +
+                            (Log()->getLogDir() + Log()->getLogFileName()).toStdString();
+    }
 }
 
 TEST(Logger, Benchmark) {
-    TEST_BENCHMARK("Logger", "loggingManualBenchmark", log()->Info("benchmark log"));
-    log()->Flush();
+    TEST_BENCHMARK("Logger", "loggingManualBenchmark", Log()->Info("benchmark log"));
+    Log()->Flush();
 }
-
 
 void writeThreadFirst() {
-    for (int i = 0; i < 100; i++)
-        log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
+    for (int i = 0; i < 100; i++) {
+        Log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
+    }
 }
+
 void writeThreadSecond() {
-    for (int i = 100; i < 201; i++)
-        log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
+    for (int i = 100; i < 200; i++) {
+        Log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
+    }
 }
 
 TEST(Logger, ThreadSafety) {
-    if (not QString(log()->LogFilePath).isNull())
-     QFile::remove(log()->LogFilePath);
+    deleteLogFile();
+    std::array<bool, 200> logsArray{};
+    bool allLogsFound = true;
+    int logCount = 0;
 
-    std::thread first(writeThreadFirst);
-    std::thread second(writeThreadSecond);
+    for (int i = 0; i < 200; i++) {
+        logsArray.at(i) = false;
+    }
 
-    first.join();
-    second.join();
+    QFile file(Log()->getLogDir() + Log()->getLogFileName());
 
-    bool arr[201], allTrue = true;
-    for (int i = 0; i < 201; i++) arr[i] = false;
+    if (file.exists()) {
+        file.open(QIODevice::ReadOnly);
+        std::thread first(writeThreadFirst);
+        std::thread second(writeThreadSecond);
+        first.join();
+        second.join();
+    } else {
+        GTEST_FAIL() << "Log file not found: " +
+                            (Log()->getLogDir() + Log()->getLogFileName()).toStdString();
+    }
 
-    QFile file(log()->LogFilePath);
-
-    EXPECT_TRUE(file.exists());
-    EXPECT_TRUE(file.open(QIODevice::ReadOnly));
-
-    for (int i = 0; i < 201; i++) arr[i] = false;
-
-    while (not file.atEnd()) {
-        QString line(file.readLine());
-        if (line.trimmed().contains("Thread 1")) {
-            arr[line.right(3).toInt()] = true;
-        }
-        if (line.trimmed().contains("Thread 2")) {
-            arr[line.right(4).toInt()] = true;
+    QRegExp rx;
+    rx.setPattern("log (.*)");
+    QString lines;
+    while (!file.atEnd()) {
+        lines = file.readLine();
+        if (lines.contains("Thread")) {
+            logCount++;
+            if (rx.indexIn(lines) != -1) {
+                int idx = rx.cap(1).toInt();
+                logsArray.at(idx) = true;
+            }
         }
     }
 
-    for (int i = 0; i < 201; i++) {
-        if (arr[i] == 0) allTrue = false;
+    EXPECT_EQ(logCount, 200);
+
+    for (bool i : logsArray) {
+        if (not i) {
+            allLogsFound = false;
+            break;
+        }
     }
 
-    // TODO uncomment and fix this
-    // EXPECT_TRUE(allTrue);
-
-    file.close();
-
-    // TODO - read every number twice from 0 to 99
+    EXPECT_TRUE(allLogsFound);
 }

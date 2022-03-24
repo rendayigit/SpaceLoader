@@ -20,8 +20,8 @@ find_package(Qt5Widgets REQUIRED)
 add_executable(tests
         ../lib/Logger/logger.cpp
         Logger/test_logger.cpp
-        ../lib/YAML/yaml.cpp
         YAML/test_yaml.cpp
+        ../lib/YAML/yaml.cpp
         ../lib/TCP/client/tcpClient.cpp
         ../lib/TCP/server/tcpServer.cpp
         TCP/testClient.cpp
@@ -31,22 +31,16 @@ add_executable(tests
 
 target_compile_definitions(tests PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
-target_link_libraries(tests
-        PRIVATE Qt${QT_VERSION_MAJOR}::Core
+target_link_libraries(tests PRIVATE 
+        Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::Quick
         gtest_main
         gtest
         yaml-cpp
-        Qt5::Core
-        Qt5::Quick
-        )
-
-if (UNIX AND NOT APPLE) # FOR LINUX ONLY
-        target_link_libraries(tests PRIVATE 
         -lpthread 
         -lm
+        stdc++fs # required for std::filesystem
         )
-endif ()
 
 include(GoogleTest)
-gtest_discover_tests(tests)
+# gtest_discover_tests(tests)
