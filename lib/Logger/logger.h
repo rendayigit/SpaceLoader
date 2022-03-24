@@ -8,15 +8,16 @@
 #define Log Logger::getInstance
 
 #include <QtCore/QString>
-#include <filesystem>
-#include <mutex>
 
 class Logger {
    public:
+    Logger(const Logger &) = delete;
+    Logger &operator=(Logger const &) = delete;
+    Logger(Logger &&) = delete;
+    Logger &operator=(Logger &&) = delete;
+
     static Logger *getInstance();
-    static QString getTimeDate();
-    Logger(Logger const &) = delete;
-    void operator=(Logger const &) = delete;
+
     void Flush();
     void Fatal(QString msg);
     void Error(QString msg);
@@ -26,19 +27,31 @@ class Logger {
     void Trace(QString msg);
     void Event(QString msg);
 
-    bool enableLogging;
-    QString LogsPath;
-    QString LogFilePath;
-    int FLUSHRATE = 100000;
-
     void updateLogFilePath();
+
+    bool isEnabled() { return Logger::isLoggingEnabled; }
+    void enableLogging(bool enableLogging) { Logger::isLoggingEnabled = enableLogging; }
+
+    QString getLogDir() { return Logger::logDir; }
+    void setLogDir(const QString &logDir) { Logger::logDir = logDir; }
+
+    QString getLogFileName() { return Logger::logFileName; }
+    void setLogFileName(const QString &logFileName) { Logger::logFileName = logFileName; }
+
+    int getFlushRate() { return Logger::flushRate; }
+    void setFlushRate(int flushRate) { Logger::flushRate = flushRate; }
 
    private:
     Logger();
     ~Logger();
+    
     bool createLogsDirectory();
-    void writer(QString data, QString type, bool error);
-    void flusher();
+    void writer(QString logMsg, QString logType, bool isErrorLog);
+
+    bool isLoggingEnabled;
+    QString logDir;
+    QString logFileName;
+    int flushRate;
 
     static Logger *m_instance;
     QByteArray buffer;

@@ -24,7 +24,7 @@ TEST(Logger, Write) {
 }
 
 TEST(Logger, Read) {
-    QFile file(Log()->LogFilePath);
+    QFile file(Log()->getLogDir() + Log()->getLogFileName());
 
     EXPECT_TRUE(file.exists());
     EXPECT_TRUE(file.open(QIODevice::ReadOnly));
@@ -59,8 +59,8 @@ void writeThreadSecond() {
 }
 
 TEST(Logger, ThreadSafety) {
-    if (not QString(Log()->LogFilePath).isNull())
-     QFile::remove(Log()->LogFilePath);
+    if (not QString(Log()->getLogDir() + Log()->getLogFileName()).isNull())
+     QFile::remove(Log()->getLogDir() + Log()->getLogFileName());
 
     std::thread first(writeThreadFirst);
     std::thread second(writeThreadSecond);
@@ -71,7 +71,7 @@ TEST(Logger, ThreadSafety) {
     bool arr[201], allTrue = true;
     for (int i = 0; i < 201; i++) arr[i] = false;
 
-    QFile file(Log()->LogFilePath);
+    QFile file(Log()->getLogDir() + Log()->getLogFileName());
 
     EXPECT_TRUE(file.exists());
     EXPECT_TRUE(file.open(QIODevice::ReadOnly));

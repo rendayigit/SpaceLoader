@@ -2,7 +2,7 @@
 
 Operations::Operations(QString yamlFile) {
     cmdsYamlFile = yamlFile;
-    Log()->FLUSHRATE = 0;
+    Log()->setFlushRate(0);
 }
 
 bool Operations::parseMessage(QTcpSocket *sender, QByteArray message, bool isExactMatch) {

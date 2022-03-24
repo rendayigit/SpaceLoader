@@ -5,6 +5,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QSharedMemory>
 #include <QtCore/QStandardPaths>
+#include <filesystem>
+#include <mutex>
 
 using std::filesystem::current_path;
 
@@ -13,36 +15,36 @@ std::mutex bufferMutex;
 
 Logger *Logger::m_instance = Logger::getInstance();
 
-void exit() {
-    Log() -> Flush();
-}
+void exit() { Log()->Flush(); }
 
-Logger::Logger() {
-    LogsPath = QDir::currentPath() + QDir::separator() + "Logs";
+Logger::Logger()
+    : isLoggingEnabled(true),
+      logDir(QDir::currentPath() + QDir::separator() + "Logs" + QDir::separator()),
+      logFileName(""),
+      flushRate(100000),
+      buffer({}),
+      errorLog(false) {
     createLogsDirectory();
-    enableLogging = true;
-    buffer.reserve(FLUSHRATE + 1000);
+    buffer.reserve(flushRate + 1000);
     atexit(exit);
 }
 
 Logger *Logger::getInstance() {
-    if (Logger::m_instance == nullptr) {
-        Logger::m_instance = new Logger;
+    if (m_instance == nullptr) {
+        m_instance = new Logger;
     }
-    return Logger::m_instance;
+    return m_instance;
 }
-
-QString Logger::getTimeDate() { return QDateTime::currentDateTime().toString(); }
 
 /// Create /Logs directory if it does not already exist
 bool Logger::createLogsDirectory() {
-    QDir dir(Logger::LogsPath);
+    QDir dir(logDir);
 
     if (dir.exists()) {
         return true;
     }
 
-    if (dir.mkpath(Logger::LogsPath)) {
+    if (dir.mkpath(logDir)) {
         return true;
     }
 
@@ -66,12 +68,9 @@ void Logger::Event(QString msg) { writer(msg, "EVENT", true); }
 
 void Logger::Flush() {
     std::unique_lock<std::mutex> lock(fileMutex);
-    Logger::flusher();
-}
 
-void Logger::flusher() {
     updateLogFilePath();
-    QFile file(Logger::LogFilePath);
+    QFile file(logDir + logFileName);
 
     if (file.open(QIODevice::WriteOnly | QIODevice::Append) and not buffer.isEmpty()) {
         file.write(buffer);
@@ -83,21 +82,19 @@ void Logger::flusher() {
 // TODO call this func only at midnight
 void Logger::updateLogFilePath() {
     QDate currentDate = QDateTime::currentDateTime().date();
-    LogFilePath = Logger::LogsPath + QDir::separator() + QString::number(currentDate.day()) + "." +
-                  QString::number(currentDate.month()) + "." + QString::number(currentDate.year()) +
-                  ".log";
+    logFileName = QString::number(currentDate.day()) + "." + QString::number(currentDate.month()) +
+                  "." + QString::number(currentDate.year()) + ".log";
 }
 
-void Logger::writer(QString data, QString type, bool error) {
-    errorLog = error;
-    data = getTimeDate() + " " + type + " " + data + "\n";
+void Logger::writer(QString logMsg, QString logType, bool isErrorLog) {
+    logMsg = QDateTime::currentDateTime().toString() + " " + logType + " " + logMsg + "\n";
 
-    if (Logger::enableLogging) {
+    if (isLoggingEnabled) {
         std::unique_lock<std::mutex> lock(bufferMutex);
-        buffer.append(data.toLocal8Bit());
+        buffer.append(logMsg.toLocal8Bit());
 
-        if (buffer.size() + data.size() > FLUSHRATE or errorLog) {
-            Logger::Flush();
+        if (buffer.size() + logMsg.size() > flushRate or isErrorLog) {
+            Flush();
         }
     }
 }
