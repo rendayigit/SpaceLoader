@@ -6,7 +6,10 @@
             "type": "shell",
             "command": "./scripts/build.bat",
             "linux": {
-                "command": "./scripts/build.sh"
+                "command": [
+                    "chmod -R 777 ./scripts/;",
+                    "./scripts/build.sh"
+                ]
             },
             "windows": {
                 "command": "./scripts/build.bat"
@@ -44,7 +47,10 @@
             "type": "shell",
             "command": "./scripts/clean.bat",
             "linux": {
-                "command": "./scripts/clean.sh",
+                "command": [
+                    "chmod -R 777 ./scripts/;",
+                    "./scripts/clean.sh"
+                ]
             },
             "windows": {
                 "command": "./scripts/clean.bat",
@@ -73,7 +79,10 @@
             "type": "shell",
             "command": "./scripts/kill.bat",
             "linux": {
-                "command": "./scripts/kill.sh",
+                "command": [
+                    "chmod -R 777 ./scripts/;",
+                    "./scripts/kill.sh"
+                ]
             },
             "windows": {
                 "command": "./scripts/kill.bat",
