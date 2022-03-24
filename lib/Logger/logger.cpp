@@ -1,14 +1,14 @@
 #include "logger.h"
-
+#include <mutex>
+std::mutex mutexLogger;
 Logger *Logger::m_instance = Logger::getInstance();
 
-void exit() {
-    log() -> Flush();
-}
+void exit() { log()->Flush(); }
 
-Logger::Logger() {
-    LogsPath = QDir::currentPath() + QDir::separator() + "Logs";
+Logger::Logger()
+    : LogsPath(QString::fromStdString(current_path().string()) + QDir::separator() + "Logs") {
     createLogsDirectory();
+    updateLogFilePath();
     enableLogging = true;
     buffer.reserve(FLUSHRATE + 1000);
     atexit(exit);
@@ -110,8 +110,11 @@ void Logger::flusher() {
 
     if (file.open(QIODevice::WriteOnly | QIODevice::Append) && !buffer.isEmpty()) {
         file.write(buffer);
-        buffer.clear();
         file.close();
+
+        if (not buffer.isNull()) {
+            buffer.clear();
+        }
     }
 }
 
@@ -124,6 +127,7 @@ void Logger::updateLogFilePath() {
 }
 
 void Logger::writer(QString data) {
+    std::unique_lock<std::mutex> lock(mutexLogger);
     if (Logger::enableLogging) {
         QSharedMemory semaphore("loggingInProgress");
 

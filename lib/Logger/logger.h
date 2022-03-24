@@ -10,6 +10,9 @@
 #include <QtCore/QSharedMemory>
 #include <QtCore/QStandardPaths>
 #include <QtCore/QString>
+#include <filesystem>
+
+using std::filesystem::current_path;
 
 #ifdef log
 #undef log
