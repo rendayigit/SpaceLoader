@@ -1,164 +1,175 @@
 #include "yaml.h"
 
-using namespace std;
-// TODO templates return type
+using std::string;
+using std::stringstream;
+using std::vector;
+using YAML::const_iterator;
+using YAML::LoadFile;
+using YAML::Node;
 
-template <typename T>
-T Yaml::getNodeByTag(const string &yamlFilePath, const string &tagName, const string &tagValue) {
-    YAML::Node config = YAML::LoadFile(yamlFilePath);
-    vector<YAML::Node> nodes = {};
+Node Yaml::getNodeByKey(const string &yamlFilePath, const string &key) {
+    Node rootNode = LoadFile(yamlFilePath);
 
-    vector<YAML::Node> result = Yaml::searchNodeByTag(config, tagName, tagValue, nodes);
-    return result;
+    return searchNodeByKey(rootNode, key).at(0);
 }
 
-template <typename T>
-T Yaml::getNodeByTag(const string &yamlFilePath, const string &tagName) {
-    YAML::Node config = YAML::LoadFile(yamlFilePath);
-    vector<YAML::Node> nodes = {};
+Node Yaml::getNodeByKey(const string &yamlFilePath, const string &key, const string &value) {
+    Node rootNode = LoadFile(yamlFilePath);
 
-    return Yaml::searchNodeByTag_(config, tagName, nodes);
+    return searchNodeByKey(rootNode, key, value).at(0);
 }
 
-template <typename T>
-T Yaml::getText(const YAML::Node &node, const string &tagName) {
-    vector<string> texts = {};
+vector<Node> Yaml::getNodeListByKey(const string &yamlFilePath, const string &key) {
+    Node rootNode = LoadFile(yamlFilePath);
+
+    return searchNodeByKey(rootNode, key);
+}
+
+vector<Node> Yaml::getNodeListByKey(const string &yamlFilePath, const string &key,
+                                    const string &value) {
+    Node rootNode = LoadFile(yamlFilePath);
+
+    return searchNodeByKey(rootNode, key, value);
+}
+
+Node Yaml::getNodeByPath(const string &yamlFilePath, const string &path) {
+    Node rootNode = LoadFile(yamlFilePath);
+    vector<string> pathOrder = splitPath(path, '.');
+
+    return searchByNodePath(rootNode, pathOrder).at(0);
+}
+
+string Yaml::getValue(const Node &node, const string &key) {
     if (node.IsScalar()) {
-        texts.push_back(node.as<string>());
-        return texts;
+        return node.as<string>();
     }
-    return Yaml::searchText(node, tagName, texts);
+
+    if(node[key]) {
+        return node[key].as<string>();
+    }
+
+    return searchValue(node, key).at(0);
 }
 
-template <typename T>
-T Yaml::getText(const std::string &yamlFilePath, const std::string &tagName) {
-    YAML::Node config = YAML::LoadFile(yamlFilePath);
-    vector<string> texts = {};
+string Yaml::getValue(const std::string &yamlFilePath, const std::string &key) {
+    Node rootNode = LoadFile(yamlFilePath);
 
-    return Yaml::searchText(config, tagName, texts);
+    return searchValue(rootNode, key).at(0);
 }
 
-template <typename T>
-T Yaml::getNodeByPath(const string &yamlFilePath, const string &path) {
-    YAML::Node config = YAML::LoadFile(yamlFilePath);
-    vector<string> pathOrder = Yaml::splitPath(path, '.');
-    vector<YAML::Node> nodes = {};
+vector<string> Yaml::getValueList(const Node &node, const string &key) {
+    vector<string> valueList = {};
 
-    return Yaml::searchByNodePath(config, pathOrder, 0, nodes);
+    if (node.IsScalar()) {
+        valueList.push_back(node.as<string>());
+        return valueList;
+    }
+
+    return searchValue(node, key);
+}
+
+vector<string> Yaml::getValueList(const std::string &yamlFilePath, const std::string &key) {
+    Node rootNode = LoadFile(yamlFilePath);
+
+    return searchValue(rootNode, key);
+}
+
+vector<Node> Yaml::getSeconds(const Node &node, const string &key) {
+    vector<Node> resultNodes;
+    
+    for (const_iterator it = node.begin(); it != node.end(); ++it) {
+        if (it->first.as<string>() == key) {
+            resultNodes.push_back(it->second);
+        }
+    }
+    
+    return resultNodes;
+}
+
+vector<Node> Yaml::searchByNodePath(const Node node, vector<string> pathOrder) {
+    if (pathOrder.size() == 1) {
+        vector<Node> temp = Yaml::searchNodeByKey(node, pathOrder.at(0));
+        return Yaml::getSeconds(temp.at(0), pathOrder.at(0));
+    }
+
+    vector<Node> resultNode = Yaml::searchNodeByKey(node, pathOrder.at(0));
+    pathOrder.erase(pathOrder.begin());
+    return Yaml::searchByNodePath(resultNode.at(0), pathOrder);
+}
+
+vector<Node> Yaml::searchNodeByKey(const Node node, const string &key, const string &value) {
+    vector<Node> resultList;
+
+    if (node.IsSequence()) {
+        for (const_iterator it = node.begin(); it != node.end(); ++it) {
+            vector<Node> temp = searchNodeByKey(*it, key, value);
+            resultList.insert(resultList.end(), temp.begin(), temp.end());
+        }
+    } else if (node.IsMap()) {
+        for (const_iterator it = node.begin(); it != node.end(); ++it) {
+            if (it->first.as<string>() == key and it->second.as<string>() == value) {
+                resultList.push_back(node);
+            } else {
+                vector<Node> temp = searchNodeByKey(it->second, key, value);
+                resultList.insert(resultList.end(), temp.begin(), temp.end());
+            }
+        }
+    }
+
+    return resultList;
+}
+
+vector<Node> Yaml::searchNodeByKey(const Node node, const string &key) {
+    vector<Node> resultList;
+
+    if (node.IsSequence()) {
+        for (const_iterator it = node.begin(); it != node.end(); ++it) {
+            vector<Node> temp = searchNodeByKey(*it, key);
+            resultList.insert(resultList.end(), temp.begin(), temp.end());
+        }
+    } else if (node.IsMap()) {
+        for (const_iterator it = node.begin(); it != node.end(); ++it) {
+            if (it->first.as<string>() == key) {
+                resultList.push_back(node);
+            } else {
+                vector<Node> temp = searchNodeByKey(it->second, key);
+                resultList.insert(resultList.end(), temp.begin(), temp.end());
+            }
+        }
+    }
+    return resultList;
+}
+
+vector<string> Yaml::searchValue(const Node &node, const string &key) {
+    vector<string> resultList;
+
+    if (node.IsSequence()) {
+        for (const_iterator it = node.begin(); it != node.end(); ++it) {
+            vector<string> temp = searchValue(*it, key);
+            resultList.insert(resultList.end(), temp.begin(), temp.end());
+        }
+    } else if (node.IsMap()) {
+        for (const_iterator it = node.begin(); it != node.end(); ++it) {
+            if (it->first.as<string>() == key and it->second.IsScalar()) {
+                resultList.push_back(it->second.as<string>());
+            } else {
+                vector<string> temp = searchValue(it->second, key);
+                resultList.insert(resultList.end(), temp.begin(), temp.end());
+            }
+        }
+    }
+
+    return resultList;
 }
 
 vector<string> Yaml::splitPath(const string &path, char delimiter) {
-    vector<string> result;
+    vector<string> pathVector;
     stringstream ss(path);
     string item;
 
     while (getline(ss, item, delimiter)) {
-        result.push_back(item);
+        pathVector.push_back(item);
     }
 
-    return result;
+    return pathVector;
 }
-
-vector<YAML::Node> Yaml::searchByNodePath(const YAML::Node config, vector<string> pathOrder,
-                                          int idx, vector<YAML::Node> &nodes) {
-    if (idx == pathOrder.size()) {
-        return nodes;
-    }
-
-    if (config.IsSequence()) {
-        for (YAML::const_iterator it = config.begin(); it != config.end(); ++it) {
-            YAML::Node temp = *it;
-            Yaml::searchByNodePath(temp, pathOrder, idx, nodes);
-        }
-    } else if (config.IsMap()) {
-        for (YAML::const_iterator it = config.begin(); it != config.end(); ++it) {
-            if (it->first.as<string>() == pathOrder.at(idx)) {
-                if (idx == pathOrder.size() - 1) {
-                    nodes.push_back(it->second);
-                }
-                Yaml::searchByNodePath(it->second, pathOrder, idx + 1, nodes);
-            } else {
-                Yaml::searchByNodePath(it->second, pathOrder, idx, nodes);
-            }
-        }
-    }
-    return nodes;
-}
-
-vector<string> Yaml::searchText(const YAML::Node &node, const string &tagName,
-                                vector<string> &texts) {
-    if (node.IsSequence()) {
-        for (YAML::const_iterator it = node.begin(); it != node.end(); ++it) {
-            YAML::Node temp = *it;
-            Yaml::searchText(temp, tagName, texts);
-        }
-    } else if (node.IsMap()) {
-        for (YAML::const_iterator it = node.begin(); it != node.end(); ++it) {
-            if (it->first.as<string>() == tagName) {
-                if (it->second.IsScalar()) {
-                    texts.push_back(it->second.as<string>());
-                }
-            } else {
-                Yaml::searchText(it->second, tagName, texts);
-            }
-        }
-    }
-    return texts;
-}
-
-vector<YAML::Node> Yaml::searchNodeByTag(const YAML::Node config, const string &tagName,
-                                         const string &tagValue, vector<YAML::Node> &nodes) {
-    if (config.IsSequence()) {
-        for (YAML::const_iterator it = config.begin(); it != config.end(); ++it) {
-            YAML::Node temp = *it;
-            Yaml::searchNodeByTag(temp, tagName, tagValue, nodes);
-        }
-    } else if (config.IsMap()) {
-        for (YAML::const_iterator it = config.begin(); it != config.end(); ++it) {
-            if (it->first.as<string>() == tagName and it->second.as<string>() == tagValue) {
-                nodes.push_back(config);
-            } else {
-                Yaml::searchNodeByTag(it->second, tagName, tagValue, nodes);
-            }
-        }
-    }
-    return nodes;
-}
-
-vector<YAML::Node> Yaml::searchNodeByTag_(const YAML::Node config, const string &tagName,
-                                          vector<YAML::Node> &nodes) {
-    if (config.IsSequence()) {
-        for (YAML::const_iterator it = config.begin(); it != config.end(); ++it) {
-            YAML::Node temp = *it;
-            Yaml::searchNodeByTag_(temp, tagName, nodes);
-        }
-    } else if (config.IsMap()) {
-        for (YAML::const_iterator it = config.begin(); it != config.end(); ++it) {
-            if (it->first.as<string>() == tagName) {
-                nodes.push_back(it->second);
-            } else {
-                Yaml::searchNodeByTag_(it->second, tagName, nodes);
-            }
-        }
-    }
-    return nodes;
-}
-
-template vector<YAML::Node> Yaml::getNodeByTag<vector<YAML::Node>>(const string &yamlFilePath,
-                                                                   const string &tagName,
-                                                                   const string &tagValue);
-// template YAML::Node Yaml::getNodeByTag<YAML::Node>(const string &yamlFilePath,
-//    const string &tagName,
-//    const string &tagValue);
-
-template vector<YAML::Node> Yaml::getNodeByTag(const string &yamlFilePath, const string &tagName);
-// template YAML::Node Yaml::getNodeByTag_(const string &yamlFilePath, const string &tagName);
-
-template vector<string> Yaml::getText(const YAML::Node &node, const string &tagName);
-// template string Yaml::getText(const YAML::Node &node, const string &tagName);
-
-template vector<string> Yaml::getText(const std::string &yamlFilePath, const std::string &tagName);
-// template string Yaml::getText_(const std::string &yamlFilePath, const std::string &tagName);
-
-template vector<YAML::Node> Yaml::getNodeByPath(const string &yamlFilePath, const string &path);
-// template YAML::Node Yaml::getNodeByPath(const string &yamlFilePath, const string &path);

@@ -12,6 +12,7 @@
 #include "../constants.h"
 #include "../lib/TCP/server/tcpServer.h"
 #include "../lib/YAML/yaml.h"
+#include "../Commands/PluginInterface.h"
 
 class Server : public TCPServer, public Operations {
    public:
@@ -28,6 +29,7 @@ class Server : public TCPServer, public Operations {
     void fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message);
     void parseInternalCmd(QTcpSocket *sender, QByteArray message);
     void connectProcess(QTcpSocket *sender, QProcess *process);
+    QList<QString> getDlibs(QString path);
 
     QList<User *> userList;
     static Server *m_instance;

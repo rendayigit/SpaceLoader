@@ -10,5 +10,6 @@
         "gruntfuggly.todo-tree",
         "cschlosser.doxdocgen",
         "tdennis4496.cmantic",
+        "redhat.vscode-yaml"
     ]
 }
