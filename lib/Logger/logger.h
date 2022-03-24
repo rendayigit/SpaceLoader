@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LOGGER_H
+#define LOGGER_H
 
 #include <stdlib.h>
 
@@ -52,3 +53,5 @@ class Logger {
     QByteArray buffer;
     bool errorLog;
 };
+
+#endif  // YAML_H

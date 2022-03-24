@@ -1,11 +1,6 @@
-#include <QtCore/QtPlugin>
-#include <QtNetwork/QHostAddress>
+#include "AddUser.h"
 
-#include "../lib/Logger/logger.h"
-#include "common/serverCommon.h"
-#include "common/user.h"
-
-static User *getUser(QTcpSocket *socket) {
+User *AddUser::getUser(QTcpSocket *socket) {
     for (auto &i : ServerCommon::getInstance()->getUserList()) {
         for (auto &j : i->socketInstances) {
             if (j == socket) return i;
@@ -15,7 +10,7 @@ static User *getUser(QTcpSocket *socket) {
     return nullptr;
 }
 
-static User *getUser(QString userName) {
+User *AddUser::getUser(QString userName) {
     for (auto &i : ServerCommon::getInstance()->getUserList()) {
         if (i->getUserName() == userName) return i;
     }
@@ -23,7 +18,7 @@ static User *getUser(QString userName) {
     return nullptr;
 }
 
-void run(QTcpSocket *sender, QByteArray message) {
+void AddUser::run(QTcpSocket *sender, QByteArray message) const {
     message.replace("username ", "");
     QString username = message.mid(0, message.indexOf(" "));
     QHostAddress ip(sender->localAddress().toIPv4Address());

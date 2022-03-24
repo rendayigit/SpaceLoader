@@ -1,100 +1,110 @@
-#include <unistd.h>
+#include <gtest/gtest.h>
+#include <yaml-cpp/yaml.h>
 
-#include <iostream>
 #include "../../lib/YAML/yaml.h"
 #include "../Test_common.h"
-#include "yaml-cpp/yaml.h"
 
-using namespace std;
+using std::count;
+using std::string;
+using std::vector;
+using YAML::Node;
 
-YAML::Node config = YAML::LoadFile("../../tests/YAML/Test.yaml");
+char const* testYamlFile = "../../tests/YAML/Test.yaml";
 
-TEST(yaml_test, ByTestPath) {
-    string path = "../../tests/YAML/Test.yaml";
-    if (access(path.c_str(), F_OK) == 0) {
-        config = YAML::LoadFile(path);
-    } else {
-        cout << "cannot find " << path;
-        FAIL();
+TEST(YamlTest, TestYamlFileCheck) {
+    if (access(testYamlFile, F_OK) != 0) {
+        GTEST_FAIL() << "cannot find " << testYamlFile;
     }
 }
 
-TEST(yaml_test, ByMultipleItemNode) {
-    vector<YAML::Node> resultNodes =
-        Yaml::getNodeByTag<vector<YAML::Node>>("../../tests/YAML/Test.yaml", "Item");
+TEST(YamlTest, getNodeByKey) {
+    Node node = Yaml::getNodeByKey(testYamlFile, "aKey");
 
-    vector<string> resulttexts = Yaml::getText<vector<string>>(resultNodes.at(0), "#text");
-    ASSERT_EQ(resulttexts.at(0), "item1");
-    ASSERT_EQ(resulttexts.at(1), "item2");
+    EXPECT_EQ(node["name"].as<string>(), "node1value");
+    EXPECT_EQ(Yaml::getValue(node, "name"), "node1value");
 }
 
-TEST(yaml_test, ByAttribute) {
-    vector<YAML::Node> result = Yaml::getNodeByTag<vector<YAML::Node>>(
-        "../../tests/YAML/Test.yaml", "-attributeName2", "AttributeValue2");
-    vector<string> resultText = Yaml::getText<vector<string>>(result.at(0), "#text");
-    ASSERT_EQ(resultText.at(0), "Level2Item1");
+TEST(YamlTest, getNodeByKeyAndValue) {
+    Node node = Yaml::getNodeByKey(testYamlFile, "aKey", "123456");
+    EXPECT_EQ(node["name"].as<string>(), "Leve4SiblingName");
+
+    vector<string> values = Yaml::getValueList(node, "name");
+    EXPECT_TRUE(count(values.begin(), values.end(), "Level5Item1Name"));
+    EXPECT_TRUE(count(values.begin(), values.end(), "Leve4SiblingName"));
+    EXPECT_TRUE(count(values.begin(), values.end(), "Level5Item2Name"));
+    EXPECT_TRUE(count(values.begin(), values.end(), "Level5Item3Name"));
 }
 
-TEST(yaml_test, BySingleItemNode) {
-    config = YAML::LoadFile("../../tests/YAML/Test.yaml");
-    vector<YAML::Node> resultNode =
-        Yaml::getNodeByTag<vector<YAML::Node>>("../../tests/YAML/Test.yaml", "SingleItemNode");
-    vector<string> resultText = Yaml::getText<vector<string>>(resultNode.at(0), "#text");
-    ASSERT_EQ(resultText.at(0), "This is a single item");
+TEST(YamlTest, getNodeListByKey) {
+    vector<Node> nodes = Yaml::getNodeListByKey(testYamlFile, "aKey");
+
+    vector<string> values = {"1234", "12345", "123456"};
+
+    EXPECT_TRUE(count(values.begin(), values.end(), Yaml::getValue(nodes.at(0), "aKey")));
+    EXPECT_TRUE(count(values.begin(), values.end(), Yaml::getValue(nodes.at(1), "aKey")));
+    EXPECT_TRUE(count(values.begin(), values.end(), Yaml::getValue(nodes.at(2), "aKey")));
+
+    EXPECT_TRUE(count(values.begin(), values.end(), nodes.at(0)["aKey"].as<string>()));
+    EXPECT_TRUE(count(values.begin(), values.end(), nodes.at(1)["aKey"].as<string>()));
+    EXPECT_TRUE(count(values.begin(), values.end(), nodes.at(2)["aKey"].as<string>()));
+
+    EXPECT_EQ(nodes.size(), 3);
 }
 
-TEST(yaml_test, ByMultipleAttribute) {
-    config = YAML::LoadFile("../../tests/YAML/Test.yaml");
-    vector<YAML::Node> resultNode = Yaml::getNodeByTag<vector<YAML::Node>>(
-        "../../tests/YAML/Test.yaml", "-attributeName1", "AttributeValue1");
-    vector<string> resultText = Yaml::getText<vector<string>>(resultNode.at(0), "#text");
-    ASSERT_EQ(resultText.at(0), "Level4Item1");
-    ASSERT_EQ(resultText.at(1), "Level4Item2");
-    ASSERT_EQ(resultText.at(2), "Level4Item3");
-    ASSERT_EQ(resultText.size(), 3);
+TEST(YamlTest, getNodeListByKeyAndValue) {
+    vector<Node> nodes = Yaml::getNodeListByKey(testYamlFile, "key", "value");
+
+    EXPECT_EQ(Yaml::getValue(nodes.at(0), "key"), "value");
+    EXPECT_EQ(Yaml::getValue(nodes.at(1), "key"), "value");
+
+    EXPECT_EQ(nodes.at(0)["key"].as<string>(), "value");
+    EXPECT_EQ(nodes.at(1)["key"].as<string>(), "value");
+
+    EXPECT_EQ(nodes.size(), 2);
 }
 
-TEST(yaml_test, ByPath) {
-    vector<YAML::Node> resultNode = Yaml::getNodeByPath<vector<YAML::Node>>(
-        "../../tests/YAML/Test.yaml", "NestedItems.Level2.Level3.Leve4.Level4Item");
-    vector<string> resultText = Yaml::getText<vector<string>>(resultNode.at(0), "#text");
-    ASSERT_EQ(resultText.at(0), "Level4Item1");
-    ASSERT_EQ(resultText.at(1), "Level4Item2");
-    ASSERT_EQ(resultText.at(2), "Level4Item3");
+TEST(YamlTest, getNodeByPath) {
+    Node node = Yaml::getNodeByPath(testYamlFile, "NestedItems.Level2.Level2Item");
+    vector<string> values = Yaml::getValueList(node, "text");
+
+    EXPECT_TRUE(count(values.begin(), values.end(), "Level2Item1"));
+    EXPECT_TRUE(count(values.begin(), values.end(), "Level2Item2"));
+    EXPECT_TRUE(count(values.begin(), values.end(), "Level2Item3"));
+
+    EXPECT_EQ(values.size(), 3);
 }
 
-TEST(yaml_test, ByRealResult) {
-    vector<YAML::Node> resultNode =
-        Yaml::getNodeByTag<vector<YAML::Node>>("../../Setup/Paths.yaml", "bin_Dir");
-    vector<string> resultText = Yaml::getText<vector<string>>(resultNode.at(0), "bin_Dir");
-    ASSERT_EQ(resultText.at(0), "bin/");
+TEST(YamlTest, getValue) {
+    Node node = Yaml::getNodeByPath(testYamlFile, "NestedItems.Level2.Level3.Leve4Sibling");
+    string value = Yaml::getValue(node, "name");
+
+    EXPECT_EQ(value, "Leve4SiblingName");
+    EXPECT_EQ(node["name"].as<string>(), "Leve4SiblingName");
 }
 
-TEST(yaml_test, ByRealResult1) {
-    vector<YAML::Node> resultNode = Yaml::getNodeByTag<vector<YAML::Node>>(
-        "../../Setup/Paths.yaml", "server_cmds_Yaml");
-    vector<string> resultText = Yaml::getText<vector<string>>(resultNode.at(0), "server_cmds_Yaml");
-    ASSERT_EQ(resultText.at(0), "Setup/ServerCmds.yaml");
+TEST(YamlTest, getValueViaYamlFile) {
+    Node node = Yaml::getNodeByPath(testYamlFile, "NestedItems.Level2.Level3.Leve4Sibling");
+    string value = Yaml::getValue(testYamlFile, "uniqueKey");
+    EXPECT_EQ(value, "unique value");
 }
 
-TEST(yaml_test, ByRealResult2) {
-    vector<YAML::Node> resultNode = Yaml::getNodeByTag<vector<YAML::Node>>(
-        "../../Setup/Paths.yaml", "client_cmds_Yaml");
-    vector<string> resultText = Yaml::getText<vector<string>>(resultNode.at(0), "client_cmds_Yaml");
-    ASSERT_EQ(resultText.at(0), "Setup/ClientCmds.yaml");
+TEST(YamlTest, getValueList) {
+    Node node = Yaml::getNodeByPath(testYamlFile, "NestedItems.Level2.Level3.Level4");
+    vector<string> values = Yaml::getValueList(node, "text");
+
+    EXPECT_TRUE(count(values.begin(), values.end(), "Level4Item1"));
+    EXPECT_TRUE(count(values.begin(), values.end(), "Level4Item2"));
+    EXPECT_TRUE(count(values.begin(), values.end(), "Level4Item3"));
+
+    EXPECT_EQ(values.size(), 3);
 }
 
-TEST(yaml_test, ByRealResult3) {
-    vector<YAML::Node> resultNode =
-        Yaml::getNodeByTag<vector<YAML::Node>>("../../Setup/Paths.yaml", "config_Yaml");
-    vector<string> resultText = Yaml::getText<vector<string>>(resultNode.at(0), "config_Yaml");
-    ASSERT_EQ(resultText.at(0), "Setup/Config.yaml");
-}
+TEST(YamlTest, getValueListViaYamlFile) {
+    vector<string> values = Yaml::getValueList(testYamlFile, "aKey");
 
+    EXPECT_TRUE(count(values.begin(), values.end(), "1234"));
+    EXPECT_TRUE(count(values.begin(), values.end(), "12345"));
+    EXPECT_TRUE(count(values.begin(), values.end(), "123456"));
 
-TEST(yaml_test, ByRealResult6){
-    vector<YAML::Node> resultNode =
-        Yaml::getNodeByTag<vector<YAML::Node>>("../../Setup/Paths.yaml", "config_Yaml");
-    vector<string> resultText = Yaml::getText<vector<string>>(resultNode.at(0), "config_Yaml");
-    ASSERT_EQ(resultText.at(0), "Setup/Config.yaml");
+    EXPECT_EQ(values.size(), 3);
 }
