@@ -1,24 +1,7 @@
 #include <gtest/gtest.h>
-#include <unistd.h>
-
-#include <QtConcurrent/QtConcurrent>
-#include <QtCore/QDebug>
-#include <QtCore/QElapsedTimer>
-#include <QtCore/QFile>
-#include <QtCore/QObject>
-#include <atomic>
-#include <cmath>
-#include <condition_variable>
-#include <iostream>
-
-#include <numeric>
-#include <string>
-#include <thread>
 
 #include "../../lib/Logger/logger.h"
 #include "../Test_common.h"
-
-using namespace std;
 
 QString logString = "Testing Logger";
 
@@ -65,27 +48,25 @@ TEST(Logger, Benchmark) {
 }
 
 void writeThreadFirst() {
-    
     for (int i = 0; i < 100; i++) {
-         log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
+        log()->Warn("Concurrent Write Test Thread 1 log " + QString::number(i));
     }
 }
 
 void writeThreadSecond() {
-    
     for (int i = 100; i < 200; i++) {
-       log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
+        log()->Warn("Concurrent Write Test Thread 2 log " + QString::number(i));
     }
 }
 
 TEST(Logger, ThreadSafety) {
     deleteLogFile();
-    bool arr[200];
-    bool allTrue = true;
-    int count=0;
+    std::array<bool, 200> logsArray{};
+    bool allLogsFound = false;
+    int logCount = 0;
 
     for (int i = 0; i < 200; i++) {
-        arr[i] = false;
+        logsArray.at(i) = false;
     }
 
     QFile file(log()->LogFilePath);
@@ -100,30 +81,28 @@ TEST(Logger, ThreadSafety) {
         GTEST_FAIL() << "Log file not found: " + log()->LogFilePath.toStdString();
     }
 
-    QString lines;
-
     QRegExp rx;
     rx.setPattern("log (.*)");
+    QString lines;
     while (!file.atEnd()) {
-        count++;
         lines = file.readLine();
         if (lines.contains("Thread")) {
+            logCount++;
             if (rx.indexIn(lines) != -1) {
                 int idx = rx.cap(1).toInt();
-                //  QString s = QString::number(idx);// for printing the values with log
-                //  log()->Info(s);
-                arr[idx] = true;
+                logsArray.at(idx) = true;
             }
         }
     }
 
-    for (int i = 0; i < 200; i++) {
-        if (not arr[i]) {
-            allTrue = false;
+    EXPECT_EQ(logCount, 200);
+
+    for (bool i : logsArray) {
+        if (not i) {
+            allLogsFound = false;
             break;
         }
     }
 
-    EXPECT_TRUE(allTrue);
-    EXPECT_EQ(count, 200);
+    EXPECT_TRUE(allLogsFound);
 }
