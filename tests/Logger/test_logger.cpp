@@ -82,6 +82,7 @@ TEST(Logger, ThreadSafety) {
     deleteLogFile();
     bool arr[200];
     bool allTrue = true;
+    int count=0;
 
     for (int i = 0; i < 200; i++) {
         arr[i] = false;
@@ -104,6 +105,7 @@ TEST(Logger, ThreadSafety) {
     QRegExp rx;
     rx.setPattern("log (.*)");
     while (!file.atEnd()) {
+        count++;
         lines = file.readLine();
         if (lines.contains("Thread")) {
             if (rx.indexIn(lines) != -1) {
@@ -123,4 +125,5 @@ TEST(Logger, ThreadSafety) {
     }
 
     EXPECT_TRUE(allTrue);
+    EXPECT_EQ(count, 200);
 }
