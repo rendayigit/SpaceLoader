@@ -1,10 +1,10 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <QtCore/QCoreApplication>
+
 #include <QtCore/QtCore>
 #include <iostream>
-
+#include <QProcess>
 #include "lib/YAML/yaml.h"
 
 #ifdef Paths
@@ -26,9 +26,25 @@ class Path {
         return instance;
     }
 
-    QString getBinaryPath() const { return QCoreApplication::applicationDirPath(); }
+    // QString getBinaryPath() const { return QCoreApplication::applicationDirPath(); }
+ 
+    QString getBinaryPath() const{ 
+        char dest[PATH_MAX];
+        memset(dest,0,sizeof(dest)); // readlink does not null terminate!
+        if (readlink("/proc/self/exe", dest, PATH_MAX) == -1) {
+            perror("readlink");
+            return "";
+        }
+        return dest;
+        
+    }
 
-    QString getProjectRoot() const { return getBinaryPath() + "/../../"; }
+    QString getProjectRoot() const { 
+        QString name = getBinaryPath();
+        int pos = name.lastIndexOf(QChar('/'));
+        return name.left(pos) + "/../../";
+        // return getBinaryPath() + "/../../";
+    }
 
     QString getPathsYaml() const { return getProjectRoot() + "Setup/Paths.yaml"; }
 
@@ -44,7 +60,7 @@ class Path {
 
     QString getClientCmdsYaml() const {
         return getProjectRoot() + QString::fromStdString(Yaml::getValue(
-                                      getProjectRoot().toStdString(), "client_cmds_Yaml"));
+                                      getPathsYaml().toStdString(), "client_cmds_Yaml"));
     }
 
     QString getConfigYaml() const {
@@ -53,7 +69,8 @@ class Path {
     }
 
    private:
-    Path() = default;
+    Path()=default;
+    
 };
 
 #endif  // COMMON_H

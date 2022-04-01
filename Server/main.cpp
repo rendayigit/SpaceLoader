@@ -1,17 +1,23 @@
 #include <iostream>
-
 #include "../common.h"
-// #include "server.h"
+#include "server.h"
+#include <stdlib.h>
 
-int main(int argc, char *argv[]) {
-    QCoreApplication a(argc, argv);
+int main(int argc, char *argv[]){
 
-    // Server::getInstance()->populateCmdLists();
+    // std::cout<<"Getenv Path: "<<getenv("PATH")<<std::endl; //gets path env
 
-    // qint32 serverPort = 1234;
-    // Server::getInstance()->startServer(serverPort);
+    Server::getInstance()->populateCmdLists();
 
-    std::cout << "PATH: " << Paths().getBinaryPath().toStdString() << std::endl;
+    qint32 serverPort = 1234;
+    Server::getInstance()->startServer(serverPort);
 
-    return a.exec();
+    std::cout << "pwd PATH: " <<Paths().getBinaryPath().toStdString() << std::endl;
+    std::cout << "getProjectRoot PATH: " <<Paths().getProjectRoot().toStdString() << std::endl;
+    std::cout << "getBinDir PATH: " <<Paths().getBinDir().toStdString() << std::endl;
+    std::cout << "getServerCmdsYaml PATH: " <<Paths().getServerCmdsYaml().toStdString() << std::endl;
+    std::cout << "getClientCmdsYaml PATH: " <<Paths().getClientCmdsYaml().toStdString() << std::endl;
+    std::cout << "getConfigYaml PATH: " <<Paths().getConfigYaml().toStdString() << std::endl;
+  
+    
 }
