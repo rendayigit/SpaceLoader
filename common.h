@@ -30,8 +30,6 @@ class Path {
         static Path instance;
         return instance;
     }
-
-    // QString getBinaryPath() const { return QCoreApplication::applicationDirPath(); }
  
     QString getBinaryPath() const{ 
         char dest[PATH_MAX];
@@ -40,15 +38,14 @@ class Path {
             perror("readlink");
             return "";
         }
-        return dest;
+        QString tmp=dest;
+        int pos = tmp.lastIndexOf(QChar('/'));
+        return tmp.left(pos);
         
     }
 
     QString getProjectRoot() const { 
-        QString name = getBinaryPath();
-        int pos = name.lastIndexOf(QChar('/'));
-        return name.left(pos) + "/../../";
-        // return getBinaryPath() + "/../../";
+        return getBinaryPath() + "/../../";
     }
 
     QString getPathsYaml() const { return getProjectRoot() + "Setup/Paths.yaml"; }
