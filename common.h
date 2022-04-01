@@ -4,11 +4,13 @@
 
 #include <QtCore/QtCore>
 #include <iostream>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>   
 #include <QProcess>
 #include "lib/YAML/yaml.h"
+#include <unistd.h>
+#include <limits.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #ifdef Paths
 #undef Paths
