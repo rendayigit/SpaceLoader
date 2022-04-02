@@ -1,91 +1,16 @@
 {
+  "clangd.path": "C:/msys64/mingw64/bin/clangd.exe", // For Windows
   "cmake.cmakePath": "C:/msys64/mingw64/bin/cmake.exe", //For Windows
-  // "cmake.cmakePath": "/home/pc/Qt/Tools/CMake/bin/cmake", //For Linux
+  // "cmake.cmakePath": "/home/renda/Qt/Tools/CMake/bin/cmake", //For Linux
   "cmake.mingwSearchDirs": [
     "C:/msys64/mingw64/**"
   ],
-  "cmake.generator": "MinGW Makefiles",
+  "cmake.generator": "MinGW Makefiles", // For Windows
   "cmake.configureSettings": {
     "CMAKE_PREFIX_PATH": "C:/msys64/mingw64/lib/cmake/", //For Windows
-    // "CMAKE_PREFIX_PATH": "/home/pc/Qt/5.15.2/gcc_64/lib/cmake/", // For Linux
+    // "CMAKE_PREFIX_PATH": "/home/renda/Qt/5.15.2/gcc_64/lib/cmake/", // For Linux
   },
   "cmake.sourceDirectory": "${workspaceFolder}/",
-  "files.associations": {
-    "<!DOCTYPE html>": "html",
-    "qcoreapplication": "cpp",
-    "qtxml": "cpp",
-    "qdomdocument": "cpp",
-    "qpair": "cpp",
-    "chrono": "cpp",
-    "complex": "cpp",
-    "ostream": "cpp",
-    "string": "cpp",
-    "future": "cpp",
-    "*.tcc": "cpp",
-    "cmath": "cpp",
-    "qstring": "cpp",
-    "cctype": "cpp",
-    "clocale": "cpp",
-    "cstdarg": "cpp",
-    "cstddef": "cpp",
-    "cstdio": "cpp",
-    "cstdlib": "cpp",
-    "cstring": "cpp",
-    "ctime": "cpp",
-    "cwchar": "cpp",
-    "cwctype": "cpp",
-    "array": "cpp",
-    "atomic": "cpp",
-    "bitset": "cpp",
-    "cinttypes": "cpp",
-    "condition_variable": "cpp",
-    "cstdint": "cpp",
-    "deque": "cpp",
-    "list": "cpp",
-    "unordered_map": "cpp",
-    "vector": "cpp",
-    "exception": "cpp",
-    "algorithm": "cpp",
-    "functional": "cpp",
-    "iterator": "cpp",
-    "map": "cpp",
-    "memory": "cpp",
-    "memory_resource": "cpp",
-    "numeric": "cpp",
-    "optional": "cpp",
-    "random": "cpp",
-    "ratio": "cpp",
-    "set": "cpp",
-    "string_view": "cpp",
-    "system_error": "cpp",
-    "tuple": "cpp",
-    "type_traits": "cpp",
-    "utility": "cpp",
-    "fstream": "cpp",
-    "initializer_list": "cpp",
-    "iomanip": "cpp",
-    "iosfwd": "cpp",
-    "iostream": "cpp",
-    "istream": "cpp",
-    "limits": "cpp",
-    "mutex": "cpp",
-    "new": "cpp",
-    "sstream": "cpp",
-    "stdexcept": "cpp",
-    "streambuf": "cpp",
-    "thread": "cpp",
-    "typeinfo": "cpp",
-    "variant": "cpp",
-    "qstandardpaths": "cpp",
-    "qfile": "cpp",
-    "qprocess": "cpp",
-    "qhostaddress": "cpp",
-    "qthread": "cpp",
-    "qtime": "cpp",
-    "qtcpsocket": "cpp",
-    "qelapsedtimer": "cpp",
-    "qsharedmemory": "cpp"
-  },
   "terminal.integrated.profiles.windows": {
     "PowerShell": {
       "source": "PowerShell",
@@ -109,8 +34,9 @@
     }
   },
   "terminal.integrated.defaultProfile.windows": "MSYS Bash",
-  "terminal.integrated.env.windows": {"PATH" : "/c/msys64/mingw64/bin:/c/msys64/usr/local/bin:/c/msys64/usr/bin:${env:windir}:${env:path}"},
-  "clangd.path": "C:/msys64/mingw64/bin/clangd.exe",
+  "terminal.integrated.env.windows": {
+    "PATH" : "/c/msys64/mingw64/bin:/c/msys64/usr/local/bin:/c/msys64/usr/bin:${env:windir}:${env:path}"
+  },
   "clangd.arguments": [
     "--compile-commands-dir=${workspaceFolder}/build/compile_commands.json"
   ],
@@ -118,11 +44,5 @@
   "C_Cpp.formatting": "Disabled",
   "C_Cpp.errorSquiggles": "Disabled",
   "C_Cpp.intelliSenseEngine": "Disabled",
-  "testMate.cpp.test.executables": "{build,Build,BUILD,out,Out,OUT}/**/*{test,tests,Test,Tests,TEST,TESTS}*",
-  //  "testMate.cpp.test.advancedExecutables": [
-  //    {
-  //      "pattern" : "{build,Build,BUILD,out,Out,OUT}/**/*{test,tests,Test,Tests,TEST,TESTS}*",
-  //      "gtest" : {"ignoreTestEnumerationStdErr": true}
-  //    }
-  // ]
+  "testMate.cpp.test.executables": "{build,Build,BUILD,out,Out,OUT}/**/*{test,tests,Test,Tests,TEST,TESTS}*"
 }
