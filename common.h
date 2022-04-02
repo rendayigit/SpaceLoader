@@ -1,16 +1,14 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <QtCore/QString>
 
-#include <QtCore/QtCore>
-#include <iostream>
-#include <QProcess>
 #include "lib/YAML/yaml.h"
+
+#ifndef Q_OS_WIN
 #include <unistd.h>
-#include <limits.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <climits>
+#endif
 
 #ifdef Paths
 #undef Paths
@@ -30,23 +28,22 @@ class Path {
         static Path instance;
         return instance;
     }
- 
-    QString getBinaryPath() const{ 
+
+    QString getBinaryPath() const {
+#ifdef Q_OS_WIN
+        return "";
+#else
         char dest[PATH_MAX];
-        memset(dest,0,sizeof(dest)); // readlink does not null terminate!
+        memset(dest, 0, sizeof(dest));
         if (readlink("/proc/self/exe", dest, PATH_MAX) == -1) {
-            perror("readlink");
             return "";
         }
-        QString tmp=dest;
-        int pos = tmp.lastIndexOf(QChar('/'));
-        return tmp.left(pos);
-        
+        QString path = dest;
+        return path.left(path.lastIndexOf(QChar('/')));
+#endif
     }
 
-    QString getProjectRoot() const { 
-        return getBinaryPath() + "/../../";
-    }
+    QString getProjectRoot() const { return getBinaryPath() + "/../../"; }
 
     QString getPathsYaml() const { return getProjectRoot() + "Setup/Paths.yaml"; }
 
@@ -71,8 +68,7 @@ class Path {
     }
 
    private:
-    Path()=default;
-    
+    Path() = default;
 };
 
 #endif  // COMMON_H
