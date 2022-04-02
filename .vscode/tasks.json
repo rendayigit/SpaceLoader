@@ -81,7 +81,7 @@
             "linux": {
                 "command": [
                     "chmod -R 777 ./scripts/;",
-                    "./scripts/kill.sh"
+                    // "./scripts/kill.sh"
                 ]
             },
             "windows": {

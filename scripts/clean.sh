@@ -1,6 +1,8 @@
-cmake --build ./build --config Debug --target clean
+cd `dirname $0`
+SCRIPTDIR=`pwd`
+cd -
 
-rm -rf $(dirname $(readlink -f "$0"))/../build
-rm -rf $(dirname $(readlink -f "$0"))/../.cache
-rm -rf $(dirname $(readlink -f "$0"))/../bin
-rm -rf $(dirname $(readlink -f "$0"))/../Logs
+rm -rf $SCRIPTDIR/../build
+rm -rf $SCRIPTDIR/../.cache
+rm -rf $SCRIPTDIR/../bin
+rm -rf $SCRIPTDIR/../Logs
