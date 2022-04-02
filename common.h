@@ -1,12 +1,16 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <QtCore/QDebug>
 #include <QtCore/QString>
 
 #include "lib/YAML/yaml.h"
 
-#ifndef Q_OS_WIN
+#ifdef Q_OS_WIN
+#include <windows.h>
+#else
 #include <unistd.h>
+
 #include <climits>
 #endif
 
@@ -31,7 +35,10 @@ class Path {
 
     QString getBinaryPath() const {
 #ifdef Q_OS_WIN
-        return "";
+        WCHAR dest[MAX_PATH];
+        GetModuleFileNameW(NULL, dest, MAX_PATH);
+        QString path = QString::fromStdWString(dest);
+        return path.left(path.lastIndexOf(QChar('\\')));
 #else
         char dest[PATH_MAX];
         memset(dest, 0, sizeof(dest));
