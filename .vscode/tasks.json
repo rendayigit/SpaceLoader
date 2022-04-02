@@ -20,7 +20,7 @@
             "group": "build",
             "presentation": {
                 "reveal": "always",
-                "panel": "dedicated",
+                "panel": "shared",
                 "focus": true,
                 "echo": true,
                 "showReuseMessage": false,
@@ -117,7 +117,7 @@
             "group": "test",
             "presentation": {
                 "reveal": "always",
-                "panel": "new",
+                "panel": "dedicated",
                 "focus": true,
                 "echo": true,
                 "showReuseMessage": false,
