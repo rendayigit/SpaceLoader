@@ -247,7 +247,7 @@ misc-unused-using-decls, # keep this
 modernize-avoid-bind,
 modernize-avoid-c-arrays,
 modernize-concat-nested-namespaces,
-modernize-deprecated-headers,
+modernize-deprecated-headers, # keep this
 modernize-deprecated-ios-base-aliases,
 modernize-loop-convert,
 modernize-make-shared,
