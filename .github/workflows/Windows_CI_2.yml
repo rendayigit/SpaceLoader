@@ -50,7 +50,7 @@ jobs:
           # cmake -DCMAKE_PREFIX_PATH:STRING=C:/msys64/mingw64/lib/cmake/ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=C:/msys64/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=C:/msys64/mingw64/bin/g++.exe -S${{ github.workspace }} -B${{ github.workspace }}\build\ -G "MinGW Makefiles"
           # set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
           # cmake --build ${{ github.workspace }}\build\ --config Debug --target all -j %coreCount% --
-          ${{ github.workspace }}/scripts/build.bat
+          /scripts/build.bat
       - name: Run Unit Tests
         run: |
           cd ${{ github.workspace }}\build\tests\
