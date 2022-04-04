@@ -1,0 +1,57 @@
+name: WINDOWS_CI
+
+on: push
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: |
+            git mingw-w64-qt5
+            git mingw-w64-qt5-base
+            git mingw-w64-qt5-declarative
+            git mingw-w64-cmake
+            git mingw-w64-make
+            git mingw-w64-gtest
+            git mingw-w64-yaml-cpp
+      - name: CI-Build
+        run: |
+          echo 'Running in MSYS2!'
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v2
+        with:
+          path: ${{ runner.workspace }}/Qt
+          key: ${{ runner.os }}-QtCache
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          host: "windows"
+          target: "desktop"
+
+      - name: Build All
+        run: |
+          cmake -S . -B build/
+          cd build
+          cmake --build .
+          cd ..
+      - name: Run Unit Tests
+        run: |
+          cd  ${GITHUB_WORKSPACE}
+          cd build
+          cd tests
+          ./tests.exe
