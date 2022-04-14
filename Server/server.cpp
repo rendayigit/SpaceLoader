@@ -167,7 +167,7 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
             if (lib.contains(message, Qt::CaseInsensitive)) {
                 QPluginLoader loader(lib);
                 if (auto *instance = loader.instance()) {
-                    if (auto *plugin = qobject_cast<PluginInterface *>(instance)) {
+                    if (auto *plugin = qobject_cast<TestPluginInterface *>(instance)) {
                         plugin->run(sender, message);
                     } else {
                         Log()->Error("qobject_cast<> returned nullptr");

@@ -1,6 +1,6 @@
-#include "AddUser.h"
-
-User *AddUser::getUser(QTcpSocket *socket) {
+#include "test-plugin.h"
+// multiple definition of `ServerCommon::m_instance'
+User *TestPlugin::getUser(QTcpSocket *socket) {
     for (auto &i : ServerCommon::getInstance()->getUserList()) {
         for (auto &j : i->socketInstances) {
             if (j == socket) return i;
@@ -10,7 +10,7 @@ User *AddUser::getUser(QTcpSocket *socket) {
     return nullptr;
 }
 
-User *AddUser::getUser(QString userName) {
+User *TestPlugin::getUser(QString userName) {
     for (auto &i : ServerCommon::getInstance()->getUserList()) {
         if (i->getUserName() == userName) return i;
     }
@@ -18,7 +18,7 @@ User *AddUser::getUser(QString userName) {
     return nullptr;
 }
 
-void AddUser::run(QTcpSocket *sender, QByteArray message) const {
+void TestPlugin::run(QTcpSocket *sender, QByteArray message) const {
     message.replace("username ", "");
     QString username = message.mid(0, message.indexOf(" "));
     QHostAddress ip(sender->localAddress().toIPv4Address());

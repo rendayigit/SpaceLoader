@@ -7,12 +7,12 @@
 #include <QtNetwork/QTcpSocket>
 
 #include "../Client_console/client.h"
-#include "../Commands/Server/common/user.h"
+#include "../Commands/common/user.h"
 #include "../Operations/Operations.h"
 #include "../constants.h"
 #include "../lib/TCP/server/tcpServer.h"
 #include "../lib/YAML/yaml.h"
-#include "../Commands/PluginInterface.h"
+#include "../Commands/common/test-plugin-interface.h"
 
 class Server : public TCPServer, public Operations {
    public:

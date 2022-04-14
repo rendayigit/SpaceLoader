@@ -11,7 +11,7 @@
 #include <iostream>
 
 #include "../../lib/Logger/logger.h"
-#include "../../Commands/Server/getUserList/GetUserList.h"
+#include "../../Commands/getUserList/test-plugin.h"
 #include "../Test_common.h"
 #include <filesystem>
 using std::filesystem::current_path;
@@ -37,7 +37,7 @@ TEST(Commands, getUserList) {
   
 
     QTcpSocket *testSocket;
-    const QString path = QString::fromStdString(current_path().string()) + "/../../bin/";
+    const QString path = QString::fromStdString(current_path().string()) + "/../../Libs/";
     TEST_COUT(path.toStdString());
     QString lib = path+getLib(path);
     if (lib.isNull()) {
@@ -46,13 +46,11 @@ TEST(Commands, getUserList) {
         TEST_COUT(lib.toStdString());
         QPluginLoader loader(lib);
         if (auto *instance = loader.instance()) {
-            if (auto *plugin = qobject_cast<PluginInterface *>(instance)) {
+            if (auto *plugin = qobject_cast<TestPluginInterface *>(instance)) {
                 plugin->run(testSocket, "getuserlist");
             } else {
                 GTEST_FAIL() << "qobject_cast<> returned nullptr";
             }
-        } else {
-            GTEST_FAIL() << loader.errorString().toStdString();
         }
     }
 

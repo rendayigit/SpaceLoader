@@ -4,18 +4,18 @@
 #include <QtCore/QObject>
 #include <QtCore/QtPlugin>
 
-#include "../lib/Logger/logger.h"
-#include "PluginInterface.h"
-#include "common/serverCommon.h"
-#include "common/user.h"
+#include "../../lib/Logger/logger.h"
+#include "../common/test-plugin-interface.h"
+#include "../common/serverCommon.h"
+#include "../common/user.h"
 
-class AddUser : public QObject, public PluginInterface {
+class TestPlugin : public QObject, public TestPluginInterface {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID PluginInterface_iid)
-    Q_INTERFACES(PluginInterface)
+    Q_PLUGIN_METADATA(IID TestPluginInterface_iid)
+    Q_INTERFACES(TestPluginInterface)
 
    public:
-    ~AddUser() override {}
+    ~TestPlugin() override {}
     void run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) const override;
 
    private:

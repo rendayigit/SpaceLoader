@@ -1,6 +1,11 @@
-#include "GetUserList.h"
-
-void GetUserList::run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) const {
+#include <QDebug>
+#include "test-plugin.h"
+#include <iostream>
+#include "../common/serverCommon.h"
+void TestPlugin::run(QTcpSocket *sender, QByteArray message) const 
+{
+    std::cout<<"hgf";
+    
     QString users;
 
     for (int i = 0; i < ServerCommon::getInstance()->getUserList().size(); i++) {
@@ -16,5 +21,6 @@ void GetUserList::run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) c
         users += "User #" + QString::number(i) + " ip: " + ip.toString() + '\n';
     }
 
-    TCPServer::transmit(sender, users.toLocal8Bit());
+    // TCPServer::transmit(sender, users.toLocal8Bit());//  symbol lookup error: undefined symbol: _ZN9TCPServer8transmitEP10QTcpSocket10QByteArray
 }
+

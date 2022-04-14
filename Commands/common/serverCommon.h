@@ -3,7 +3,7 @@
 
 #include <QtCore/QList>
 
-#include "../../commandsCommon.h"
+#include "commandsCommon.h"
 #include "user.h"
 
 class ServerCommon {

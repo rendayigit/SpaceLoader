@@ -1,9 +1,10 @@
+#include <QtNetwork/qtcpsocket.h>
 #include <QtCore/QtCore>
-#include <QString>
 #include <QTcpSocket>
+#include <QString>
 #include <QByteArray>
 #include <QDateTime>
-#include <QAbstractSocket>
+
 static bool cmp(const QString source, const QString command) {
     QString simplifiedSource = source.simplified();
     simplifiedSource = simplifiedSource.mid(0, simplifiedSource.indexOf(" ", 0));
