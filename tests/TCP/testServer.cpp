@@ -1,12 +1,11 @@
 #include "testServer.h"
 
-TestServer::TestServer() { }
+Server::Server() { }
 
-void TestServer::onReceived(QTcpSocket *sender, QByteArray message) {
+void Server::onReceived(QTcpSocket *sender, QByteArray message) {
     receivedString = message.data();
 }
 
-void TestServer::clientDisconnected(QTcpSocket *clientSocket) {
+void Server::clientDisconnected(QTcpSocket *clientSocket) {
     qDebug() << clientSocket->peerAddress().toIPv4Address() << " disconnected";
 }
-

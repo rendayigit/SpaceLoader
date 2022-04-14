@@ -1,14 +1,14 @@
-#ifndef TESTCLIENT_H
-#define TESTCLIENT_H
+#ifndef CLIENT_H
+#define CLIENT_H
 
 #include "../../lib/TCP/client/tcpClient.h"
 
-class TestClient : public TCPClient {
+class Client : public TCPClient {
 public:
-    explicit TestClient();
-    void onReceived(QByteArray) override;
+    explicit Client();
+    void onReceived(QByteArray);
     void onDisconnected();
-    QString receivedString = "null";
+    QString receivedString;
 };
 
-#endif // TESTCLIENT_H
+#endif // CLIENT_H
