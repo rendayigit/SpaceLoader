@@ -1,10 +1,10 @@
 #include <QDebug>
-#include "test-plugin.h"
+#include "getUserList.h"
 #include <iostream>
 #include "../common/serverCommon.h"
 void TestPlugin::run(QTcpSocket *sender, QByteArray message) const 
 {
-    std::cout<<"hgf";
+    qDebug()<<"control";
     
     QString users;
 

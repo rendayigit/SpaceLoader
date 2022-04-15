@@ -2,7 +2,7 @@
 #define TEST_PLUGIN_HPP
 #include <QObject>
 #include <QtPlugin>
-#include "../common/test-plugin-interface.h"
+#include "../common/command_interface.h"
 
 class TestPlugin : public QObject, public TestPluginInterface
 {

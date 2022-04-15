@@ -8,7 +8,7 @@ find_package(Qt5Widgets REQUIRED)
 
 set(COMPILE_OPTIONS -std=c++11)
 
-add_library(addUser SHARED test-plugin.cpp)
+add_library(addUser SHARED addUser.cpp)
 
 find_package(Qt5 COMPONENTS Network REQUIRED)
 

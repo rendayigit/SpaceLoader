@@ -9,9 +9,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 #include <iostream>
-
+#include <QDebug>
 #include "../../lib/Logger/logger.h"
-#include "../../Commands/getUserList/test-plugin.h"
+#include "../../Commands/getUserList/getUserList.h"
 #include "../Test_common.h"
 #include <filesystem>
 using std::filesystem::current_path;
@@ -48,6 +48,7 @@ TEST(Commands, getUserList) {
         if (auto *instance = loader.instance()) {
             if (auto *plugin = qobject_cast<TestPluginInterface *>(instance)) {
                 plugin->run(testSocket, "getuserlist");
+                qDebug()<<"plugin safely implemented";
             } else {
                 GTEST_FAIL() << "qobject_cast<> returned nullptr";
             }
