@@ -9,9 +9,8 @@ jobs:
       run:
         shell: msys2 {0}
     steps:
+    
       - name: Install MSYS2
-        uses: actions/checkout@v2
-      - name: Install MSYS2 v2
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
@@ -46,9 +45,9 @@ jobs:
         run: |
           # TODO - find the correct path to the msys installation
           mkdir D:\a\SpaceLoader\SpaceLoader\build
-          cmake -DCMAKE_PREFIX_PATH:STRING=C:\msys64\mingw64\lib\cmake\ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=C:\msys64\mingw64\bin\gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=C:\msys64\mingw64\bin\g++.exe -S D:\a\SpaceLoader\SpaceLoader\ -B D:\a\SpaceLoader\SpaceLoader\build -G "MinGW Makefiles"
+          cmake -DCMAKE_PREFIX_PATH:STRING=D:\a\_temp\msys64\mingw64\lib\cmake\ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=D:\a\_temp\msys64\mingw64\bin\gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=D:\a\_temp\msys64\mingw64\bin\g++.exe -S D:\a\SpaceLoader\SpaceLoader\ -B D:\a\SpaceLoader\SpaceLoader\build\ -G "MinGW Makefiles"
           set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
-          cmake --build D:\a\SpaceLoader\SpaceLoader\build --config Debug --target all -j %coreCount% --
+          cmake --build D:\a\SpaceLoader\SpaceLoader\build\ --config Debug --target all -j %coreCount% --
 
       - name: Run Unit Tests
         run: |
