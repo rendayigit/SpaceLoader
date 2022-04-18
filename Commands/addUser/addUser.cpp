@@ -28,5 +28,6 @@ void TestPlugin::run(QTcpSocket *sender, QByteArray message) const {
     else
         getUser(username)->socketInstances.append(sender);
 
+    TCPServer::transmit(sender, "HELLO !!");
     Log()->Event(username + " (" + ip.toString() + ") connected.");
 }

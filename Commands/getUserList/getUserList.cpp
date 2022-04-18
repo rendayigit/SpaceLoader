@@ -18,7 +18,6 @@ void TestPlugin::run(QTcpSocket *sender, QByteArray /*message*/) const {
         users += "User #" + QString::number(i) + " ip: " + ip.toString() + '\n';
     }
 
-    TCPServer::transmit(sender,
-                        users.toLocal8Bit());  //  symbol lookup error: undefined symbol:
-                                               //  _ZN9TCPServer8transmitEP10QTcpSocket10QByteArray
+    TCPServer::transmit(sender, "users.toLocal8Bit()");
+    TCPServer::transmit(sender, users.toLocal8Bit());
 }

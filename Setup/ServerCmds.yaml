@@ -37,7 +37,7 @@ Cmds:
       Description: Get the list of users connected to the server.
       id: getuserlist
       type: internal
-      auth: 'true'
+      auth: 'false'
     - CmdCallString: addUser
       Description: 'Sets username in server. Syntax: "addUser renda ip 127.0.0.1"'
       id: addUser
