@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 
-#include <QPluginLoader>
+#include <QtCore/QPluginLoader>
 
-#include "../../Commands/getUserList/getUserList.h"
+#include "../../Commands/hello/hello.h"
 #include "../../lib/Logger/logger.h"
 #include "../Test_common.h"
-#include "../common.h"
+#include "../../path.h"
 
 QString getLib(QString lib) {
-    QString path = Paths().getCommandsDir();
+    QString path = Paths().getCmdsDir();
     QDirIterator iterator(path, QDirIterator::Subdirectories);
     while (iterator.hasNext()) {
         QFile file(iterator.next());
@@ -23,9 +23,9 @@ QString getLib(QString lib) {
     return "";
 }
 
-TEST(Commands, getUserList) {
+TEST(Commands, hello) {
     QTcpSocket *testSocket{};
-    const QString lib = getLib("getuserlist");
+    const QString lib = getLib("hello");
 
     if (lib.isNull()) {
         GTEST_FAIL() << "lib not found";
@@ -34,7 +34,7 @@ TEST(Commands, getUserList) {
     QPluginLoader loader(lib);
     if (auto *instance = loader.instance()) {
         if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
-            plugin->run(testSocket, "getuserlist");
+            plugin->run(testSocket, "hello");
         } else {
             GTEST_FAIL() << "qobject_cast<> returned nullptr";
         }
@@ -43,5 +43,5 @@ TEST(Commands, getUserList) {
     // TODO
     // QString tmp = testSocket.getLastMessage();
     // std::cout << "received string " << tmp.toStdString();
-    // EXPECT_EQ(tmp, "AS");
+    // EXPECT_EQ(tmp, "hello");
 }

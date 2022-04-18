@@ -1,7 +1,5 @@
 #include "server.h"
 
-Server *Server::m_instance = Server::getInstance();
-
 Server::Server() : Operations(Paths().getServerCmdsYaml()) {
     isFileTransferInProgress = false;
 
@@ -13,11 +11,6 @@ Server::Server() : Operations(Paths().getServerCmdsYaml()) {
         this, [=]() -> void { triggerCmdTimer->start(); }, Qt::QueuedConnection);
 
     Log()->Info("Server Started");
-}
-
-Server *Server::getInstance() {
-    if (Server::m_instance == nullptr) Server::m_instance = new Server;
-    return Server::m_instance;
 }
 
 void Server::onReceived(QTcpSocket *sender, QByteArray message) {
@@ -47,7 +40,7 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
         std::cout << message.toStdString() << std::endl;
     } else {  // File transfer operations
         if (sender == fileTransfererSocket) {
-            if (not cmp(message.data(), "#END")) {
+            if (not Cmp(message.data(), "#END")) {
                 transferredFileBuffer.append(message);
                 formerCurrTime = QDateTime::currentDateTime();
             } else {  // Finalize file transfer
@@ -72,6 +65,33 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
             }
         }
     }
+}
+
+void Server::addUser(QTcpSocket *sender, QByteArray message) {
+    message.replace("username ", "");
+    QString username = message.mid(0, message.indexOf(" "));
+    QHostAddress ip(sender->localAddress().toIPv4Address());
+
+    if (getUser(username) == nullptr)
+        userList.append(new User(username, sender));
+    else
+        getUser(username)->socketInstances.append(sender);
+
+    Log()->Event(username + " (" + ip.toString() + ") connected.");
+}
+
+void Server::getUserList(QTcpSocket *sender) {
+    QString users = "";
+
+    for (int i = 0; i < userList.size(); i++) {
+        QHostAddress ip(userList.at(i)->socketInstances.at(0)->localAddress().toIPv4Address());
+        users += "User #" + QString::number(i);
+        users += " username: " + userList.at(i)->getUserName() + '\n';
+        users += "User #" + QString::number(i);
+        users += " ip: " + ip.toString() + '\n';
+    }
+
+    Transmit(sender, users.toLocal8Bit());
 }
 
 void Server::clientDisconnected(QTcpSocket *clientSocket) {
@@ -119,7 +139,7 @@ bool Server::isAuthorized(QTcpSocket *sender, QString cmdName) {
 
 BaseCmd *Server::getCmd(QString cmdName) {
     for (auto &i : cmdList) {
-        if (cmp(cmdName, i->getCmdCallString())) return i;
+        if (Cmp(cmdName, i->getCmdCallString())) return i;
     }
 
     return nullptr;
@@ -158,14 +178,13 @@ QList<QString> Server::getDlibs(QString path) {
     return libList;
 }
 
-void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
-    Log()->Error(message);
-    QList<QString> commandLibs = getDlibs(Paths().getBinDir());
+void Server::runDynamicCmd(QTcpSocket *sender, QByteArray message) {
+    QList<QString> commandLibs = getDlibs(Paths().getCmdsDir());
     if (commandLibs.isEmpty()) {
-        Log()->Error("no libs found at " + Paths().getBinDir());
+        Log()->Error("no libs found at " + Paths().getCmdsDir());
     } else {
         for (auto &lib : commandLibs) {
-            if (lib.contains(message.mid(0, message.indexOf(" ")), Qt::CaseInsensitive)) { // TODO create function get the first word of a string
+            if (lib.contains(GetCmd(message), Qt::CaseInsensitive)) {
                 QPluginLoader loader(lib);
                 if (auto *instance = loader.instance()) {
                     if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
@@ -178,6 +197,14 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
                 }
             }
         }
+    }
+}
+
+void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
+    if(Cmp(message, "addUser")) {
+        addUser(sender, message);
+    } else if(Cmp(message, "getUserList")) {
+        getUserList(sender);
     }
 }
 

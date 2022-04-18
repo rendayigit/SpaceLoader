@@ -1,2 +1,1 @@
-add_subdirectory(getUserList)
-add_subdirectory(addUser)
+add_subdirectory(hello)

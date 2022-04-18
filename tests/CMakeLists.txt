@@ -40,7 +40,6 @@ target_link_libraries(tests PRIVATE
         yaml-cpp
         -lpthread 
         -lm
-        stdc++fs # required for std::filesystem
         )
 
 include(GoogleTest)

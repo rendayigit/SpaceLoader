@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(addUser LANGUAGES CXX)
+project(getUserList LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -18,19 +18,18 @@ set(COMPILE_OPTIONS -std=c++17)
 include_directories(${PROJECT_SOURCE_DIR}/../../)
 include_directories(${PROJECT_SOURCE_DIR}/../)
 
-add_library(addUser SHARED 
-        addUser.cpp
-        ../../../lib/TCP/server/tcpServer.cpp
-        ../../../lib/Logger/logger.cpp)
+add_library(getUserList SHARED 
+        hello.cpp
+        ../../../lib/TCP/server/tcpServer.cpp)
 
-set_target_properties(addUser PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/cmds/) # UNIX
-set_target_properties(addUser PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/cmds/) # WINDOWS
+set_target_properties(getUserList PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/cmds/) # UNIX
+set_target_properties(getUserList PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/cmds/) # WINDOWS
 
-target_compile_definitions(addUser PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+target_compile_definitions(getUserList PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
-target_link_libraries(addUser
+target_link_libraries(getUserList
         PRIVATE Qt${QT_VERSION_MAJOR}::Core
         Qt${QT_VERSION_MAJOR}::Quick
         )
 
-target_compile_options(addUser PRIVATE ${COMPILE_OPTIONS})
+target_compile_options(getUserList PRIVATE ${COMPILE_OPTIONS})

@@ -1,4 +1,5 @@
 #include "Operations.h"
+#include "../common.h"
 
 Operations::Operations(QString yamlFile) {
     cmdsYamlFile = yamlFile;
@@ -7,7 +8,7 @@ Operations::Operations(QString yamlFile) {
 
 bool Operations::parseMessage(QTcpSocket *sender, QByteArray message, bool isExactMatch) {
     for (auto &i : cmdList) {
-        if (cmp(message, i->getCmdCallString())) {
+        if (Cmp(message, i->getCmdCallString())) {
             switch (i->getCmdType()) {
             case CmdType::internal:
                 parseInternalCmd(sender, message);
@@ -27,7 +28,7 @@ bool Operations::parseMessage(QTcpSocket *sender, QByteArray message, bool isExa
             for (auto &tcmd : cmdList) {
                 if (tcmd->getCmdType() == CmdType::trigger) {
                     auto *trigger = dynamic_cast<TriggerCmd *>(tcmd);
-                    if (cmp(i->getCmdCallString(), trigger->getTriggererId())) {
+                    if (Cmp(i->getCmdCallString(), trigger->getTriggererId())) {
                         QString triggerCmd = trigger->getCallString();
                         Log()->Info("Detected a trigger connected to " + i->getCmdCallString());
                         Log()->Info("Triggering " + triggerCmd);
@@ -175,21 +176,6 @@ void Operations::runBatchScript(QTcpSocket *sender, CallCmd *cmd, QString messag
     process->start("cmd.exe", args);
 
     connectProcess(sender, process);
-}
-
-void Operations::transmitMsg(QTcpSocket *client, QByteArray message) {
-    if (client->state() != QAbstractSocket::SocketState::UnconnectedState) {
-        client->write(message);
-        client->waitForBytesWritten();
-    }
-}
-
-// TODO move to Commands/common
-bool Operations::cmp(const QString source, const QString command) {
-    QString simplifiedSource = source.simplified();
-    simplifiedSource = simplifiedSource.mid(0, simplifiedSource.indexOf(" ", 0));
-
-    return simplifiedSource.compare(command, Qt::CaseInsensitive) == 0;
 }
 
 void Operations::timerTrigger() {

@@ -1,7 +1,7 @@
-#ifndef TEST_PLUGIN_INTERFACE
-#define TEST_PLUGIN_INTERFACE
+#ifndef CMD_PLUGIN_INTERFACE
+#define CMD_PLUGIN_INTERFACE
 
-#include "../../lib/TCP/server/tcpServer.h"
+#include "../lib/TCP/server/tcpServer.h"
 
 class CmdPluginInterface {
    public:
@@ -11,4 +11,4 @@ class CmdPluginInterface {
 
 #define CmdPluginInterface_iid "SpaceLoader.CmdPluginInterface"
 Q_DECLARE_INTERFACE(CmdPluginInterface, CmdPluginInterface_iid)
-#endif  // TEST_PLUGIN_INTERFACE
+#endif  // CMD_PLUGIN_INTERFACE

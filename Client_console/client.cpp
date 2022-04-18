@@ -1,17 +1,10 @@
 #include "client.h"
+#include "../path.h"
 #include "../common.h"
 
 using namespace std;
 
-Client *Client::m_instance = Client::getInstance();
 Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
-
-Client *Client::getInstance() {
-    if (Client::m_instance == nullptr) {
-        Client::m_instance = new Client;
-    }
-    return Client::m_instance;
-}
 
 void Client::onReceived(QByteArray message) {
     QString messageToPrint = message;
@@ -38,16 +31,16 @@ void Client::parse(QByteArray message) {
     if (not parseMessage(nullptr, message)) {
         // If the command cannot be found in the client cmds xml then it must be a
         // command for the server
-        m_instance->sendCommand(message);
+        sendCommand(message);
     }
 }
 
 void Client::start(QList<QString> commandArguments) {
-    connect(m_instance, &Client::consoleInputReceived, m_instance, &Client::parse);
+    connect(this, &Client::consoleInputReceived, this, &Client::parse);
 	
     populateCmdLists();
 
-    while (!m_instance->attemptConnection(commandArguments.first(), 1234)) {
+    while (!attemptConnection(commandArguments.first(), 1234)) {
         commandArguments.removeFirst();
         std::cout << "Connection error please re-enter IP: ";
         std::string ip;
@@ -59,7 +52,7 @@ void Client::start(QList<QString> commandArguments) {
     /* Transmit username */
     QByteArray username = getenv("USERNAME");
     QHostAddress ip(getSocket()->localAddress().toIPv4Address());
-    m_instance->sendCommand("addUser " + username);
+    sendCommand("addUser " + username);
 
     while (!commandArguments.isEmpty()) {
         QThread::usleep(100);
@@ -69,7 +62,7 @@ void Client::start(QList<QString> commandArguments) {
         emit consoleInputReceived(value);
     }
 
-    QtConcurrent::run(m_instance, &Client::loopForCommands);
+    QtConcurrent::run(this, &Client::loopForCommands);
 }
 
 void Client::listenTo(QString msg) {
@@ -122,7 +115,7 @@ void Client::stopListen(QString ipPort) {
         QString port = QString::number(listener->getSocket()->peerPort());
         givenIpPortPair = clientAddress + ":" + port;
 
-        if (cmp(ipPort, givenIpPortPair)) {
+        if (Cmp(ipPort, givenIpPortPair)) {
             listener->disconnect();
             delete listener;
             listeners.removeOne(listener);
@@ -131,7 +124,7 @@ void Client::stopListen(QString ipPort) {
 }
 
 void Client::help(QByteArray message) {
-    if (cmp("help", message)) {
+    if (Cmp("help", message)) {
         std::cout << "\nClient command list:\n" << std::endl;
         for (auto &cmd : cmdList) {
             QString helpString = "\t" + cmd->getCmdCallString();
@@ -139,14 +132,14 @@ void Client::help(QByteArray message) {
             helpString = helpFormatter(helpString);
             std::cout << helpString.toStdString() << std::endl;
         }
-        m_instance->sendCommand(message);
+        sendCommand(message);
     } else {
         QString requestedCmd = message.mid(message.indexOf("help ") + 5, message.size());
         requestedCmd = requestedCmd.toLower();
         vector<YAML::Node> nodeList = Yaml::getNodeListByKey(
             Paths().getClientCmdsYaml().toStdString(), "id", requestedCmd.toStdString());
         if (nodeList.size() < 1) {
-            m_instance->sendCommand(message);
+            sendCommand(message);
             return;
         }
 
@@ -168,7 +161,7 @@ void Client::stopAllListeners() {
 }
 
 void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QByteArray message) {
-    m_instance->sendCommand(message);
+    sendCommand(message);
     QThread::msleep(10);
 
     int endOfCmdName = message.indexOf(" ");
@@ -189,10 +182,10 @@ void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QB
     int iteration = 0;
     while (!fileData.isNull()) {
         if (fileData.size() >= FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE) {
-            m_instance->sendCommand(fileData.mid(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE));
+            sendCommand(fileData.mid(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE));
             fileData.remove(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE);
         } else {
-            m_instance->sendCommand(fileData.mid(0, fileData.size()));
+            sendCommand(fileData.mid(0, fileData.size()));
             fileData.clear();
         }
         iteration++;
@@ -201,7 +194,7 @@ void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QB
             std::cout << ".";
         }
     }
-    m_instance->sendCommand("#END");
+    sendCommand("#END");
 
     if (iteration >= 10) {
         std::cout << " Transfer Complete" << std::endl;
@@ -212,14 +205,14 @@ void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QB
 }
 
 void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray message) {
-    if (cmp(message, "help")) {
+    if (Cmp(message, "help")) {
         help(message);
-    } else if (cmp(message, "ListenTo")) {
+    } else if (Cmp(message, "ListenTo")) {
         listenTo(message);
-    } else if (cmp(message, "StopListeningTo")) {
+    } else if (Cmp(message, "StopListeningTo")) {
         stopListen(message);
-    } else if (cmp(message, "getAuth")) {
-        m_instance->sendCommand(message);
+    } else if (Cmp(message, "getAuth")) {
+        sendCommand(message);
     }
 }
 

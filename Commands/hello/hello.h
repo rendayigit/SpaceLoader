@@ -1,10 +1,10 @@
-#ifndef GETUSERLIST_H
-#define GETUSERLIST_H
+#ifndef HELLO_H
+#define HELLO_H
 
-#include <QObject>
-#include <QtPlugin>
+#include <QtCore/QObject>
+#include <QtCore/QtPlugin>
 
-#include "../common/cmd_plugin_interface.h"
+#include "../cmd_plugin_interface.h"
 
 class CmdPlugin : public QObject, public CmdPluginInterface {
     Q_OBJECT
@@ -15,4 +15,4 @@ class CmdPlugin : public QObject, public CmdPluginInterface {
     ~CmdPlugin() override = default;
     void run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) const override;
 };
-#endif  // GETUSERLIST_H
+#endif  // HELLO_H

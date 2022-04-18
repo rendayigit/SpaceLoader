@@ -14,7 +14,11 @@
 class Client : public TCPClient, public Operations {
     Q_OBJECT
    public:
-    static Client *getInstance();
+    static auto &getInstance() {
+        static Client instance;
+        return instance;
+    }
+
     void onReceived(QByteArray message);
     void onDisconnected();
     void start(QList<QString> commandArguments);
@@ -45,7 +49,6 @@ class Client : public TCPClient, public Operations {
 
    private:
     Client();
-    static Client *m_instance;
     QList<Client *> listeners;
 };
 

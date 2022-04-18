@@ -40,9 +40,5 @@
   "clangd.arguments": [
     "--compile-commands-dir=${workspaceFolder}/build/compile_commands.json"
   ],
-  "C_Cpp.autocomplete": "Disabled",
-  "C_Cpp.formatting": "Disabled",
-  "C_Cpp.errorSquiggles": "Disabled",
-  "C_Cpp.intelliSenseEngine": "Disabled",
   "testMate.cpp.test.executables": "{build,Build,BUILD,out,Out,OUT}/**/*{test,tests,Test,Tests,TEST,TESTS}*"
 }

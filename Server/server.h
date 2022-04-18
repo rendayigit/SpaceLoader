@@ -7,16 +7,27 @@
 #include <QtNetwork/QTcpSocket>
 
 #include "../Client_console/client.h"
-#include "../Commands/common/user.h"
+#include "../Commands/cmd_plugin_interface.h"
 #include "../Operations/Operations.h"
 #include "../constants.h"
 #include "../lib/TCP/server/tcpServer.h"
 #include "../lib/YAML/yaml.h"
-#include "../Commands/common/cmd_plugin_interface.h"
+#include "../path.h"
+#include "user.h"
 
 class Server : public TCPServer, public Operations {
    public:
-    static Server *getInstance();
+    // Server(const Server &) = delete;
+    // Server &operator=(const Server &) = delete;
+    // Server(Server &&) = delete;
+    // Server &operator=(Server &&) = delete;
+    // ~Server() = default;
+
+    static auto &getInstance() {
+        static Server instance;
+        return instance;
+    }
+
     void onReceived(QTcpSocket *sender, QByteArray message);
     void clientDisconnected(QTcpSocket *clientSocket);
     BaseCmd *getCmd(QString cmdName);
@@ -29,10 +40,12 @@ class Server : public TCPServer, public Operations {
     void fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message);
     void parseInternalCmd(QTcpSocket *sender, QByteArray message);
     void connectProcess(QTcpSocket *sender, QProcess *process);
+    void runDynamicCmd(QTcpSocket *sender, QByteArray message);
+    void addUser(QTcpSocket *sender, QByteArray message);
+    void getUserList(QTcpSocket *sender);
     QList<QString> getDlibs(QString path);
 
     QList<User *> userList;
-    static Server *m_instance;
     QString transferredFileName;
     QString transferredFileLocation;
     QByteArray transferredFileBuffer;
