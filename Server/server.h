@@ -13,7 +13,6 @@
 #include "../lib/TCP/server/tcpServer.h"
 #include "../lib/YAML/yaml.h"
 #include "../path.h"
-#include "user.h"
 
 class Server : public TCPServer, public Operations {
    public:
@@ -31,8 +30,6 @@ class Server : public TCPServer, public Operations {
     void onReceived(QTcpSocket *sender, QByteArray message);
     void clientDisconnected(QTcpSocket *clientSocket);
     BaseCmd *getCmd(QString cmdName);
-    User *getUser(QString userName);
-    User *getUser(QTcpSocket *socket);
     bool isAuthorized(QTcpSocket *sender, QString cmdName);
 
    private:
@@ -41,11 +38,9 @@ class Server : public TCPServer, public Operations {
     void parseInternalCmd(QTcpSocket *sender, QByteArray message);
     void connectProcess(QTcpSocket *sender, QProcess *process);
     void runDynamicCmd(QTcpSocket *sender, QByteArray message);
-    void addUser(QTcpSocket *sender, QByteArray message);
-    void getUserList(QTcpSocket *sender);
     QList<QString> getDlibs(QString path);
 
-    QList<User *> userList;
+    
     QString transferredFileName;
     QString transferredFileLocation;
     QByteArray transferredFileBuffer;

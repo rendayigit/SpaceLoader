@@ -20,6 +20,7 @@ set(PROJECT_SOURCES
         ../lib/Logger/logger.cpp
         ../lib/TCP/server/tcpServer.cpp
         ../Operations/Operations.cpp
+        User/userOperations.cpp
         server.cpp
         main.cpp
         )

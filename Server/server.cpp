@@ -1,5 +1,7 @@
 #include "server.h"
 
+#include "User/userOperations.h"
+
 Server::Server() : Operations(Paths().getServerCmdsYaml()) {
     isFileTransferInProgress = false;
 
@@ -67,44 +69,18 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
     }
 }
 
-void Server::addUser(QTcpSocket *sender, QByteArray message) {
-    message.replace("username ", "");
-    QString username = message.mid(0, message.indexOf(" "));
-    QHostAddress ip(sender->localAddress().toIPv4Address());
-
-    if (getUser(username) == nullptr)
-        userList.append(new User(username, sender));
-    else
-        getUser(username)->socketInstances.append(sender);
-
-    Log()->Event(username + " (" + ip.toString() + ") connected.");
-}
-
-void Server::getUserList(QTcpSocket *sender) {
-    QString users = "";
-
-    for (int i = 0; i < userList.size(); i++) {
-        QHostAddress ip(userList.at(i)->socketInstances.at(0)->localAddress().toIPv4Address());
-        users += "User #" + QString::number(i);
-        users += " username: " + userList.at(i)->getUserName() + '\n';
-        users += "User #" + QString::number(i);
-        users += " ip: " + ip.toString() + '\n';
-    }
-
-    Transmit(sender, users.toLocal8Bit());
-}
-
 void Server::clientDisconnected(QTcpSocket *clientSocket) {
-    if (getUser(clientSocket)->socketInstances.size() == 1) {
+    if (UserOperations::getInstance().getUser(clientSocket)->socketInstances.size() == 1) {
         for (auto &auth : cmdList) {  // release user auths
             if (auth->getAuthorizedUser() != nullptr) {
-                if (auth->getAuthorizedUser() == getUser(clientSocket)->getUserName()) {
+                if (auth->getAuthorizedUser() ==
+                    UserOperations::getInstance().getUser(clientSocket)->getUserName()) {
                     auth->setAuthorizedUser(nullptr);
                 }
             }
         }
 
-        userList.removeOne(getUser(clientSocket));
+        UserOperations::getInstance().removeUser(clientSocket);
         QHostAddress clientAddress(clientSocket->localAddress().toIPv4Address());
         Log()->Info(clientAddress.toString() + " disconnected");
     }
@@ -128,7 +104,9 @@ bool Server::isAuthorized(QTcpSocket *sender, QString cmdName) {
         getCmd(cmdName)->getIsAuthRequired() == false)
         return false;
     else
-        for (auto &i : getUser(getCmd(cmdName)->getAuthorizedUser())->socketInstances) {
+        for (auto &i : UserOperations::getInstance()
+                           .getUser(getCmd(cmdName)->getAuthorizedUser())
+                           ->socketInstances) {
             if (i == sender) {
                 return true;
             }
@@ -140,24 +118,6 @@ bool Server::isAuthorized(QTcpSocket *sender, QString cmdName) {
 BaseCmd *Server::getCmd(QString cmdName) {
     for (auto &i : cmdList) {
         if (Cmp(cmdName, i->getCmdCallString())) return i;
-    }
-
-    return nullptr;
-}
-
-User *Server::getUser(QString userName) {
-    for (auto &i : userList) {
-        if (i->getUserName() == userName) return i;
-    }
-
-    return nullptr;
-}
-
-User *Server::getUser(QTcpSocket *socket) {
-    for (auto &i : userList) {
-        for (auto &j : i->socketInstances) {
-            if (j == socket) return i;
-        }
     }
 
     return nullptr;
@@ -201,10 +161,10 @@ void Server::runDynamicCmd(QTcpSocket *sender, QByteArray message) {
 }
 
 void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
-    if(Cmp(message, "addUser")) {
-        addUser(sender, message);
-    } else if(Cmp(message, "getUserList")) {
-        getUserList(sender);
+    if (Cmp(message, "addUser")) {
+        UserOperations::getInstance().addUser(sender, message);
+    } else if (Cmp(message, "getUserList")) {
+        UserOperations::getInstance().getUserList(sender);
     }
 }
 
