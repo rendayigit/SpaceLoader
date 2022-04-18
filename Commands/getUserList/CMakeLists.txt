@@ -1,25 +1,35 @@
-project(getUserList)
-cmake_minimum_required(VERSION 3.2.0)
+cmake_minimum_required(VERSION 3.14)
+project(getUserList LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
-find_package(Qt5Widgets REQUIRED)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(COMPILE_OPTIONS -std=c++11)
+find_package(QT NAMES Qt5 COMPONENTS Core Quick REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED) # if error run: sudo apt-get install libgl1-mesa-dev
 
-add_library(getUserList SHARED getUserList.cpp)
+set(COMPILE_OPTIONS -std=c++17)
 
-find_package(Qt5 COMPONENTS Network REQUIRED)
+include_directories(${PROJECT_SOURCE_DIR}/../../)
+include_directories(${PROJECT_SOURCE_DIR}/../)
 
-set_target_properties(getUserList PROPERTIES
-         LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../Libs/)
+add_library(getUserList SHARED 
+        getUserList.cpp
+        ../../../lib/TCP/server/tcpServer.cpp)
 
-target_link_libraries(getUserList PRIVATE Qt5::Widgets Qt5::Network)
+set_target_properties(getUserList PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/cmds/) # UNIX
+set_target_properties(getUserList PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/cmds/) # WINDOWS
+
+target_compile_definitions(getUserList PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+
+target_link_libraries(getUserList
+        PRIVATE Qt${QT_VERSION_MAJOR}::Core
+        Qt${QT_VERSION_MAJOR}::Quick
+        )
 
 target_compile_options(getUserList PRIVATE ${COMPILE_OPTIONS})
-
-set_target_properties(getUserList PROPERTIES
-  IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/libs/libgetUserList.so"
-  INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/libs/libgetUserList"
-)

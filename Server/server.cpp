@@ -159,12 +159,13 @@ QList<QString> Server::getDlibs(QString path) {
 }
 
 void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
+    Log()->Error(message);
     QList<QString> commandLibs = getDlibs(Paths().getBinDir());
     if (commandLibs.isEmpty()) {
         Log()->Error("no libs found at " + Paths().getBinDir());
     } else {
         for (auto &lib : commandLibs) {
-            if (lib.contains(message, Qt::CaseInsensitive)) {
+            if (lib.contains(message.mid(0, message.indexOf(" ")), Qt::CaseInsensitive)) { // TODO create function get the first word of a string
                 QPluginLoader loader(lib);
                 if (auto *instance = loader.instance()) {
                     if (auto *plugin = qobject_cast<TestPluginInterface *>(instance)) {

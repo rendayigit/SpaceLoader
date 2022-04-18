@@ -1,19 +1,18 @@
 #ifndef TEST_PLUGIN_HPP
 #define TEST_PLUGIN_HPP
+
 #include <QObject>
 #include <QtPlugin>
-#include "../common/command_interface.h"
 
-class TestPlugin : public QObject, public TestPluginInterface
-{
+#include "../common/test_plugin_interface.h"
+
+class TestPlugin : public QObject, public TestPluginInterface {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID TestPluginInterface_iid)
     Q_INTERFACES(TestPluginInterface)
-    QString str;
 
-public:
-    ~TestPlugin() override {}
-     void run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) const ;
+   public:
+    ~TestPlugin() override = default;
+    void run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) const;
 };
-#endif // TEST_PLUGIN_HPP
-
+#endif  // TEST_PLUGIN_HPP

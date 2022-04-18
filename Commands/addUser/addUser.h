@@ -5,8 +5,8 @@
 #include <QtCore/QtPlugin>
 
 #include "../../lib/Logger/logger.h"
-#include "../common/command_interface.h"
-#include "../common/serverCommon.h"
+#include "../common/cmd_interface.h"
+#include "../common/server_common.h"
 #include "../common/user.h"
 
 class TestPlugin : public QObject, public TestPluginInterface {

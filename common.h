@@ -59,6 +59,11 @@ class Path {
                QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "bin_Dir"));
     }
 
+    QString getCommandsDir() const {
+        return getProjectRoot() +
+               QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "cmd_lib_Dir"));
+    }
+
     QString getServerCmdsYaml() const {
         return getProjectRoot() + QString::fromStdString(Yaml::getValue(
                                       getPathsYaml().toStdString(), "server_cmds_Yaml"));

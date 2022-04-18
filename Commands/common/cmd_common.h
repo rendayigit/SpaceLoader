@@ -1,9 +1,13 @@
+#ifndef CMD_COMMON_H
+#define CMD_COMMON_H
+
 #include <QtNetwork/qtcpsocket.h>
-#include <QtCore/QtCore>
-#include <QTcpSocket>
-#include <QString>
+
 #include <QByteArray>
 #include <QDateTime>
+#include <QString>
+#include <QTcpSocket>
+#include <QtCore/QtCore>
 
 static bool cmp(const QString source, const QString command) {
     QString simplifiedSource = source.simplified();
@@ -20,3 +24,5 @@ static void transmit(QTcpSocket *socket, QByteArray message) {
         }
     }
 }
+
+#endif  // CMD_COMMON_H
