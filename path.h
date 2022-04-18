@@ -22,13 +22,13 @@ class Path {
         return instance;
     }
 
-    QString getBinaryPath() const {
+    QString getExecutablePath() const {
         QString bin =
             QString::fromStdWString(QCoreApplication::applicationFilePath().toStdWString());
         return bin.mid(0, bin.lastIndexOf(QChar('/')));
     }
 
-    QString getProjectRoot() const { return getBinaryPath() + "/../../"; }
+    QString getProjectRoot() const { return getExecutablePath() + "/../../"; }
 
     QString getPathsYaml() const { return getProjectRoot() + "Setup/Paths.yaml"; }
 
