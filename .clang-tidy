@@ -207,7 +207,7 @@ google-explicit-constructor,
 google-global-names-in-headers, # keep this
 google-objc-avoid-nsobject-new,	 
 google-objc-avoid-throwing-exception,
-google-objc-function-naming,
+google-objc-function-naming, # keep this
 google-objc-global-variable-declaration,
 google-readability-avoid-underscore-in-googletest-name, # keep this
 google-readability-casting,
