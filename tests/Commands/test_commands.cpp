@@ -33,7 +33,7 @@ TEST(Commands, getUserList) {
 
     QPluginLoader loader(lib);
     if (auto *instance = loader.instance()) {
-        if (auto *plugin = qobject_cast<TestPluginInterface *>(instance)) {
+        if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
             plugin->run(testSocket, "getuserlist");
         } else {
             GTEST_FAIL() << "qobject_cast<> returned nullptr";

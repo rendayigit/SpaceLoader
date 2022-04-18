@@ -12,7 +12,7 @@
 #include "../constants.h"
 #include "../lib/TCP/server/tcpServer.h"
 #include "../lib/YAML/yaml.h"
-#include "../Commands/common/test_plugin_interface.h"
+#include "../Commands/common/cmd_plugin_interface.h"
 
 class Server : public TCPServer, public Operations {
    public:

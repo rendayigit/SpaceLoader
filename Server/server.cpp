@@ -168,7 +168,7 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
             if (lib.contains(message.mid(0, message.indexOf(" ")), Qt::CaseInsensitive)) { // TODO create function get the first word of a string
                 QPluginLoader loader(lib);
                 if (auto *instance = loader.instance()) {
-                    if (auto *plugin = qobject_cast<TestPluginInterface *>(instance)) {
+                    if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
                         plugin->run(sender, message);
                     } else {
                         Log()->Error("qobject_cast<> returned nullptr");

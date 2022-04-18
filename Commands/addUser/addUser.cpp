@@ -1,6 +1,6 @@
 #include "addUser.h"
 
-User *TestPlugin::getUser(QTcpSocket *socket) {
+User *CmdPlugin::getUser(QTcpSocket *socket) {
     for (auto &i : ServerCommon::getInstance().getUserList()) {
         for (auto &j : i->socketInstances) {
             if (j == socket) return i;
@@ -10,7 +10,7 @@ User *TestPlugin::getUser(QTcpSocket *socket) {
     return nullptr;
 }
 
-User *TestPlugin::getUser(QString userName) {
+User *CmdPlugin::getUser(QString userName) {
     for (auto &i : ServerCommon::getInstance().getUserList()) {
         if (i->getUserName() == userName) return i;
     }
@@ -18,7 +18,7 @@ User *TestPlugin::getUser(QString userName) {
     return nullptr;
 }
 
-void TestPlugin::run(QTcpSocket *sender, QByteArray message) const {
+void CmdPlugin::run(QTcpSocket *sender, QByteArray message) const {
     message.replace("username ", "");
     QString username = message.mid(0, message.indexOf(" "));
     QHostAddress ip(sender->localAddress().toIPv4Address());
@@ -28,6 +28,6 @@ void TestPlugin::run(QTcpSocket *sender, QByteArray message) const {
     else
         getUser(username)->socketInstances.append(sender);
 
-    TCPServer::transmit(sender, "HELLO !!");
+    TCPServer::transmit(sender, "ran addUser");
     Log()->Event(username + " (" + ip.toString() + ") connected.");
 }

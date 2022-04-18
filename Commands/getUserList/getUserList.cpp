@@ -2,7 +2,7 @@
 
 #include "../common/server_common.h"
 
-void TestPlugin::run(QTcpSocket *sender, QByteArray /*message*/) const {
+void CmdPlugin::run(QTcpSocket *sender, QByteArray /*message*/) const {
     QString users = "";
 
     for (int i = 0; i < ServerCommon::getInstance().getUserList().size(); i++) {

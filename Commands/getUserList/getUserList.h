@@ -1,18 +1,18 @@
-#ifndef TEST_PLUGIN_HPP
-#define TEST_PLUGIN_HPP
+#ifndef GETUSERLIST_H
+#define GETUSERLIST_H
 
 #include <QObject>
 #include <QtPlugin>
 
-#include "../common/test_plugin_interface.h"
+#include "../common/cmd_plugin_interface.h"
 
-class TestPlugin : public QObject, public TestPluginInterface {
+class CmdPlugin : public QObject, public CmdPluginInterface {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID TestPluginInterface_iid)
-    Q_INTERFACES(TestPluginInterface)
+    Q_PLUGIN_METADATA(IID CmdPluginInterface_iid)
+    Q_INTERFACES(CmdPluginInterface)
 
    public:
-    ~TestPlugin() override = default;
-    void run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) const;
+    ~CmdPlugin() override = default;
+    void run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) const override;
 };
-#endif  // TEST_PLUGIN_HPP
+#endif  // GETUSERLIST_H
