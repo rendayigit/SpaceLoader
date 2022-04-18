@@ -2,7 +2,7 @@
 
 Server *Server::m_instance = Server::getInstance();
 
-Server::Server() : Operations(Path::server_cmds_Yaml) {
+Server::Server() : Operations(Paths().getServerCmdsYaml()) {
     isFileTransferInProgress = false;
 
     triggerCmdTimer = new QTimer(this);
@@ -159,9 +159,9 @@ QList<QString> Server::getDlibs(QString path) {
 }
 
 void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
-    QList<QString> commandLibs = getDlibs(Path::bin_Dir);
+    QList<QString> commandLibs = getDlibs(Paths().getBinDir());
     if (commandLibs.isEmpty()) {
-        Log()->Error("no libs found at " + Path::bin_Dir);
+        Log()->Error("no libs found at " + Paths().getBinDir());
     } else {
         for (auto &lib : commandLibs) {
             if (lib.contains(message, Qt::CaseInsensitive)) {

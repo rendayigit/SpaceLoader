@@ -1,36 +1,81 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <QtCore/QtCore>
-#include <filesystem>
+#include <QtCore/QDebug>
+#include <QtCore/QString>
 
 #include "lib/YAML/yaml.h"
 
-using std::filesystem::current_path;
+#ifdef Q_OS_WIN
+#include <windows.h>
+#else
+#include <unistd.h>
 
-namespace Path {
-const QString project_root = QString::fromStdString(current_path().string()) + "/../../";
+#include <climits>
+#endif
 
-const QString paths_Yaml = project_root + "Setup/Paths.yaml";
+#ifdef Paths
+#undef Paths
+#endif
 
-const QString bin_Dir =
-    project_root + QString::fromStdString(
-                       Yaml::getValue(paths_Yaml.toStdString(), "bin_Dir"));
+#define Paths Path::getInstance
 
-const QString server_cmds_Yaml =
-    project_root +
-    QString::fromStdString(
-        Yaml::getValue(paths_Yaml.toStdString(), "server_cmds_Yaml"));
+class Path {
+   public:
+    Path(const Path &) = delete;
+    Path &operator=(const Path &) = delete;
+    Path(Path &&) = delete;
+    Path &operator=(Path &&) = delete;
+    ~Path() = default;
 
-const QString client_cmds_Yaml =
-    project_root +
-    QString::fromStdString(
-        Yaml::getValue(paths_Yaml.toStdString(), "client_cmds_Yaml"));
+    static auto &getInstance() {
+        static Path instance;
+        return instance;
+    }
 
-const QString config_Yaml =
-    project_root +
-    QString::fromStdString(
-        Yaml::getValue(paths_Yaml.toStdString(), "config_Yaml"));
+    QString getBinaryPath() const {
+#ifdef Q_OS_WIN
+        WCHAR dest[MAX_PATH];
+        GetModuleFileNameW(NULL, dest, MAX_PATH);
+        QString path = QString::fromStdWString(dest);
+        return path.left(path.lastIndexOf(QChar('\\')));
+#else
+        char dest[PATH_MAX];
+        memset(dest, 0, sizeof(dest));
+        if (readlink("/proc/self/exe", dest, PATH_MAX) == -1) {
+            return "";
+        }
+        QString path = dest;
+        return path.left(path.lastIndexOf(QChar('/')));
+#endif
+    }
 
-}  // namespace Path
+    QString getProjectRoot() const { return getBinaryPath() + "/../../"; }
+
+    QString getPathsYaml() const { return getProjectRoot() + "Setup/Paths.yaml"; }
+
+    QString getBinDir() const {
+        return getProjectRoot() +
+               QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "bin_Dir"));
+    }
+
+    QString getServerCmdsYaml() const {
+        return getProjectRoot() + QString::fromStdString(Yaml::getValue(
+                                      getPathsYaml().toStdString(), "server_cmds_Yaml"));
+    }
+
+    QString getClientCmdsYaml() const {
+        return getProjectRoot() + QString::fromStdString(Yaml::getValue(
+                                      getPathsYaml().toStdString(), "client_cmds_Yaml"));
+    }
+
+    QString getConfigYaml() const {
+        return getProjectRoot() +
+               QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "config_Yaml"));
+    }
+
+   private:
+    Path() = default;
+};
+
 #endif  // COMMON_H

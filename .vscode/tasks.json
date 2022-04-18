@@ -2,142 +2,105 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build tests",
-            "type": "shell",
-            "linux": {
-                "command": "./scripts/build.sh"
-            },
-            "windows": {
-                "command": "./scripts/build.bat"
-            },
-            "args": [
-                "test"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
-            "label": "build source",
-            "type": "shell",
-            "linux": {
-                "command": "./scripts/build.sh"
-            },
-            "windows": {
-                "command": "./scripts/build.bat"
-            },
-            "args": [
-                "source"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            }
-        },
-        {
             "label": "build all",
+            "type": "shell",
+            "command": "./scripts/build.bat",
+            "linux": {
+                "command": [
+                    "chmod -R 777 ./scripts/;",
+                    "./scripts/build.sh"
+                ]
+            },
+            "windows": {
+                "command": "./scripts/build.bat"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "focus": true,
+                "echo": true,
+                "showReuseMessage": false,
+                "clear": true,
+                "group": "build",
+                "revealProblems": "onProblem"
+            },
+        },
+        {
+            "label": "clean build all",
             "type": "shell",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "dependsOrder": "parallel",
-            "dependsOn": [
-                "build tests",
-                "build source"
-            ]
-        },
-        {
-            "label": "run unit tests",
-            "type": "shell",
-            "linux": {
-                "command": "./build/XMLTEST"
-            },
-            "windows": {
-                "command": "./build/XMLTEST.exe"
-            },
-            "args": [],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "test",
-            "presentation": {
-                "reveal": "silent",
-                "panel": "shared",
-                "revealProblems": "onProblem"
-            }
-        },
-        {
-            "label": "run server",
-            "type": "process",
-            "linux": {
-                "command": "./build/SERVER",
-            },
-            "windows": {
-                "command": "./build/SERVER.exe"
-            },
-            "args": [],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new",
-                "focus": true,
-                "echo": true,
-                "showReuseMessage": false,
-                "clear": true,
-                "group": "client-server",
-                "revealProblems": "always"
-            },
-            "dependsOn": [
-                "build all",
-            ]
-        },
-        {
-            "label": "run client",
-            "type": "process",
-            "linux": {
-                "command": "./build/CLIENT",
-            },
-            "windows": {
-                "command": "./build/CLIENT.exe"
-            },
-            "args": [],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "group": "test",
-            "presentation": {
-                "reveal": "always",
-                "panel": "new",
-                "focus": true,
-                "echo": true,
-                "showReuseMessage": false,
-                "clear": true,
-                "group": "client-server",
-                "revealProblems": "always"
-            },
             "dependsOrder": "sequence",
             "dependsOn": [
-                "build all",
-                "run server"
+                "clean",
+                "build all"
             ]
         },
         {
             "label": "clean",
             "type": "shell",
+            "command": "./scripts/clean.bat",
             "linux": {
-                "command": "./scripts/clean.sh",
+                "command": [
+                    "chmod -R 777 ./scripts/;",
+                    "./scripts/clean.sh"
+                ]
             },
             "windows": {
                 "command": "./scripts/clean.bat",
             },
-            "args": [],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "group": "none"
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "focus": true,
+                "echo": true,
+                "showReuseMessage": false,
+                "clear": true,
+                "group": "build",
+                "revealProblems": "onProblem"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "kill all"
+            ]
+        },
+        {
+            "label": "kill all",
+            "type": "shell",
+            "command": "./scripts/kill.bat",
+            "linux": {
+                "command": [
+                    "chmod -R 777 ./scripts/;",
+                    // "./scripts/kill.sh"
+                ]
+            },
+            "windows": {
+                "command": "./scripts/kill.bat",
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "focus": false,
+                "echo": true,
+                "showReuseMessage": false,
+                "clear": true,
+                "group": "build",
+                "revealProblems": "onProblem"
+            },
         },
         {
             "label": "run",
@@ -154,8 +117,14 @@
             "group": "test",
             "presentation": {
                 "reveal": "always",
-                "panel": "shared"
-            }
+                "panel": "dedicated",
+                "focus": true,
+                "echo": true,
+                "showReuseMessage": false,
+                "clear": true,
+                "group": "client-server",
+                "revealProblems": "onProblem"
+            },
         },
     ],
     "inputs": [
@@ -164,12 +133,11 @@
             "id": "PickExecutableToRun",
             "description": "Select executable:",
             "options": [
-                "XMLTEST",
-                "SERVER",
-                "CLIENT",
-                "LOGGER",
+                "tests/tests",
+                "Server/SERVER",
+                "Client_console/CONSOLE",
             ],
-            "default": "XMLTEST"
+            "default": "tests/tests"
         },
         {
             "type": "promptString",
