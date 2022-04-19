@@ -123,43 +123,6 @@ BaseCmd *Server::getCmd(QString cmdName) {
     return nullptr;
 }
 
-QList<QString> Server::getDlibs(QString path) {
-    QList<QString> libList;
-
-    QDirIterator iterator(path, QDirIterator::Subdirectories);
-
-    while (iterator.hasNext()) {
-        QFile file(iterator.next());
-        if (file.open(QIODevice::ReadOnly) and QLibrary::isLibrary(file.fileName())) {
-            libList.append(file.fileName());
-        }
-    }
-
-    return libList;
-}
-
-void Server::runDynamicCmd(QTcpSocket *sender, QByteArray message) {
-    QList<QString> commandLibs = getDlibs(Paths().getCmdsDir());
-    if (commandLibs.isEmpty()) {
-        Log()->Error("no libs found at " + Paths().getCmdsDir());
-    } else {
-        for (auto &lib : commandLibs) {
-            if (lib.contains(GetCmd(message), Qt::CaseInsensitive)) {
-                QPluginLoader loader(lib);
-                if (auto *instance = loader.instance()) {
-                    if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
-                        plugin->run(sender, message);
-                    } else {
-                        Log()->Error("qobject_cast<> returned nullptr");
-                    }
-                } else {
-                    Log()->Error(loader.errorString());
-                }
-            }
-        }
-    }
-}
-
 void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
     if (Cmp(message, "addUser")) {
         UserOperations::getInstance().addUser(sender, message);

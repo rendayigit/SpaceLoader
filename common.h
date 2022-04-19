@@ -3,8 +3,17 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QDateTime>
+#include <QtCore/QDirIterator>
+#include <QtCore/QLibrary>
+#include <QtCore/QPluginLoader>
 #include <QtCore/QString>
+#include <QtCore/QtPlugin>
 #include <QtNetwork/QTcpSocket>
+
+#include "Commands/cmd_plugin_interface.h"
+#include "lib/Logger/logger.h"
+#include "path.h"
+
 
 static QString GetCmd(QString msg) {
     msg = msg.simplified();
@@ -23,6 +32,43 @@ static void Transmit(QTcpSocket *socket, QByteArray message, bool transmitTime =
             }
             socket->write(message);
             socket->waitForBytesWritten();
+        }
+    }
+}
+
+static QList<QString> getDlibs(QString path) {
+    QList<QString> libList;
+
+    QDirIterator iterator(path, QDirIterator::Subdirectories);
+
+    while (iterator.hasNext()) {
+        QFile file(iterator.next());
+        if (file.open(QIODevice::ReadOnly) and QLibrary::isLibrary(file.fileName())) {
+            libList.append(file.fileName());
+        }
+    }
+
+    return libList;
+}
+
+static void runDynamicCmd(QTcpSocket *sender, QByteArray message) {
+    QList<QString> commandLibs = getDlibs(Paths().getCmdsDir());
+    if (commandLibs.isEmpty()) {
+        Log()->Error("no libs found at " + Paths().getCmdsDir());
+    } else {
+        for (auto &lib : commandLibs) {
+            if (lib.contains(GetCmd(message), Qt::CaseInsensitive)) {
+                QPluginLoader loader(lib);
+                if (auto *instance = loader.instance()) {
+                    if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
+                        plugin->run(sender, message);
+                    } else {
+                        Log()->Error("qobject_cast<> returned nullptr");
+                    }
+                } else {
+                    Log()->Error(loader.errorString());
+                }
+            }
         }
     }
 }

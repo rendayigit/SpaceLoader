@@ -37,9 +37,6 @@ class Server : public TCPServer, public Operations {
     void fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message);
     void parseInternalCmd(QTcpSocket *sender, QByteArray message);
     void connectProcess(QTcpSocket *sender, QProcess *process);
-    void runDynamicCmd(QTcpSocket *sender, QByteArray message);
-    QList<QString> getDlibs(QString path);
-
     
     QString transferredFileName;
     QString transferredFileLocation;
