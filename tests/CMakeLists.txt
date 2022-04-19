@@ -28,6 +28,7 @@ add_executable(tests
         TCP/testServer.cpp
         TCP/test_tcp.cpp
         Commands/test_commands.cpp
+        ../Commands/hello/hello.cpp
 )   
 
 target_compile_definitions(tests PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)

@@ -20,9 +20,9 @@ include_directories(${PROJECT_SOURCE_DIR}/../)
 
 add_library(hello SHARED 
         hello.cpp
-        ../../../lib/YAML/yaml.cpp
-        ../../../lib/Logger/Logger.cpp
-        ../../../lib/TCP/server/tcpServer.cpp)
+        ../../lib/YAML/yaml.cpp
+        ../../lib/Logger/logger.cpp
+        ../../lib/TCP/server/tcpServer.cpp)
 
 set_target_properties(hello PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/cmds/) # UNIX
 set_target_properties(hello PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../../bin/cmds/) # WINDOWS
