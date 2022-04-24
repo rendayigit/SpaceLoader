@@ -20,6 +20,11 @@ static QString GetCmd(QString msg) {
     return msg.mid(0, msg.indexOf(" ", 0));
 }
 
+static QString GetParam(QString msg) {
+    msg = msg.simplified();
+    return msg.mid(msg.indexOf(" ", 0) + 1, msg.size());
+}
+
 static bool Cmp(const QString source, const QString command) {
     return GetCmd(source).compare(command, Qt::CaseInsensitive) == 0;
 }

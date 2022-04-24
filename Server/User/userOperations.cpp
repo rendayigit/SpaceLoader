@@ -6,14 +6,14 @@
 #include "../../lib/Logger/logger.h"
 
 void UserOperations::addUser(QTcpSocket *sender, QByteArray message) {
-    message.replace("username ", "");
-    QString username = message.mid(0, message.indexOf(" "));
+    QString username = GetParam(message);
     QHostAddress ip(sender->localAddress().toIPv4Address());
 
-    if (getUser(username) == nullptr)
+    if (getUser(username) == nullptr) {
         userList.append(new User(username, sender));
-    else
+    } else {
         getUser(username)->socketInstances.append(sender);
+    }
 
     Log()->Event(username + " (" + ip.toString() + ") connected.");
 }
@@ -32,9 +32,7 @@ void UserOperations::getUserList(QTcpSocket *sender) {
     Transmit(sender, users.toLocal8Bit());
 }
 
-void UserOperations::removeUser(QTcpSocket *socket) {
-    userList.removeOne(getUser(socket));
-}
+void UserOperations::removeUser(QTcpSocket *socket) { userList.removeOne(getUser(socket)); }
 
 User *UserOperations::getUser(QString userName) {
     for (auto &i : userList) {

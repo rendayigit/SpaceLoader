@@ -46,24 +46,6 @@ Cmds:
       Description: Tells the server to reparse the ServerCmds.yaml.
       id: updatecmds
       type: internal
-    - CmdCallString: deneme1
-      Description: deneme.
-      TriggererId: starkiton
-      Call: getUserlist
-      id: deneme1
-      type: trigger
-    - CmdCallString: deneme2
-      Description: deneme2.
-      TriggererId: sa
-      Call: getuserlist
-      id: deneme2
-      type: trigger
-    - CmdCallString: deneme3
-      Description: deneme3.
-      TriggererId: ping
-      Call: hello
-      id: deneme3
-      type: trigger
     - CmdCallString: echo
       Description: echo deneme.
       ScriptDir: echo
@@ -121,7 +103,7 @@ Cmds:
         available log files.
       id: readlog
       type: internal
-    - CmdCallString: ListLog
+    - CmdCallString: ListLogs
       Description: View available log files in the server.
-      id: listlog
+      id: listlogs
       type: internal

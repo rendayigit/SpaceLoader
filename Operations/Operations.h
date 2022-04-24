@@ -18,7 +18,6 @@
 #include "./Cmd/CallCmd.h"
 #include "./Cmd/FileTransferCmd.h"
 #include "./Cmd/InternalCmd.h"
-#include "./Cmd/TriggerCmd.h"
 
 using namespace std;
 
@@ -36,9 +35,8 @@ class Operations {
         QString originalMessage;
     };
 
-    bool parseMessage(QTcpSocket *sender, QByteArray message, bool isExactMatch = false);
+    bool parseMessage(QTcpSocket *sender, QByteArray message);
     void populateCmdLists();
-    QString helpFormatter(QString message);
 
     parsedCmd getParsedMessage(QString cmd);
 
@@ -50,6 +48,8 @@ class Operations {
     virtual void connectProcess(QTcpSocket *sender, QProcess *process) = 0;
 
     void timerTrigger();
+    QString help();
+
    private:
     static bool checkTimerFlag(std::vector<YAML::Node> cmdsWithTheTimerFlagSetNodeList,
                                QString cmdCallString);

@@ -1,6 +1,7 @@
 #include "server.h"
 
 #include "User/userOperations.h"
+#include "logging.h"
 
 Server::Server() : Operations(Paths().getServerCmdsYaml()) {
     isFileTransferInProgress = false;
@@ -98,19 +99,19 @@ void Server::fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray m
     transferredFileLocation = cmd->getDestinationDir();
 }
 
-// TODO move to /Commands
 bool Server::isAuthorized(QTcpSocket *sender, QString cmdName) {
-    if (getCmd(cmdName)->getAuthorizedUser() == nullptr ||
-        getCmd(cmdName)->getIsAuthRequired() == false)
+    if (getCmd(cmdName)->getAuthorizedUser() == nullptr or
+        not getCmd(cmdName)->getIsAuthRequired()) {
         return false;
-    else
-        for (auto &i : UserOperations::getInstance()
-                           .getUser(getCmd(cmdName)->getAuthorizedUser())
-                           ->socketInstances) {
-            if (i == sender) {
-                return true;
-            }
+    }
+
+    for (auto &i : UserOperations::getInstance()
+                       .getUser(getCmd(cmdName)->getAuthorizedUser())
+                       ->socketInstances) {
+        if (i == sender) {
+            return true;
         }
+    }
 
     return false;
 }
@@ -128,11 +129,30 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
         UserOperations::getInstance().addUser(sender, message);
     } else if (Cmp(message, "getUserList")) {
         UserOperations::getInstance().getUserList(sender);
-    }
+    } else if (Cmp(message, "listLogs")) {
+        Transmit(sender, Logging::getLogFileNames().toLocal8Bit());
+    } else if (Cmp(message, "readLog")) {
+        Transmit(sender, Logging::getLogData(GetParam(message)).toLocal8Bit());
+    } else if (Cmp(message, "help")) {
+        Transmit(sender, (" - Server Commands - \n" + Operations::help()).toLocal8Bit());
+    } else if (Cmp(message, "sa")) {
+        Transmit(sender, "AS");
+    } else if (Cmp(message, "UpdateCmds")) {
+        populateCmdLists();
+        Transmit(sender, "Command list updated.");
+    } /*else if (Cmp(message, "getAuth")) {
+        authRequest(sender, message);
+    } else if (Cmp(message, "clearAuth")) {
+        deAuthRequest(sender, message);
+    } else if (Cmp(message, "forceAuth")) {
+        forceAuth(sender, message);
+    } else if (Cmp(message, "createFolder")) {
+        createFolder(sender, message);
+    }*/
 }
 
 void Server::connectProcess(QTcpSocket *sender, QProcess *process) {
-    transmit(sender, "Script execution successful. Forwarding output: ");
+    Transmit(sender, "Script execution successful. Forwarding output: ");
     connect(process, &QProcess::readyReadStandardOutput, this,
             [=]() { transmit(sender, process->readLine()); });
 }
