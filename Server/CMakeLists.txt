@@ -21,6 +21,7 @@ set(PROJECT_SOURCES
         ../lib/TCP/server/tcpServer.cpp
         ../Operations/Operations.cpp
         User/userOperations.cpp
+        User/user.cpp
         logging.cpp
         server.cpp
         main.cpp

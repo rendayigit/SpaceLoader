@@ -29,8 +29,8 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
     if (not isFileTransferInProgress) {  // No file transfer operations, regular operations
         Log()->Info("Received: '" + message + "' from " + ip4Address.toString());
 
-        if (getCmd(cmdName) != nullptr && getCmd(cmdName)->getIsAuthRequired() &&
-            not isAuthorized(sender, cmdName)) {
+        if (getCmd(cmdName) != nullptr and getCmd(cmdName)->getIsAuthRequired() and
+            not UserOperations::getInstance().getUser(sender)->checkAuthorization(getCmd(cmdName))) {
             transmit(sender, "You are not authorized for this command. Try: getAuth " +
                                  cmdName.toLocal8Bit());
             return;
@@ -71,20 +71,10 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
 }
 
 void Server::clientDisconnected(QTcpSocket *clientSocket) {
-    if (UserOperations::getInstance().getUser(clientSocket)->socketInstances.size() == 1) {
-        for (auto &auth : cmdList) {  // release user auths
-            if (auth->getAuthorizedUser() != nullptr) {
-                if (auth->getAuthorizedUser() ==
-                    UserOperations::getInstance().getUser(clientSocket)->getUserName()) {
-                    auth->setAuthorizedUser(nullptr);
-                }
-            }
-        }
-
-        UserOperations::getInstance().removeUser(clientSocket);
-        QHostAddress clientAddress(clientSocket->localAddress().toIPv4Address());
-        Log()->Info(clientAddress.toString() + " disconnected");
-    }
+    User *user = UserOperations::getInstance().getUser(clientSocket);
+    user->clearAuthorizations();
+    UserOperations::getInstance().removeUser(user);
+    Log()->Info(user->getIp() + " disconnected");
 }
 
 void Server::fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message) {
@@ -97,23 +87,6 @@ void Server::fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray m
     transferredFileName = message.mid(beginningOfFileName + 1, message.size());
 
     transferredFileLocation = cmd->getDestinationDir();
-}
-
-bool Server::isAuthorized(QTcpSocket *sender, QString cmdName) {
-    if (getCmd(cmdName)->getAuthorizedUser() == nullptr or
-        not getCmd(cmdName)->getIsAuthRequired()) {
-        return false;
-    }
-
-    for (auto &i : UserOperations::getInstance()
-                       .getUser(getCmd(cmdName)->getAuthorizedUser())
-                       ->socketInstances) {
-        if (i == sender) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 BaseCmd *Server::getCmd(QString cmdName) {
@@ -140,15 +113,25 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
     } else if (Cmp(message, "UpdateCmds")) {
         populateCmdLists();
         Transmit(sender, "Command list updated.");
-    } /*else if (Cmp(message, "getAuth")) {
-        authRequest(sender, message);
+    } else if (Cmp(message, "getAuth")) {
+        if (UserOperations::getInstance().getUser(sender)->addAuthorizedCmd(
+                getCmd(GetParam(message)))) {
+            Transmit(sender, "You are now authorized for this command.");
+        } else {
+            Transmit(sender, "Unable to acquire authorization");
+        }
     } else if (Cmp(message, "clearAuth")) {
-        deAuthRequest(sender, message);
+        if (GetParam(message).contains(" ")) {
+            UserOperations::getInstance().getUser(sender)->clearAuthorizations();
+        } else {
+            UserOperations::getInstance().getUser(sender)->removeAuthorizedCmd(
+                getCmd(GetParam(message)));
+        }
     } else if (Cmp(message, "forceAuth")) {
-        forceAuth(sender, message);
-    } else if (Cmp(message, "createFolder")) {
-        createFolder(sender, message);
-    }*/
+        BaseCmd *cmd = getCmd(GetParam(message));
+        UserOperations::getInstance().getUser(cmd->getAuthorizedUser())->removeAuthorizedCmd(cmd);
+        UserOperations::getInstance().getUser(sender)->addAuthorizedCmd(getCmd(GetParam(message)));
+    }
 }
 
 void Server::connectProcess(QTcpSocket *sender, QProcess *process) {

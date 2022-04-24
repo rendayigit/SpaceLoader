@@ -81,10 +81,7 @@ Cmds:
         up.
       id: sa
       type: internal
-    - CmdCallString: createFolder
-      Description: 'Creates a folder in D:\ with the given name.'
-      id: createFolder
-      type: internal
+      auth: 'true'
     - CmdCallString: clearAuth
       Description: Server clears the clients authorization.
       id: clearAuth
