@@ -7,6 +7,10 @@ class CmdPluginInterface {
    public:
     virtual ~CmdPluginInterface() = default;
     virtual void run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) const = 0;
+    QString getDescription() const { return description; }
+
+   protected:
+    QString description;
 };
 
 #define CmdPluginInterface_iid "SpaceLoader.CmdPluginInterface"

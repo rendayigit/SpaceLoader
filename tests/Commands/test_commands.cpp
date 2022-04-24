@@ -10,6 +10,7 @@ TEST(Commands, hello) {
 
     CmdPlugin *testPlugin = new CmdPlugin();
     testPlugin->run(testSocket, "hello");
+    TEST_COUT(testPlugin->getDescription().toStdString());
 
     /* Read logs and see if string ("Ran Hello !!") exists */
     QFile file(Log()->getLogDir() + Log()->getLogFileName());
