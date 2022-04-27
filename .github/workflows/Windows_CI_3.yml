@@ -1,4 +1,4 @@
-name: WINDOWS_CI
+name: WINDOWS_CI_3
 
 on: push
 
@@ -24,6 +24,9 @@ jobs:
             mingw-w64-x86_64-gtest
             mingw-w64-x86_64-yaml-cpp
 
+      - name: Get Path 
+        uses: echo $CI_PROJECT_DIR
+
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -48,6 +51,7 @@ jobs:
           cmake -DCMAKE_PREFIX_PATH:STRING=C:\msys64\mingw64\lib\cmake\ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=C:\msys64\mingw64\bin\gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=C:\msys64\mingw64\bin\g++.exe -S D:\a\SpaceLoader\SpaceLoader\ -B D:\a\SpaceLoader\SpaceLoader\build\ -G "MinGW Makefiles"
           set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
           cmake --build D:\a\SpaceLoader\SpaceLoader\build\ --config Debug --target all -j %coreCount% --
+          
 
       - name: Run Unit Tests
         run: |
