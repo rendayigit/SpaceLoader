@@ -25,7 +25,7 @@ jobs:
             mingw-w64-x86_64-yaml-cpp
 
       - name: Get Path 
-        uses: echo $CI_PROJECT_DIR
+        run : echo $CI_PROJECT_DIR
 
       - name: Checkout
         uses: actions/checkout@v2
