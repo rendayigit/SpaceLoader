@@ -27,24 +27,25 @@ jobs:
       - name: Get Path 
         run : |
          echo $CI_PROJECT_DIR
+         ls -a
         #  D:\a\_temp\setup-msys2\msys2.CMD {0}
 
-      - name: Checkout
-        uses: actions/checkout@v2
+      # - name: Checkout
+      #   uses: actions/checkout@v2
 
-      - name: Cache Qt
-        id: cache-qt
-        uses: actions/cache@v2
-        with:
-          path: ${{ runner.workspace }}/Qt
-          key: ${{ runner.os }}-QtCache
+      # - name: Cache Qt
+      #   id: cache-qt
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: ${{ runner.workspace }}/Qt
+      #     key: ${{ runner.os }}-QtCache
 
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2
-        with:
-          cached: ${{ steps.cache-qt.outputs.cache-hit }}
-          host: "windows"
-          target: "desktop"
+      # - name: Install Qt
+      #   uses: jurplel/install-qt-action@v2
+      #   with:
+      #     cached: ${{ steps.cache-qt.outputs.cache-hit }}
+      #     host: "windows"
+      #     target: "desktop"
 
       - name: Build All
         run: |
