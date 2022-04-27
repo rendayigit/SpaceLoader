@@ -26,7 +26,7 @@ jobs:
 
       - name: Get Path 
         run : |
-          echo "ls -a"
+          "ls -a"
         #  echo "$MSYS2_PATH"
         #  D:\a\_temp\setup-msys2\msys2.CMD {0} --> cmd
 
