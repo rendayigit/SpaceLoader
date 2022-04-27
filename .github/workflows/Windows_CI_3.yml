@@ -26,8 +26,8 @@ jobs:
 
       - name: Get Path 
         run : |
-         echo "$CI_PROJECT_DIR" || "ls -a"
-        #  D:\a\_temp\setup-msys2\msys2.CMD {0}
+         echo %{MSYS2_PATH}%
+        #  D:\a\_temp\setup-msys2\msys2.CMD {0} --> cmd
 
       - name: Checkout
         uses: actions/checkout@v2
