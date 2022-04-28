@@ -24,15 +24,7 @@ jobs:
             mingw-w64-x86_64-make
             mingw-w64-x86_64-gtest
             mingw-w64-x86_64-yaml-cpp
-
-      - name: Get Path 
-        run : |
-          echo "$MSYS2_PATH" 
-          echo "$MINGW_MOUNT_POINT"
-          cd D:\a\_temp\setup-msys2\
-          dir
-
-          
+            
         #--> MSYS2_PATH="/usr/local/bin:/usr/bin:/bin"
         #  D:\a\_temp\setup-msys2\msys2.CMD {0} --> cmd
 
@@ -57,6 +49,8 @@ jobs:
         run: |
           # TODO - find the correct path to the msys installation
           mkdir D:\a\SpaceLoader\SpaceLoader\build
+          cd D:\a\_temp\setup-msys2\
+          dir
           cmake -DCMAKE_PREFIX_PATH:STRING=D:/a/_temp/msys64/mingw64/lib/cmake/ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=D:/a/_temp/msys64/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=D:/a/_temp/msys64/mingw64/bin/g++.exe -S D:/a/SpaceLoader/SpaceLoader/ -B D:/a/SpaceLoader/SpaceLoader/build/ -G "MinGW Makefiles"
           set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
           cmake --build D:/a/SpaceLoader/SpaceLoader/build/ --config Debug --target all -j %coreCount% --
