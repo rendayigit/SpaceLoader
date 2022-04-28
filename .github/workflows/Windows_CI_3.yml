@@ -14,7 +14,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
-          location: D:\a\_temp\
+          #location: D:\a\_temp\
           update: true
           install: |
             mingw-w64-x86_64-qt5
@@ -29,7 +29,7 @@ jobs:
         run : |
           echo "$MSYS2_PATH" 
           echo "$MINGW_MOUNT_POINT"
-          cd %MSYS2_PATH%
+          cd D:\a\_temp\setup-msys2\
           dir
 
           
