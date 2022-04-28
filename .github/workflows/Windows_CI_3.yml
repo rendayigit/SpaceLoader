@@ -27,8 +27,8 @@ jobs:
 
       - name: Get Path 
         run : |
-          "ls -a"
-        #  echo "$MSYS2_PATH" --> MSYS2_PATH="/usr/local/bin:/usr/bin:/bin"
+          echo "$MSYS2_PATH" 
+        #--> MSYS2_PATH="/usr/local/bin:/usr/bin:/bin"
         #  D:\a\_temp\setup-msys2\msys2.CMD {0} --> cmd
 
       - name: Checkout
