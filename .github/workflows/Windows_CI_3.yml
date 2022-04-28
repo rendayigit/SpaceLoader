@@ -5,9 +5,6 @@ on: push
 jobs:
   build:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: msys2 {0}
     steps:
     
       - name: Install MSYS2
