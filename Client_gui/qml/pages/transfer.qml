@@ -33,7 +33,7 @@ Item {
                 Row {
                     TreeWidget {
                         id: tree
-//                        anchors.fill: parent
+                        //                        anchors.fill: parent
 
                         Component.onCompleted: {
                             iconSize = (Qt.size(12, 12));
@@ -79,9 +79,9 @@ Item {
                 }
 
                 Row {
-                    TreeWidget{
+                    TreeWidget {
                         id: tree2
-//                        anchors.fill: parent
+                        //                        anchors.fill: parent
 
                         Component.onCompleted: {
                             iconSize = (Qt.size(12, 12));

@@ -28,7 +28,7 @@ Window {
     property int bgRadius: 20
 
     // Internal functions
-    QtObject{
+    QtObject {
         id: internal
 
         function resetResizeBorders(){
@@ -169,9 +169,9 @@ Window {
             anchors.topMargin: 8
 
             DragHandler { onActiveChanged: if(active){
-                   mainWindow.startSystemMove()
-                   internal.ifMaximizedWindowRestore()
-                }
+                                               mainWindow.startSystemMove()
+                                               internal.ifMaximizedWindowRestore()
+                                           }
             }
 
             Image {
@@ -243,6 +243,22 @@ Window {
                     font.pointSize: 9
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     onClicked: stackView.push("pages/transfer.qml")
+                }
+
+                CustomAppButton {
+                    text: "Command Line"
+                    setIcon: "../assets/images/terminal.png"
+                    font.pointSize: 9
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    onClicked: stackView.push("pages/cli.qml")
+                }
+
+                CustomAppButton {
+                    text: "Listeners"
+                    setIcon: "../assets/images/connect.png"
+                    font.pointSize: 9
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    onClicked: stackView.push("pages/listeners.qml")
                 }
             }
             ScrollBar.horizontal: ScrollBar {
@@ -323,7 +339,7 @@ Window {
             anchors.leftMargin: 5
             anchors.topMargin: 10
 
-            PropertyAnimation{
+            PropertyAnimation {
                 id: animationMenu
                 target: leftMenu
                 property: "width"
@@ -351,7 +367,7 @@ Window {
 
                 LeftButton {
                     text: "Settings"
-                    btnIconSource: "../assets/svg_images/moeda_icon.svg"
+                    btnIconSource: "../assets/images/settings.png"
                     onClicked: stackView.push("pages/pageNoInternet.qml")
                 }
 
@@ -393,7 +409,7 @@ Window {
 
     }
 
-    DropShadow{
+    DropShadow {
         id: dropShadowBG
         opacity: 0
         anchors.fill: bg
@@ -416,7 +432,7 @@ Window {
         anchors.leftMargin: 0
         anchors.topMargin: 10
         cursorShape: Qt.SizeHorCursor
-        DragHandler{
+        DragHandler {
             target: null
             onActiveChanged: if (active) { mainWindow.startSystemResize(Qt.LeftEdge) }
         }
@@ -433,7 +449,7 @@ Window {
         anchors.leftMargin: 6
         anchors.topMargin: 10
         cursorShape: Qt.SizeHorCursor
-        DragHandler{
+        DragHandler {
             target: null
             onActiveChanged: if (active) { mainWindow.startSystemResize(Qt.RightEdge) }
         }

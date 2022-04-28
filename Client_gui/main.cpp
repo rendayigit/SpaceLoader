@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 
     engine.rootContext()->setContextProperty("backend", &data);
     engine.load("qrc:/qml/splashScreen.qml"); // Bypass password screen for debugging
-    //engine.load("qrc:/qml/main.qml");
+//    engine.load("qrc:/qml/main.qml");
 
     // QList<QString> commandArguments;
     // commandArguments.append("127.0.0.1");

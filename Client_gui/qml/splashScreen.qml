@@ -38,13 +38,13 @@ Window {
     }
 
     // Functions
-    QtObject{
+    QtObject {
         id: internal
 
         // Verify Login
         function checkLogin(){
             // TODO: This is the password
-            if(loginTextField.text == "123456"){
+            if(loginTextField.text == "1"){
                 loginTextField.borderColor = "#00ff7f"
                 labelPassword.visible = false
                 loginAnimationFrameMarginTop.running = true
@@ -80,7 +80,7 @@ Window {
 
         DragHandler { onActiveChanged: if(active){ splashScreen.startSystemMove() } }
 
-        CircularProgressBar{
+        CircularProgressBar {
             id: circularProgressBar;
             width: 200;
             height: 200;
@@ -102,7 +102,7 @@ Window {
             y: 50
             width: 300
             height: 300
-            anchors.verticalCenter: parent.verticalCenter           
+            anchors.verticalCenter: parent.verticalCenter
             source: "../assets/videos/earth.avi"
             anchors.horizontalCenter: parent.horizontalCenter
             fillMode: VideoOutput.PreserveAspectFit
@@ -112,7 +112,7 @@ Window {
             playbackRate: 0.4
         }
 
-        TopBarButton{
+        TopBarButton {
             id: btnClose;
             opacity: 0
             visible: true
@@ -125,7 +125,7 @@ Window {
             anchors.topMargin: 8
             anchors.rightMargin: 8
             onClicked: splashScreen.close()
-            CustomToolTip{
+            CustomToolTip {
                 text: "Close"
             }
         }
@@ -208,7 +208,7 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
         z: 2
 
-        PropertyAnimation{
+        PropertyAnimation {
             id: loginAnimationFrameMarginTop
             target: loginFrame
             property: "anchors.topMargin"
@@ -255,7 +255,7 @@ Window {
             anchors.verticalCenterOffset: 10
             fillMode: Image.PreserveAspectFit
 
-            PropertyAnimation{
+            PropertyAnimation {
                 id: imageAnimationRightMargin
                 target: imageFingerPrint
                 property: "anchors.rightMargin"
@@ -263,7 +263,7 @@ Window {
                 duration: 5000
                 easing.type: Easing.InOutQuint
             }
-            PropertyAnimation{
+            PropertyAnimation {
                 id: imageAnimationOpacity
                 target: imageFingerPrint
                 property: "opacity"
@@ -273,7 +273,7 @@ Window {
             }
         }
 
-        CustomTextField{
+        CustomTextField {
             id: loginTextField
             x: 261
             y: 80
@@ -303,7 +303,7 @@ Window {
                 internal.resetTextLogin();
             }
 
-            PropertyAnimation{
+            PropertyAnimation {
                 id: textFieldAnimationRightMargin
                 target: loginTextField
                 property: "anchors.rightMargin"
@@ -311,7 +311,7 @@ Window {
                 duration: 5000
                 easing.type: Easing.InOutQuint
             }
-            PropertyAnimation{
+            PropertyAnimation {
                 id: textFieldOpacity
                 target: loginTextField
                 property: "opacity"
@@ -340,7 +340,7 @@ Window {
         }
     }
 
-    DropShadow{
+    DropShadow {
         id: dropShadowBG
         opacity: 0
         anchors.fill: bg
@@ -352,7 +352,7 @@ Window {
         z: 1
     }
 
-    DropShadow{
+    DropShadow {
         id: dropShadowLogin
         visible: false
         anchors.fill: loginFrame

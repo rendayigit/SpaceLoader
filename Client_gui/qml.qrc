@@ -47,5 +47,10 @@
         <file>qml/QmlTreeWidget/btn_expand@2x.png</file>
         <file>qml/QmlTreeWidget/TreeItem.js</file>
         <file>qml/QmlTreeWidget/TreeWidget.qml</file>
+        <file>assets/images/connect.png</file>
+        <file>assets/images/terminal.png</file>
+        <file>qml/pages/listeners.qml</file>
+        <file>qml/pages/cli.qml</file>
+        <file>assets/images/settings.png</file>
     </qresource>
 </RCC>

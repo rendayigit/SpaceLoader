@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.15
 Item {
     id: item1
 
-    Rectangle{
+    Rectangle {
         id: rectangle
         anchors.fill: parent
         radius: 10
@@ -22,172 +22,137 @@ Item {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            clip: true
             anchors.bottomMargin: 10
             anchors.leftMargin: 5
             anchors.topMargin: 10
 
-            Flickable {
+            ScrollView {
                 id: flickable
-                width: 106
-                contentHeight: 19 * 10 //(the scrollbar size) do amount of content * by 10 maybe
                 anchors.left: parent.left
-                anchors.right: parent.right
+                //                anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 anchors.top: parent.top
-                anchors.rightMargin: 4
+                //                anchors.rightMargin: 4
                 anchors.leftMargin: 4
                 anchors.bottomMargin: 4
                 anchors.topMargin: 4
                 clip: true
 
-                GridLayout {
-                    id: gridLayoutBottom
-                    rows: 19
-                    anchors.leftMargin: 0
-                    anchors.rightMargin: 0
-                    anchors.topMargin: 0
-                    anchors.bottomMargin: 0
-                    rowSpacing: 1
-                    columns: 0
-
-                    Column {
-                        id: rowMenus
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-
-                        LeftButton {
-                            text: "14.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                        }
-
-                        LeftButton {
-                            text: "13.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                        }
-
-                        LeftButton {
-                            text: "12.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "11.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "10.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
-
-                        LeftButton {
-                            text: "09.06.2021.log"
-                            btnIconSource: "../../assets/images/logs.png"
-                            onClicked: stackView.push("pageNoInternet.qml")
-                        }
+                Column {
+                    LeftButton {
+                        text: "14.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     }
-                }
 
-                ScrollBar.vertical: ScrollBar {
-                    id: control
-                    size: 0.3
-                    position: 0.2
-                    orientation: Qt.Vertical
-                    visible: flickable.moving || flickable.moving
+                    LeftButton {
+                        text: "13.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    }
 
-                    contentItem: Rectangle {
-                        implicitWidth: 6
-                        implicitHeight: 100
-                        radius: width / 2
-                        color: control.pressed ? "#55aaff" : "#40405f"
+                    LeftButton {
+                        text: "12.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "11.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "10.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
+                    }
+
+                    LeftButton {
+                        text: "09.06.2021.log"
+                        btnIconSource: "../../assets/images/logs.png"
+                        onClicked: stackView.push("pageNoInternet.qml")
                     }
                 }
             }

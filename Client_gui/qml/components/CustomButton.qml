@@ -21,7 +21,7 @@ Button {
     }
 
     text: qsTr("Button")
-    contentItem: Item{
+    contentItem: Item {
         Text {
             id: name
             text: button.text
@@ -32,7 +32,7 @@ Button {
         }
     }
 
-    background: Rectangle{
+    background: Rectangle {
         color: internal.dynamicColor
         radius: 10
     }

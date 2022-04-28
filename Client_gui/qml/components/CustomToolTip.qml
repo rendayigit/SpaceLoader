@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.15
 
-ToolTip{
+ToolTip {
     id: control
     visible: parent.hovered
     delay: 500
@@ -16,7 +16,7 @@ ToolTip{
         color: "#d9dce1"
     }
 
-    background: Rectangle{
+    background: Rectangle {
         color: "#222327"
         border.color: "#36373d"
         border.width: 1

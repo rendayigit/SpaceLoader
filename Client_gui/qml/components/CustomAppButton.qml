@@ -16,16 +16,16 @@ Button {
     QtObject{
         id: internal
 
-        property var dynamicColor: if(button.down){
+        property var dynamicColor: if(button.down) {
                                        button.down ? colorPressed : colorDefault
-                                   }else{
+                                   } else {
                                        button.hovered ? colorMouseOver : colorDefault
                                    }
     }
 
     text: qsTr("Button")
     font.family: "Segoe UI"
-    contentItem: Item{
+    contentItem: Item {
         id: itemBtn
         Text {
             id: name
@@ -52,7 +52,7 @@ Button {
         }
     }
 
-    background: Rectangle{
+    background: Rectangle {
         color: internal.dynamicColor
         radius: 10
     }

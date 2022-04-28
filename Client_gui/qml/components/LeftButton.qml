@@ -11,22 +11,24 @@ Button {
     property color colorPressed: "#55aaff"
     property url btnIconSource: "../../assets/svg_images/help_icon.svg"
 
-    QtObject{
+    QtObject {
         id: internal
 
-        property var dynamicColor: if(button.down){
+        property var dynamicColor: if(button.down) {
                                        button.down ? colorPressed : colorDefault
-                                   }else{
+                                   } else {
                                        button.hovered ? colorMouseOver : colorDefault
                                    }
     }
+
     implicitWidth: 240
     implicitHeight: 40
     text: qsTr("Button")
     font.pointSize: 9
     font.family: "Segoe UI"
-    contentItem: Item{
+    contentItem: Item {
         id: item1
+
         Text {
             id: name
             text: button.text
@@ -36,6 +38,7 @@ Button {
             anchors.left: parent.left
             anchors.leftMargin: 37
         }
+
         Image {
             id: iconBtn
             sourceSize.height: 24
@@ -47,6 +50,7 @@ Button {
             fillMode: Image.PreserveAspectFit
             antialiasing: true
         }
+
         Image {
             id: iconArrow
             sourceSize.height: 18
@@ -58,15 +62,14 @@ Button {
             fillMode: Image.PreserveAspectFit
             antialiasing: true
         }
-
     }
 
-    background: Rectangle{
+    background: Rectangle {
         color: "#00000000"
         radius: 0
         border.color: "#33334c"
 
-        Rectangle{
+        Rectangle {
             anchors.fill: parent
             anchors.bottomMargin: 1
             anchors.topMargin: 0

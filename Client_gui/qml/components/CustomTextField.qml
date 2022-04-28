@@ -12,23 +12,23 @@ TextField {
     property color borderColor: "#33334c"
     property int borderWidth: 3
 
-    QtObject{
+    QtObject {
         id: internal
 
         property var dynamicColor: if(textField.focus) {
-                                        textField.focus ? colorOnFocus : colorDefault
+                                       textField.focus ? colorOnFocus : colorDefault
                                    } else {
-                                        textField.hovered ? colorMouseOver : colorDefault
-                                        // if(textField.hovered) {
-                                        //     width = width - 2;
-                                        //     frame.border.width = borderWidth + 2;
-                                        //     // return colorMouseOver;
-                                        // } else {
-                                        //     width = width + 2;
-                                        //     frame.border.width = borderWidth;
-                                        //     // return colorDefault;
-                                        // }
-                                        // return colorDefault;
+                                       textField.hovered ? colorMouseOver : colorDefault
+                                       // if(textField.hovered) {
+                                       //     width = width - 2;
+                                       //     frame.border.width = borderWidth + 2;
+                                       //     // return colorMouseOver;
+                                       // } else {
+                                       //     width = width + 2;
+                                       //     frame.border.width = borderWidth;
+                                       //     // return colorDefault;
+                                       // }
+                                       // return colorDefault;
                                    }
     }
 

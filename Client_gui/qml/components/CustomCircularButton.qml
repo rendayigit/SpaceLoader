@@ -15,7 +15,7 @@ Button{
         id: internal
 
         // MOUSE OVER AND CLICK CHANGE COLOR
-        property var dynamicColor: if(btnTopBar.down){
+        property var dynamicColor: if(btnTopBar.down) {
                                        btnTopBar.down ? btnColorClicked : btnColorDefault
                                    } else {
                                        btnTopBar.hovered ? btnColorMouseOver : btnColorDefault
@@ -26,7 +26,7 @@ Button{
     width: 50
     height: 50
 
-    background: Rectangle{
+    background: Rectangle {
         id: bgBtn
         color: internal.dynamicColor
         radius: btnRadius
@@ -45,7 +45,7 @@ Button{
             antialiasing: true
         }
 
-        ColorOverlay{
+        ColorOverlay {
             anchors.fill: iconBtn
             source: iconBtn
             color: "#ffffff"

@@ -33,7 +33,7 @@ Item {
     property color textColor: "#7c7c7c"
 
     // Internal Properties/Functions
-    QtObject{
+    QtObject {
         id: internal
 
         property Component dropShadow: DropShadow{
@@ -47,21 +47,21 @@ Item {
     }
 
 
-    Shape{
+    Shape {
         id: shape
         anchors.fill: parent
         layer.enabled: true
         layer.samples: progress.samples
         layer.effect: progress.enableDropShadow ? internal.dropShadow : null
 
-        ShapePath{
+        ShapePath {
             id: pathBG
             strokeColor: progress.bgStrokeColor
             fillColor: progress.bgColor
             strokeWidth: progress.strokeBgWidth
             capStyle: progress.roundCap ? ShapePath.RoundCap : ShapePath.FlatCap
 
-            PathAngleArc{
+            PathAngleArc {
                 radiusX: (progress.width / 2) - (progress.progressWidth / 2)
                 radiusY: (progress.height / 2) - (progress.progressWidth / 2)
                 centerX: progress.width / 2
@@ -71,14 +71,14 @@ Item {
             }
         }
 
-        ShapePath{
+        ShapePath {
             id: path
             strokeColor: progress.progressColor
             fillColor: "transparent"
             strokeWidth: progress.progressWidth
             capStyle: progress.roundCap ? ShapePath.RoundCap : ShapePath.FlatCap
 
-            PathAngleArc{
+            PathAngleArc {
                 radiusX: (progress.width / 2) - (progress.progressWidth / 2)
                 radiusY: (progress.height / 2) - (progress.progressWidth / 2)
                 centerX: progress.width / 2

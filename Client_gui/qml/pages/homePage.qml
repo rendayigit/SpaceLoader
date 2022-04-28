@@ -24,7 +24,7 @@ Item {
             columnSpacing: 10
             rows: 3
 
-            Rectangle{
+            Rectangle {
                 id: rectangle1
                 color: "#27273a"
                 height: 220
@@ -175,7 +175,7 @@ Item {
                 }
             }
 
-            Rectangle{
+            Rectangle {
                 id: rectangle2
                 color: "#27273a"
                 height: 220

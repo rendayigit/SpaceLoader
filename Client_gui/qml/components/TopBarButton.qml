@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.15
 
-Button{
+Button {
     id: btnTopBar
     // CUSTOM PROPERTIES
     property url btnIconSource: "../../assets/svg_images/minimize_icon.svg"
@@ -11,11 +11,11 @@ Button{
     property color btnColorClicked: "#00a1f1"
     property int btnRadius: 16
 
-    QtObject{
+    QtObject {
         id: internal
 
         // MOUSE OVER AND CLICK CHANGE COLOR
-        property var dynamicColor: if(btnTopBar.down){
+        property var dynamicColor: if(btnTopBar.down) {
                                        btnTopBar.down ? btnColorClicked : btnColorDefault
                                    } else {
                                        btnTopBar.hovered ? btnColorMouseOver : btnColorDefault
@@ -26,7 +26,7 @@ Button{
     width: 35
     height: 35
 
-    background: Rectangle{
+    background: Rectangle {
         id: bgBtn
         color: internal.dynamicColor
         radius: btnRadius
@@ -45,7 +45,7 @@ Button{
             antialiasing: false
         }
 
-        ColorOverlay{
+        ColorOverlay {
             anchors.fill: iconBtn
             source: iconBtn
             color: "#ffffff"
