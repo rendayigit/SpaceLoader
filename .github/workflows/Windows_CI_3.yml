@@ -37,9 +37,11 @@ jobs:
           cd "D://a//_temp//setup-msys2//"
           ls
           dir
-          echo $CI_PROJECT_DIR
-          echo $MSYS_PATH
-          echo "$(pwd)/build:$PATH"
+          echo "ci project dir is : $CI_PROJECT_DIR"
+          echo "msys path is : $MSYS_PATH"
+          echo "build path is: $(pwd)/build:$PATH"
+
+#/d/a/_temp/setup-msys2/build:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/c/Windows/System32:/c/Windows:/c/Windows/System32/Wbem:/c/Windows/System32/WindowsPowerShell/v1.0/:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
           
 #          cmake -DCMAKE_PREFIX_PATH:STRING=D:/a/_temp/msys64/mingw64/lib/cmake/
 #           -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
