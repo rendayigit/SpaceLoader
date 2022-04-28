@@ -39,6 +39,7 @@ jobs:
           dir
           echo $CI_PROJECT_DIR
           echo $MSYS_PATH
+          echo "$(pwd)/build:$PATH"
           
 #          cmake -DCMAKE_PREFIX_PATH:STRING=D:/a/_temp/msys64/mingw64/lib/cmake/
 #           -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
