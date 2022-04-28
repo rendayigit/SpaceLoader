@@ -29,6 +29,8 @@ jobs:
         run : |
           echo "$MSYS2_PATH" 
           echo "$MINGW_MOUNT_POINT"
+          cd %MSYS2_PATH%
+          dir
 
           
         #--> MSYS2_PATH="/usr/local/bin:/usr/bin:/bin"
