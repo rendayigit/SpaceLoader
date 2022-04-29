@@ -73,7 +73,7 @@ void Operations::populateCmdLists() {
         callCmd->setCmdCallString(QString::fromStdString(Yaml::getValue(i, "CmdCallString")));
         callCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
         callCmd->setScriptDir(QString::fromStdString(Yaml::getValue(i, "ScriptDir")));
-        callCmd->setScriptFileName(QString::fromStdString(Yaml::getValue(i, "id")));
+        callCmd->setScriptFileName(QString::fromStdString(Yaml::getValue(i, "ScriptFileName")));
         callCmd->setIsTimerSet(
             checkTimerFlag(cmdsWithTheTimerFlagSetNodeList, callCmd->getCmdCallString()));
         callCmd->setIsAuthRequired(
