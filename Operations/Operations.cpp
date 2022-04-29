@@ -136,7 +136,13 @@ void Operations::runBatchScript(QTcpSocket *sender, CallCmd *cmd, QString messag
     qDebug() << "running: " << args;
 
     auto *process = new QProcess();
-    process->start("cmd.exe", args);
+
+    #ifdef Q_OS_WIN
+        QString bash = "cmd.exe";
+    #else
+        QString bash = "/bin/bash";
+    #endif
+    process->start(bash, args);
 
     connectProcess(sender, process);
 }

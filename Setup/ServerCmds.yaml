@@ -60,6 +60,12 @@ Cmds:
       id: run
       type: call
       timer: 'true'
+    - CmdCallString: linuxDeneme
+      Description: linuxDeneme
+      ScriptDir: '/home/pc/Desktop/'
+      ScriptFileName: 'echo.sh'
+      id: linuxDeneme
+      type: call
     - CmdCallString: trigger1
       Description: trigger1
       ScriptDir: 'D:\\SpaceLoader Source\scripts\'
