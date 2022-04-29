@@ -41,7 +41,8 @@ jobs:
           echo "make path is :  $MAKE" 
           echo "make path is :  $(mkfile_path)" 
           cmake \
-          -DCMAKE_BUILD_TYPE:STRING=Debug\ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
+          -DCMAKE_BUILD_TYPE:STRING=Debug\
+          -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE \
            set /a coreCount=(%NUMBER_OF_PROCESSORS% + 2) \
 
           
