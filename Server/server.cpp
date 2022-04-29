@@ -137,5 +137,5 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
 void Server::connectProcess(QTcpSocket *sender, QProcess *process) {
     Transmit(sender, "Script execution successful. Forwarding output: ");
     connect(process, &QProcess::readyReadStandardOutput, this,
-            [=]() { transmit(sender, process->readLine()); });
+            [=]() { Transmit(sender, process->readLine()); });
 }
