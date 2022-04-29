@@ -20,6 +20,7 @@ set(PROJECT_SOURCES
         ../lib/YAML/yaml.cpp
         ../Operations/Operations.cpp
         ../Client_console/client.cpp
+        backend.cpp
         main.cpp
         qml.qrc
 )
