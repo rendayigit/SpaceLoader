@@ -41,7 +41,7 @@ jobs:
           echo "make path is :  $MAKE" 
           echo "make path is :  $(mkfile_path)" 
           
-          cmake .. -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE 
+          cmake .. -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_PREFIX_PATH:STRING=/msys64/mingw64/lib/cmake/
       
 
           
