@@ -76,7 +76,7 @@ Cmds:
       timer: 'true'
     - CmdCallString: hello
       Description: hello deneme.
-      ScriptDir: 'D:\\SpaceLoader Source\scripts\'
+      ScriptDir: 'C:\Users\renda\Documents\Projects\SpaceLoader\scripts\'
       ScriptFileName: hello.bat
       id: hello
       type: call

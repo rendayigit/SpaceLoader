@@ -136,7 +136,7 @@ void Operations::runBatchScript(QTcpSocket *sender, CallCmd *cmd, QString messag
     auto *process = new QProcess();
 
     #ifdef Q_OS_WIN
-        //args.prepend("/c"); // TODO check if necessary
+        args.prepend("/c");
         QString bash = "cmd.exe";
     #else
         QString bash = "/bin/bash";
