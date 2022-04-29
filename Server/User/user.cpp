@@ -12,7 +12,7 @@ QString User::getIp() {
 
 bool User::checkAuthorization(BaseCmd *cmd) {
     for (auto &authorizedCmd : authorizedCmds) {
-        if (authorizedCmd->getCmdCallString() == cmd->getCmdCallString()) {
+        if (authorizedCmd == cmd) {
             return true;
         }
     }
