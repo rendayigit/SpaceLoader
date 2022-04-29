@@ -29,11 +29,11 @@ int main(int argc, char *argv[]) {
     }
 
     /* Connect to server */
-    Client::getInstance()->start(commandArguments);
+    Client::getInstance().start(commandArguments);
 
     auto ret = a.exec();
 
-    Client::getInstance()->stopAllListeners();
+    Client::getInstance().stopAllListeners();
 
     return ret;
 }
