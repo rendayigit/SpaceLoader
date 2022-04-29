@@ -17,20 +17,13 @@ class User {
     void setUsername(const QString &userName_) { userName = userName_; }
 
     QList<QTcpSocket *> getSocketInstances() const { return socketInstances; }
-    QList<BaseCmd *> getAuthorizedCmds() const { return authorizedCmds; }
 
     void addSocket(QTcpSocket *socket);
     QString getIp();
 
-    bool checkAuthorization(BaseCmd *cmd);
-    bool addAuthorizedCmd(BaseCmd *cmd);
-    void removeAuthorizedCmd(BaseCmd *cmd);
-    void clearAuthorizations();
-
    private:
     QString userName = "";
     QList<QTcpSocket *> socketInstances;
-    QList<BaseCmd *> authorizedCmds;
 };
 
 #endif  // USER_H

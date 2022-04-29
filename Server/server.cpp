@@ -30,7 +30,7 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
         Log()->Info("Received: '" + message + "' from " + ip4Address.toString());
 
         if (getCmd(cmdName) != nullptr and getCmd(cmdName)->getIsAuthRequired() and
-            not UserOperations::getInstance().getUser(sender)->checkAuthorization(getCmd(cmdName))) {
+            not getCmd(GetParam(message))->isAuthenticated(UserOperations::getInstance().getUser(sender)->getUserName())) {
             transmit(sender, "You are not authorized for this command. Try: getAuth " +
                                  cmdName.toLocal8Bit());
             return;
@@ -72,7 +72,9 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
 
 void Server::clientDisconnected(QTcpSocket *clientSocket) {
     User *user = UserOperations::getInstance().getUser(clientSocket);
-    user->clearAuthorizations();
+
+    clearUserAuths(clientSocket);
+
     UserOperations::getInstance().removeUser(user);
     Log()->Info(user->getIp() + " disconnected");
 }
@@ -114,24 +116,39 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
         populateCmdLists();
         Transmit(sender, "Command list updated.");
     } else if (Cmp(message, "getAuth")) {
-        if (UserOperations::getInstance().getUser(sender)->addAuthorizedCmd(
-                getCmd(GetParam(message)))) {
-            Transmit(sender, "You are now authorized for this command.");
-        } else {
-            Transmit(sender, "Unable to acquire authorization");
-        }
+        Transmit(sender,
+                 getCmd(GetParam(message))
+                     ->authorizeUser(UserOperations::getInstance().getUser(sender)->getUserName())
+                     .toLocal8Bit());
     } else if (Cmp(message, "clearAuth")) {
-        if (GetParam(message).contains(" ")) {
-            UserOperations::getInstance().getUser(sender)->clearAuthorizations();
+        if (not message.simplified().contains(" ")) {
+            clearUserAuths(sender);
         } else {
-            UserOperations::getInstance().getUser(sender)->removeAuthorizedCmd(
-                getCmd(GetParam(message)));
+            if (getCmd(GetParam(message))
+                    ->isAuthenticated(
+                        UserOperations::getInstance().getUser(sender)->getUserName())) {
+                Transmit(sender, getCmd(GetParam(message))->clearAuthorizedUser().toLocal8Bit());
+            } else {
+                Transmit(sender, "You are already not authorized for this command.");
+            }
         }
     } else if (Cmp(message, "forceAuth")) {
-        BaseCmd *cmd = getCmd(GetParam(message));
-        UserOperations::getInstance().getUser(cmd->getAuthorizedUser())->removeAuthorizedCmd(cmd);
-        UserOperations::getInstance().getUser(sender)->addAuthorizedCmd(getCmd(GetParam(message)));
+        Transmit(sender, getCmd(GetParam(message))
+                             ->forceAuthorizeUser(
+                                 UserOperations::getInstance().getUser(sender)->getUserName())
+                             .toLocal8Bit());
     }
+}
+
+void Server::clearUserAuths(QTcpSocket *sender) {
+    for (auto &cmd : cmdList) {
+        if (cmd->getAuthorizedUser() ==
+            UserOperations::getInstance().getUser(sender)->getUserName()) {
+            Transmit(sender, cmd->clearAuthorizedUser().toLocal8Bit());
+        }
+    }
+
+    Transmit(sender, "All authorizations cleared.");
 }
 
 void Server::connectProcess(QTcpSocket *sender, QProcess *process) {
