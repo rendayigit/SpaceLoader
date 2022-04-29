@@ -33,13 +33,13 @@ jobs:
       - name: Build All
         run: |
           # TODO - find the correct path to the msys installation
-          mkdir -p /d/a/SpaceLoader/SpaceLoader/build
-          cd /d/a/SpaceLoader/SpaceLoader/build
+          mkdir build
+          cd build
           ls
           dir
           echo "build path is: $(pwd)/build:$PATH"
           cmake \
-          -DCMAKE_PREFIX_PATH:STRING=/d/deneme/build:/mingw64/bin:/lib/cmake/ \
+          -DCMAKE_PREFIX_PATH:STRING=/build:/mingw64/bin:/lib/cmake/ \
           make
 
 #/d/deneme/build:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/c/Windows/System32:/c/Windows:/c/Windows/System32/Wbem:/c/Windows/System32/WindowsPowerShell/v1.0/:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
