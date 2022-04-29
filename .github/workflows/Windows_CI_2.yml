@@ -1,4 +1,4 @@
-name: WINDOWS_CI
+name: WINDOWS_CI_2
 
 on: push
 
