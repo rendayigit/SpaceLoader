@@ -38,7 +38,8 @@ jobs:
           ls
           dir
           echo "build path is: $(pwd)/build:$PATH"
-          echo "make path is :  $(MAKE)" 
+          echo "make path is :  $MAKE" 
+          echo "make path is :  $(dir $(mkfile_path))" 
  #         cmake \
 #         -DCMAKE_BUILD_TYPE:STRING=Debug \
 #          -DCMAKE_PREFIX_PATH:STRING=/build:/mingw64/bin:/lib/cmake/ \
