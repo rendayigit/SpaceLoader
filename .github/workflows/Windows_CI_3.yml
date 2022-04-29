@@ -40,7 +40,7 @@ jobs:
           echo "build path is: $(pwd)/build:$PATH"
           echo "make path is :  $MAKE" 
           echo "make path is :  $(mkfile_path)" 
-          cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE 
+          cmake .. -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE 
       
 
           
