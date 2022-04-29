@@ -19,11 +19,7 @@ jobs:
             mingw-w64-x86_64-qt5
             mingw-w64-x86_64-qt5-base
             mingw-w64-x86_64-qt5-declarative
-            cmake
             mingw-w64-cmake
-            mingw-w64-cmake-doc-qt
-            mingw-w64-extra-cmake-modules
-            mingw-w64-python-sphinxcontrib-moderncmakedomain
             mingw-w64-x86_64-make
             mingw-w64-x86_64-gtest
             mingw-w64-x86_64-yaml-cpp
