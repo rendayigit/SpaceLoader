@@ -31,6 +31,10 @@ void Backend::listLogs() {
     sendCommand("listLogs");
 }
 
+void Backend::getUserList() {
+    sendCommand("getUserList");
+}
+
 void Backend::parse(QString text) {
     if (text.contains("Server Logs")) {
         emit clearLogs();
@@ -41,5 +45,7 @@ void Backend::parse(QString text) {
         }
     } else if (text.contains("Reading")) {
         emit getLogText(text);
+    } else if (text.contains("User #")) {
+        emit getUsers(text);
     }
 }

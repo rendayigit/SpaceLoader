@@ -22,10 +22,9 @@ void UserOperations::getUserList(QTcpSocket *sender) {
     QString users = "";
 
     for (int i = 0; i < userList.size(); i++) {
-        users += "User #" + QString::number(i);
-        users += " username: " + userList.at(i)->getUserName() + '\n';
-        users += "User #" + QString::number(i);
-        users += " ip: " + userList.at(i)->getIp() + '\n';
+        users += "User #" + QString::number(i + 1);
+        users += ": " + userList.at(i)->getUserName();
+        users += " (" + userList.at(i)->getIp() + ")\n";
     }
 
     Transmit(sender, users.toLocal8Bit());

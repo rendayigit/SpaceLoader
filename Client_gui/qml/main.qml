@@ -27,6 +27,10 @@ Window {
     property int windowMargin: 10
     property int bgRadius: 20
 
+    Component.onCompleted: {
+        backend.start("127.0.0.1")
+    }
+
     // Internal functions
     QtObject {
         id: internal
@@ -259,6 +263,14 @@ Window {
                     font.pointSize: 9
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     onClicked: stackView.push("pages/listeners.qml")
+                }
+
+                CustomAppButton {
+                    text: "Users"
+                    setIcon: "../assets/svg_images/user_icon.svg"
+                    font.pointSize: 9
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    onClicked: stackView.push("pages/users.qml")
                 }
             }
             ScrollBar.horizontal: ScrollBar {
@@ -533,5 +545,9 @@ Window {
                 value: 0
             }
         }
+    }
+
+    Connections {
+        target: backend
     }
 }

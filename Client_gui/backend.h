@@ -16,12 +16,14 @@ class Backend : public TCPClient {
     Q_INVOKABLE void start(QString ip);
     Q_INVOKABLE void selectLogFile(QString fileName);
     Q_INVOKABLE void listLogs();
+    Q_INVOKABLE void getUserList();
 
    signals:
     void getReceivedText(QString text);
     void getLogList(QString text);
     void getLogText(QString text);
     void clearLogs();
+    void getUsers(QString text);
 
    private:
     void parse(QString text);

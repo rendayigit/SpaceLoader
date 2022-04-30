@@ -7,18 +7,15 @@ import QtQuick.Layouts 1.15
 Item {
     id: item1
 
+    Component.onCompleted: {
+        backend.listLogs()
+    }
+
     Rectangle {
         id: rectangle
         anchors.fill: parent
         radius: 10
         color: "#27273a"
-
-        Button {
-            text: "list"
-            onClicked: backend.listLogs()
-            z: 3
-            anchors.right: parent.right
-        }
 
         Rectangle {
             id: leftMenu
