@@ -27,8 +27,21 @@ Item {
             radius: 10
             color: "#000000"
 
-            ScrollView {
+            Label {
+                id: label
                 anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: 10
+
+                color: "#ffffff"
+                text: qsTr("Logged In Users")
+                font.family: "Segoe UI"
+                font.pointSize: 11
+            }
+
+            ScrollView {
+                anchors.top: label.bottom
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
