@@ -18,7 +18,7 @@ void UserOperations::addUser(QTcpSocket *sender, QByteArray message) {
     Log().Event(username + " (" + ip.toString() + ") connected.");
 }
 
-void UserOperations::getUserList(QTcpSocket *sender) {
+QString UserOperations::getUserList(QTcpSocket *sender) {
     QString users = "";
 
     for (int i = 0; i < userList.size(); i++) {
@@ -26,8 +26,8 @@ void UserOperations::getUserList(QTcpSocket *sender) {
         users += ": " + userList.at(i)->getUserName();
         users += " (" + userList.at(i)->getIp() + ")\n";
     }
-
-    Transmit(sender, users.toLocal8Bit());
+        
+    return users;
 }
 
 void UserOperations::removeUser(User *user) { userList.removeOne(user); }

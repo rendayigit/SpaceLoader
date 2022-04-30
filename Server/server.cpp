@@ -30,7 +30,9 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
         Log().Info("Received: '" + message + "' from " + ip4Address.toString());
 
         if (getCmd(cmdName) != nullptr and getCmd(cmdName)->getIsAuthRequired() and
-            not getCmd(GetParam(message))->isAuthenticated(UserOperations::getInstance().getUser(sender)->getUserName())) {
+            not getCmd(GetParam(message))
+                    ->isAuthenticated(
+                        UserOperations::getInstance().getUser(sender)->getUserName())) {
             transmit(sender, "You are not authorized for this command. Try: getAuth " +
                                  cmdName.toLocal8Bit());
             return;
@@ -93,7 +95,9 @@ void Server::fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray m
 
 BaseCmd *Server::getCmd(QString cmdName) {
     for (auto &i : cmdList) {
-        if (Cmp(cmdName, i->getCmdCallString())) return i;
+        if (Cmp(cmdName, i->getCmdCallString())) {
+            return i;
+        }
     }
 
     return nullptr;
@@ -102,8 +106,9 @@ BaseCmd *Server::getCmd(QString cmdName) {
 void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
     if (Cmp(message, "addUser")) {
         UserOperations::getInstance().addUser(sender, message);
+        broadcast(UserOperations::getInstance().getUserList(sender).toLocal8Bit());
     } else if (Cmp(message, "getUserList")) {
-        UserOperations::getInstance().getUserList(sender);
+        Transmit(sender, UserOperations::getInstance().getUserList(sender).toLocal8Bit());
     } else if (Cmp(message, "listLogs")) {
         Transmit(sender, Logging::getLogFileNames().toLocal8Bit());
     } else if (Cmp(message, "readLog")) {
