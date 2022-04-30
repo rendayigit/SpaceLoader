@@ -15,8 +15,12 @@ class Logger {
     Logger &operator=(Logger const &) = delete;
     Logger(Logger &&) = delete;
     Logger &operator=(Logger &&) = delete;
+    ~Logger() = default;
 
-    static Logger *getInstance();
+    static auto &getInstance() {
+        static Logger instance;
+        return instance;
+    }
 
     void Flush();
     void Fatal(QString msg);
@@ -43,8 +47,7 @@ class Logger {
 
    private:
     Logger();
-    ~Logger();
-    
+
     bool createLogsDirectory();
     void writer(QString logMsg, QString logType, bool isErrorLog);
 
@@ -53,7 +56,6 @@ class Logger {
     QString logFileName;
     int flushRate;
 
-    static Logger *m_instance;
     QByteArray buffer;
     bool errorLog;
 };

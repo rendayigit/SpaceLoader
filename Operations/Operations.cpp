@@ -4,7 +4,7 @@
 
 Operations::Operations(QString yamlFile) {
     cmdsYamlFile = yamlFile;
-    Log()->setFlushRate(0);
+    Log().setFlushRate(0);
 }
 
 bool Operations::parseMessage(QTcpSocket *sender, QByteArray message) {
@@ -122,7 +122,7 @@ void Operations::populateCmdLists() {
         cmdList.append(internalCmd);
     }
 
-    Log()->Info("Parsed ServerCmds.yaml");
+    Log().Info("Parsed ServerCmds.yaml");
 }
 
 void Operations::runBatchScript(QTcpSocket *sender, CallCmd *cmd, QString message) {
@@ -154,7 +154,7 @@ void Operations::timerTrigger() {
 
     for (auto &cmd : cmdList) {
         if (cmd->getIsTimerSet() and cmd->getTriggerTime() == currentHMTime) {
-            Log()->Info("Trigger by timer: " + cmd->getCmdCallString());
+            Log().Info("Trigger by timer: " + cmd->getCmdCallString());
             parseMessage(nullptr, cmd->getCmdCallString().toLocal8Bit());
         }
     }

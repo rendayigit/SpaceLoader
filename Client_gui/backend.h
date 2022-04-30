@@ -14,9 +14,17 @@ class Backend : public TCPClient {
    public slots:
     Q_INVOKABLE void getTerminalData(QString text);
     Q_INVOKABLE void start(QString ip);
+    Q_INVOKABLE void selectLogFile(QString fileName);
+    Q_INVOKABLE void listLogs();
 
    signals:
     void getReceivedText(QString text);
+    void getLogList(QString text);
+    void getLogText(QString text);
+    void clearLogs();
+
+   private:
+    void parse(QString text);
 };
 
 #endif  // BACKEND_H

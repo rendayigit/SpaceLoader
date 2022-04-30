@@ -13,7 +13,7 @@ Server::Server() : Operations(Paths().getServerCmdsYaml()) {
     QMetaObject::invokeMethod(
         this, [=]() -> void { triggerCmdTimer->start(); }, Qt::QueuedConnection);
 
-    Log()->Info("Server Started");
+    Log().Info("Server Started");
 }
 
 void Server::onReceived(QTcpSocket *sender, QByteArray message) {
@@ -27,7 +27,7 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
     }
 
     if (not isFileTransferInProgress) {  // No file transfer operations, regular operations
-        Log()->Info("Received: '" + message + "' from " + ip4Address.toString());
+        Log().Info("Received: '" + message + "' from " + ip4Address.toString());
 
         if (getCmd(cmdName) != nullptr and getCmd(cmdName)->getIsAuthRequired() and
             not getCmd(GetParam(message))->isAuthenticated(UserOperations::getInstance().getUser(sender)->getUserName())) {
@@ -59,7 +59,7 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
             if (formerCurrTime.msecsTo(QDateTime::currentDateTime()) > 5000) {
                 isFileTransferInProgress = false;
                 transferredFileBuffer.clear();
-                Log()->Info("File transfer timed out");
+                Log().Info("File transfer timed out");
                 onReceived(sender, message);
             } else {
                 transmit(sender,
@@ -76,7 +76,7 @@ void Server::clientDisconnected(QTcpSocket *clientSocket) {
     clearUserAuths(clientSocket);
 
     UserOperations::getInstance().removeUser(user);
-    Log()->Info(user->getIp() + " disconnected");
+    Log().Info(user->getIp() + " disconnected");
 }
 
 void Server::fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message) {

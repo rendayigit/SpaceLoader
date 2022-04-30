@@ -15,7 +15,7 @@ void UserOperations::addUser(QTcpSocket *sender, QByteArray message) {
         getUser(username)->addSocket(sender);
     }
 
-    Log()->Event(username + " (" + ip.toString() + ") connected.");
+    Log().Event(username + " (" + ip.toString() + ") connected.");
 }
 
 void UserOperations::getUserList(QTcpSocket *sender) {

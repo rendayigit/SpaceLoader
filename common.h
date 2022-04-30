@@ -59,7 +59,7 @@ static QList<QString> getDlibs(QString path) {
 static void runDynamicCmd(QTcpSocket *sender, QByteArray message) {
     QList<QString> commandLibs = getDlibs(Paths().getCmdsDir());
     if (commandLibs.isEmpty()) {
-        Log()->Error("no libs found at " + Paths().getCmdsDir());
+        Log().Error("no libs found at " + Paths().getCmdsDir());
     } else {
         for (auto &lib : commandLibs) {
             if (lib.contains(GetCmd(message), Qt::CaseInsensitive)) {
@@ -68,10 +68,10 @@ static void runDynamicCmd(QTcpSocket *sender, QByteArray message) {
                     if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
                         plugin->run(sender, message);
                     } else {
-                        Log()->Error("qobject_cast<> returned nullptr");
+                        Log().Error("qobject_cast<> returned nullptr");
                     }
                 } else {
-                    Log()->Error(loader.errorString());
+                    Log().Error(loader.errorString());
                 }
             }
         }

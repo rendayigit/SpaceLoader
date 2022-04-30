@@ -52,5 +52,6 @@
         <file>qml/pages/listeners.qml</file>
         <file>qml/pages/cli.qml</file>
         <file>assets/images/settings.png</file>
+        <file>qml/components/LogButton.qml</file>
     </qresource>
 </RCC>

@@ -5,21 +5,19 @@
 #include <QtCore/QDir>
 #include <QtCore/QSharedMemory>
 #include <QtCore/QStandardPaths>
-#include <filesystem>
 #include <mutex>
 
-using std::filesystem::current_path;
+#include "../../path.h"
 
 std::mutex fileMutex;
 std::mutex bufferMutex;
 
-Logger *Logger::m_instance = Logger::getInstance();
-
-void exit() { Log()->Flush(); }
+void exit() { Log().Flush(); }
 
 Logger::Logger()
     : isLoggingEnabled(true),
-      logDir(QDir::currentPath() + QDir::separator() + "Logs" + QDir::separator()),
+      logDir(Path::getInstance().getExecutablePath() + QDir::separator() + "Logs" +
+             QDir::separator()),
       logFileName(""),
       flushRate(100000),
       buffer({}),
@@ -27,13 +25,6 @@ Logger::Logger()
     createLogsDirectory();
     buffer.reserve(flushRate + 1000);
     atexit(exit);
-}
-
-Logger *Logger::getInstance() {
-    if (m_instance == nullptr) {
-        m_instance = new Logger;
-    }
-    return m_instance;
 }
 
 /// Create /Logs directory if it does not already exist
