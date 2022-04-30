@@ -1,15 +1,21 @@
 #include <QtCore/QtCore>
 
 class Backend : public QObject {
-Q_OBJECT
+    Q_OBJECT
 
-public:
-    Backend();
+   public:
+   Backend(); // TODO move to private
+    static auto &getInstance() {
+        static Backend instance ;
+        return instance;
+    }
 
-public slots:
-
+   public slots:
     Q_INVOKABLE void sendCmd(QString text);
 
-signals:
-    QString getReceivedText();
+   signals:
+    void getReceivedText(QString text);
+
+   private:
+    
 };

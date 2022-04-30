@@ -19,7 +19,7 @@ set(PROJECT_SOURCES
         ../lib/TCP/client/tcpClient.cpp
         ../lib/YAML/yaml.cpp
         ../Operations/Operations.cpp
-        ../Client_console/client.cpp
+        client.cpp
         backend.cpp
         main.cpp
         qml.qrc
@@ -30,7 +30,6 @@ add_executable(GUI ${PROJECT_SOURCES})
 target_include_directories(GUI PRIVATE
         "../lib/TCP/client/"
         "../Operations/"
-        "../Client_console/"
         )
 
 target_compile_definitions(GUI PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)

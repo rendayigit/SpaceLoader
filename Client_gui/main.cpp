@@ -4,7 +4,6 @@
 #include <QtQml/QQmlContext>
 
 #include "backend.h"
-#include "client.h"
 
 int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
@@ -15,15 +14,10 @@ int main(int argc, char *argv[]) {
     app.setWindowIcon(QIcon(":/images/icon.ico"));
 
     QQmlApplicationEngine engine;
-    Backend data;
 
-    engine.rootContext()->setContextProperty("backend", &data);
+    engine.rootContext()->setContextProperty("backend", &Backend::getInstance());
     // engine.load("qrc:/qml/splashScreen.qml"); // Bypass password screen for debugging
     engine.load("qrc:/qml/main.qml");
-
-    // QList<QString> commandArguments;
-    // commandArguments.append("127.0.0.1");
-    // Client::getInstance().start(commandArguments);
 
     return app.exec();
 }
