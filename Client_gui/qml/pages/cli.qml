@@ -10,6 +10,13 @@ Item {
         radius: 10
         color: "#27273a"
 
+        Button {
+            text: "connect"
+            onClicked: backend.start("127.0.0.1")
+            z: 3
+            anchors.right: parent.right
+        }
+
         Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom

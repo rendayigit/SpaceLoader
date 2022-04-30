@@ -1,11 +1,21 @@
 #include "backend.h"
 
-#include "client.h"
-
-
-Backend::Backend() { Client::getInstance().start("127.0.0.1"); }
-
 void Backend::getTerminalData(QString text) {
-    Client::getInstance().sendCommand(
-        text.mid(text.lastIndexOf(">") + 2, text.size()).toLocal8Bit());
+    sendCommand(text.mid(text.lastIndexOf(">") + 2, text.size()).toLocal8Bit());
+}
+
+void Backend::onReceived(QByteArray message) {
+    std::cout << message.toStdString() << std::endl;
+
+    emit getReceivedText(message);
+}
+
+void Backend::onDisconnected() { std::cout << "Disconnected From Server!"; }
+
+void Backend::start(QString ip) {
+    attemptConnection(ip, 1234);
+
+    /* Transmit username */
+    QByteArray username = getenv("USERNAME");
+    sendCommand("addUser " + username);
 }

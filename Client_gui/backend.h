@@ -1,21 +1,26 @@
-#include <QtCore/QtCore>
+#ifndef BACKEND_H
+#define BACKEND_H
 
-class Backend : public QObject {
+#include <QtCore/QtCore>
+#include <iostream>
+
+#include "../lib/TCP/client/tcpClient.h"
+
+
+class Backend : public TCPClient {
     Q_OBJECT
 
    public:
-   Backend(); // TODO move to private
-    static auto &getInstance() {
-        static Backend instance ;
-        return instance;
-    }
-
+    Backend() = default;
+    void onReceived(QByteArray message);
+    void onDisconnected();
+    
    public slots:
     Q_INVOKABLE void getTerminalData(QString text);
+    Q_INVOKABLE void start(QString ip);
 
    signals:
     void getReceivedText(QString text);
-
-   private:
-    
 };
+
+#endif  // BACKEND_H
