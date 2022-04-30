@@ -24,7 +24,7 @@ class Client : public TCPClient, public Operations {
     void start(QList<QString> commandArguments);
     void stopAllListeners();
 
-    void fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message);
+    void fileTransfer(QString localFile, QString serverPath);
     void parseInternalCmd(QTcpSocket *sender, QByteArray message);
     void connectProcess(QTcpSocket *sender, QProcess *process);
 

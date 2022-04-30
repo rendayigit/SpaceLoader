@@ -124,20 +124,16 @@ void Client::stopAllListeners() {
     }
 }
 
-void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QByteArray message) {
-    sendCommand(message);
+void Client::fileTransfer(QString localFile, QString serverPath) {
+    sendCommand("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
     QThread::msleep(10);
 
-    int endOfCmdName = message.indexOf(" ");
-    QString fileNamePath = message.mid(endOfCmdName + 1, message.size());
-
-    QFile file(fileNamePath);
+    QFile file(localFile);
     file.open(QIODevice::ReadOnly);
-    fileNamePath.remove(fileNamePath.size() - 1);
     QByteArray fileData = file.readAll();
     if (fileData.isNull()) {
         std::cout << "An error occured: Cannot open the provided file" << std::endl;
-        Log().Error("Error opening" + fileNamePath);
+        Log().Error("Error opening" + localFile);
         return;
     }
     std::cout << "File size: " << fileData.size() / BYTE_TO_KILOBYTE << "KiloByte" << std::endl;
@@ -164,7 +160,7 @@ void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QB
         std::cout << " Transfer Complete" << std::endl;
     } else {
         std::cout << "An error occured white transferring the file." << std::endl;
-        Log().Error("An error occured white transferring file: " + fileNamePath);
+        Log().Error("An error occured white transferring file: " + localFile);
     }
 }
 
@@ -176,6 +172,19 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
         listenTo(message);
     } else if (Cmp(message, "StopListeningTo")) {
         stopListen(message);
+    } else if (Cmp(message, "transmit")) {
+        message = message.simplified();
+
+        int sIndex = message.indexOf("-s", 0) + 3;
+        int dIndex = message.indexOf("-d") - 1;
+
+        QString localFileAndPath = message.mid(sIndex, dIndex - sIndex).simplified();
+        QString serverPath = message.mid(dIndex + 4, message.length()).simplified();
+
+        std::cout << "localFileAndPath: " << localFileAndPath.toStdString() << std::endl;
+        std::cout << "serverPath: " << serverPath.toStdString() << std::endl;
+
+        fileTransfer(localFileAndPath, serverPath);
     }
 }
 

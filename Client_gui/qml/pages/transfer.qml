@@ -32,6 +32,11 @@ Item {
         anchors.rightMargin: 20
 
         placeholderText: ""
+        onEditingFinished: if(serverPath.text.length > 0 && localPath.text.length > 0) {
+                               upload.enabled = true
+                           } else {
+                               upload.enabled = false
+                           }
 
         font.pointSize: 12
     }
@@ -79,6 +84,11 @@ Item {
         anchors.rightMargin: 20
 
         text: "D:/"
+        onEditingFinished: if(serverPath.text.length > 0 && localPath.text.length > 0) {
+                               upload.enabled = true
+                           } else {
+                               upload.enabled = false
+                           }
 
         font.pointSize: 12
     }
@@ -98,6 +108,14 @@ Item {
         colorDefault: "#4632a8"
         colorMouseOver: "#5643b5"
         colorPressed: "#7963e6"
+
+        enabled: false
+
+        onClicked: if(serverPath.text.length > 0 && localPath.text.length > 0) {
+                       backend.fileTransfer(localPath.text, serverPath.text)
+                   } else {
+                       print("error")
+                   }
     }
 
     FileDialog {

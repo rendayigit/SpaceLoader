@@ -43,7 +43,6 @@ class Operations {
     void runBatchScript(QTcpSocket *sender, CallCmd *cmd, QString message);
     bool isAuthorized(QTcpSocket *sender, QString cmdName);
 
-    virtual void fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message) = 0;
     virtual void parseInternalCmd(QTcpSocket *sender, QByteArray message) = 0;
     virtual void connectProcess(QTcpSocket *sender, QProcess *process) = 0;
 

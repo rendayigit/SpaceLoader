@@ -17,6 +17,7 @@ class Backend : public TCPClient {
     Q_INVOKABLE void selectLogFile(QString fileName);
     Q_INVOKABLE void listLogs();
     Q_INVOKABLE void getUserList();
+    Q_INVOKABLE void fileTransfer(QString localFile, QString serverPath);
 
    signals:
     void getReceivedText(QString text);

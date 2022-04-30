@@ -33,6 +33,10 @@ Cmds:
       DestinationDir: 'D:\'
       id: sendFolder
       type: filetransfer
+    - CmdCallString: transmit
+      Description: 'Transmit a file to server. Syntax: "transmit -s C:/myfile.elf -d D:/path/in/server/"'
+      id: transmit
+      type: internal
     - CmdCallString: GetUserList
       Description: Get the list of users connected to the server.
       id: getuserlist

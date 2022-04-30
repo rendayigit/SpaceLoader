@@ -1,9 +1,12 @@
 #include "backend.h"
-#include <QtCore/qobjectdefs.h>
 
+#include <QtCore/QFile>
 #include <QtCore/QThread>
 
 #include "../lib/Logger/logger.h"
+#include "iostream"
+#include "../constants.h"
+
 
 void Backend::onReceived(QByteArray message) {
     parse(message);
@@ -27,12 +30,57 @@ void Backend::start(QString ip) {
 
 void Backend::selectLogFile(QString fileName) { sendCommand("readLog " + fileName.toLocal8Bit()); }
 
-void Backend::listLogs() {
-    sendCommand("listLogs");
-}
+void Backend::listLogs() { sendCommand("listLogs"); }
 
-void Backend::getUserList() {
-    sendCommand("getUserList");
+void Backend::getUserList() { sendCommand("getUserList"); }
+
+void Backend::fileTransfer(QString localFile, QString serverPath) {
+    // localFile = localFile.replace('"', "");
+    // serverPath = serverPath.replace('"', "");
+
+    localFile = localFile.replace("file:///", "");
+
+    qDebug() << "1:" << localFile;
+    qDebug() << "2:" << serverPath;
+
+    sendCommand("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
+
+    QThread::msleep(10);
+
+    QFile file(localFile);
+    file.open(QIODevice::ReadOnly);
+    QByteArray fileData = file.readAll();
+    if (fileData.isNull()) {
+        std::cout << "An error occured: Cannot open the provided file" << std::endl;
+        Log().Error("Error opening" + localFile);
+        return;
+    }
+    std::cout << "File size: " << fileData.size() / BYTE_TO_KILOBYTE << "KiloByte" << std::endl;
+    int approxfileSize = fileData.size() / (FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE * 10) + 1;
+    std::cout << "Progress: ";
+    int iteration = 0;
+    while (!fileData.isNull()) {
+        if (fileData.size() >= FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE) {
+            sendCommand(fileData.mid(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE));
+            fileData.remove(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE);
+        } else {
+            sendCommand(fileData.mid(0, fileData.size()));
+            fileData.clear();
+        }
+        iteration++;
+        QThread::msleep(30);
+        if (iteration % approxfileSize == 0) {
+            std::cout << ".";
+        }
+    }
+    sendCommand("#END");
+
+    if (iteration >= 10) {
+        std::cout << " Transfer Complete" << std::endl;
+    } else {
+        std::cout << "An error occured white transferring the file." << std::endl;
+        Log().Error("An error occured white transferring file: " + localFile);
+    }
 }
 
 void Backend::parse(QString text) {

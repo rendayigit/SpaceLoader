@@ -17,9 +17,6 @@ bool Operations::parseMessage(QTcpSocket *sender, QByteArray message) {
             case CmdType::call:
                 runBatchScript(sender, dynamic_cast<CallCmd *>(i), message);
                 break;
-            case CmdType::fileTransfer:
-                fileTransfer(sender, dynamic_cast<FileTransferCmd *>(i), message);
-                break;
             case null:
             case trigger:
                 break;

@@ -38,5 +38,9 @@ Cmds:
       Description: Creates provided folder dirs in the server's pre defined folder path.
       id: createDir
       type: internal
+    - CmdCallString: transmit
+      Description: 'Transmit a file to server. Syntax: "transmit -s C:/myfile.elf -d D:/path/in/server/"'
+      id: transmit
+      type: internal
 
       # TODO check these commands

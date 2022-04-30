@@ -1,6 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <QtCore/qglobal.h>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QPair>
 #include <QtCore/QTimer>
@@ -34,7 +35,7 @@ class Server : public TCPServer, public Operations {
 
    private:
     Server();
-    void fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message);
+    void fileTransfer(QTcpSocket *sender, QString localFile, QString serverPath);
     void parseInternalCmd(QTcpSocket *sender, QByteArray message);
     void clearUserAuths(QTcpSocket *sender);
     void connectProcess(QTcpSocket *sender, QProcess *process);

@@ -1,4 +1,5 @@
 #include "server.h"
+#include <QtCore/qglobal.h>
 
 #include "User/userOperations.h"
 #include "logging.h"
@@ -81,16 +82,12 @@ void Server::clientDisconnected(QTcpSocket *clientSocket) {
     Log().Info(user->getIp() + " disconnected");
 }
 
-void Server::fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message) {
+void Server::fileTransfer(QTcpSocket *sender, QString localFile, QString serverPath) {
     fileTransfererSocket = sender;
     isFileTransferInProgress = true;
 
-    message = message.replace('\\', '/');
-
-    int beginningOfFileName = message.lastIndexOf('/');
-    transferredFileName = message.mid(beginningOfFileName + 1, message.size());
-
-    transferredFileLocation = cmd->getDestinationDir();
+    transferredFileName = localFile.mid(localFile.lastIndexOf("/") + 1, localFile.length());
+    transferredFileLocation = serverPath;
 }
 
 BaseCmd *Server::getCmd(QString cmdName) {
@@ -142,6 +139,19 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
                              ->forceAuthorizeUser(
                                  UserOperations::getInstance().getUser(sender)->getUserName())
                              .toLocal8Bit());
+    } else if (Cmp(message, "transmit")) {
+        message = message.simplified();
+
+        int sIndex = message.indexOf("-s", 0) + 3;
+        int dIndex = message.indexOf("-d") - 1;
+
+        QString localFileAndPath = message.mid(sIndex, dIndex - sIndex).simplified();
+        QString serverPath = message.mid(dIndex + 4, message.length()).simplified();
+
+        std::cout << "localFileAndPath: " << localFileAndPath.toStdString() << std::endl;
+        std::cout << "serverPath: " << serverPath.toStdString() << std::endl;
+
+        fileTransfer(sender, localFileAndPath, serverPath);
     }
 }
 
