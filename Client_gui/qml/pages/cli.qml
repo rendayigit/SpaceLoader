@@ -41,14 +41,10 @@ Item {
                     textFormat: TextEdit.PlainText
 
                     Keys.onReturnPressed: {
+                        backend.getTerminalData(text)
+
                         text = text + "\n > "
                         cursorPosition += text.length
-                        print("enter pressed")
-
-                        var str = text
-//                        print(str.substring(str.lastIndexOf('>') + 2, 5))
-                        print(str.substring(str.lastIndexOf('>') + 2, text.length))
-//                        backend.sendCmd(text.substring(text.lastIndexOf(">") + 2))
                     }
                 }
             }

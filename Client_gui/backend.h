@@ -11,7 +11,7 @@ class Backend : public QObject {
     }
 
    public slots:
-    Q_INVOKABLE void sendCmd(QString text);
+    Q_INVOKABLE void getTerminalData(QString text);
 
    signals:
     void getReceivedText(QString text);
