@@ -19,10 +19,6 @@ Cmds:
         `help` for full list.
       id: help
       type: internal
-    - CmdCallString: clearAuth
-      Description: Server clears the clients authorization.
-      id: clearAuth
-      type: internal
     - CmdCallString: TransmitImg
       Description: Send provided .elf image file to debug pc.
       DestinationDir: " "
@@ -42,3 +38,5 @@ Cmds:
       Description: Creates provided folder dirs in the server's pre defined folder path.
       id: createDir
       type: internal
+
+      # TODO check these commands

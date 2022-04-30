@@ -16,7 +16,7 @@ class UserOperations {
 
     void addUser(QTcpSocket *sender, QByteArray message);
     void getUserList(QTcpSocket *sender);
-    void removeUser(QTcpSocket *socket);
+    void removeUser(User *user);
     User *getUser(QString userName);
     User *getUser(QTcpSocket *socket);
 

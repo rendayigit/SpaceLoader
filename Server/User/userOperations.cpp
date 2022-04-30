@@ -12,7 +12,7 @@ void UserOperations::addUser(QTcpSocket *sender, QByteArray message) {
     if (getUser(username) == nullptr) {
         userList.append(new User(username, sender));
     } else {
-        getUser(username)->socketInstances.append(sender);
+        getUser(username)->addSocket(sender);
     }
 
     Log()->Event(username + " (" + ip.toString() + ") connected.");
@@ -22,17 +22,16 @@ void UserOperations::getUserList(QTcpSocket *sender) {
     QString users = "";
 
     for (int i = 0; i < userList.size(); i++) {
-        QHostAddress ip(userList.at(i)->socketInstances.at(0)->localAddress().toIPv4Address());
         users += "User #" + QString::number(i);
         users += " username: " + userList.at(i)->getUserName() + '\n';
         users += "User #" + QString::number(i);
-        users += " ip: " + ip.toString() + '\n';
+        users += " ip: " + userList.at(i)->getIp() + '\n';
     }
 
     Transmit(sender, users.toLocal8Bit());
 }
 
-void UserOperations::removeUser(QTcpSocket *socket) { userList.removeOne(getUser(socket)); }
+void UserOperations::removeUser(User *user) { userList.removeOne(user); }
 
 User *UserOperations::getUser(QString userName) {
     for (auto &i : userList) {
@@ -43,9 +42,11 @@ User *UserOperations::getUser(QString userName) {
 }
 
 User *UserOperations::getUser(QTcpSocket *socket) {
-    for (auto &i : userList) {
-        for (auto &j : i->socketInstances) {
-            if (j == socket) return i;
+    for (auto &user : userList) {
+        for (auto &userSocket : user->getSocketInstances()) {
+            if (userSocket == socket) {
+                return user;
+            }
         }
     }
 

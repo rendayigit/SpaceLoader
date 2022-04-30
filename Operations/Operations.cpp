@@ -73,7 +73,7 @@ void Operations::populateCmdLists() {
         callCmd->setCmdCallString(QString::fromStdString(Yaml::getValue(i, "CmdCallString")));
         callCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
         callCmd->setScriptDir(QString::fromStdString(Yaml::getValue(i, "ScriptDir")));
-        callCmd->setScriptFileName(QString::fromStdString(Yaml::getValue(i, "id")));
+        callCmd->setScriptFileName(QString::fromStdString(Yaml::getValue(i, "ScriptFileName")));
         callCmd->setIsTimerSet(
             checkTimerFlag(cmdsWithTheTimerFlagSetNodeList, callCmd->getCmdCallString()));
         callCmd->setIsAuthRequired(
@@ -132,11 +132,18 @@ void Operations::runBatchScript(QTcpSocket *sender, CallCmd *cmd, QString messag
     QStringList args = message.split(" ");
     args.removeFirst();
     args.prepend(batchLocation + batchFile);
-    args.prepend("/c");
-    qDebug() << "running: " << args;
 
     auto *process = new QProcess();
-    process->start("cmd.exe", args);
+
+    #ifdef Q_OS_WIN
+        args.prepend("/c");
+        QString bash = "cmd.exe";
+    #else
+        QString bash = "/bin/bash";
+    #endif
+
+    qDebug() << "running: " << args;
+    process->start(bash, args);
 
     connectProcess(sender, process);
 }

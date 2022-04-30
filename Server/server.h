@@ -36,6 +36,7 @@ class Server : public TCPServer, public Operations {
     Server();
     void fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message);
     void parseInternalCmd(QTcpSocket *sender, QByteArray message);
+    void clearUserAuths(QTcpSocket *sender);
     void connectProcess(QTcpSocket *sender, QProcess *process);
     
     QString transferredFileName;

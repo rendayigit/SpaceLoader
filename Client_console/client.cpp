@@ -176,8 +176,6 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
         listenTo(message);
     } else if (Cmp(message, "StopListeningTo")) {
         stopListen(message);
-    } else if (Cmp(message, "getAuth")) {
-        sendCommand(message);
     }
 }
 
