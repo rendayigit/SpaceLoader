@@ -1,126 +1,110 @@
-import QtQuick 2.0
-import "../components"
-import QtQuick.Timeline 1.0
+import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import "../QmlTreeWidget"
+import QtQuick.Dialogs 1.3
+import "../components"
 
 Item {
-    Rectangle {
-        anchors.fill: parent
-        radius: 10
-        color: "#27273a"
+    Label {
+        id: localPathLabel
+        color: "#ffffff"
+        text: qsTr("Path to local file: ")
+        font.pointSize: 10
+        font.family: "Segoe UI"
+        font.weight: Font.Normal
 
-        GridLayout {
-            id: gridLayout
-            columns: 3
-            rows: 2
-            anchors.fill: parent
-            anchors.margins: 30
-            columnSpacing: 10
-            rowSpacing: 50
-            Column {
-                Row {
-                    Label {
-                        id: userPc
-                        color: "#ffffff"
-                        text: qsTr("User PC")
-                        font.family: "Segoe UI"
-                        font.pointSize: 11
-                    }
-                }
+        anchors.top: parent.top
+        anchors.left: parent.left
 
-                Row {
-                    TreeWidget {
-                        id: tree
-                        //                        anchors.fill: parent
+        anchors.topMargin: 25
+        anchors.leftMargin: 20
+    }
 
-                        Component.onCompleted: {
-                            iconSize = (Qt.size(12, 12));
-                            font.family = "Monaco";
-                            font.pointSize = 16;
+    CustomTextField {
+        id: localPath
+        height: 40
 
-                            var C = tree.createItem("C");
-                            var D = tree.createItem("D");
+        anchors.top: parent.top
+        anchors.left: localPathLabel.right
+        anchors.right: browseLocal.left
 
-                            C.appendChild(tree.createItem("Program Files"));
-                            C.appendChild(tree.createItem("Program Files (x86)"));
-                            C.appendChild(tree.createItem("Users"));
-                            C.appendChild(tree.createItem("Windows"));
-                            tree.addTopLevelItem(C);
-                            tree.addTopLevelItem(D);
-                        }
-                    }
+        anchors.topMargin: 20
+        anchors.leftMargin: 10
+        anchors.rightMargin: 20
 
-                    //                    Button{
-                    //                        id: buttonRename
-                    //                        text: "Rename"
+        placeholderText: ""
 
-                    //                        anchors.left: parent.left;
-                    //                        anchors.bottom: parent.bottom;
+        font.pointSize: 12
+    }
 
-                    //                        onClicked: {
-                    //                            var curItem = tree.getCurrentItem();
-                    //                            if(curItem){
-                    //                                curItem.setText("New Name");
-                    //                            }
-                    //                        }
-                }
-            }
-            Column {
-                Row {
-                    Label {
-                        id: serverPc
-                        color: "#ffffff"
-                        text: qsTr("Server PC")
-                        font.family: "Segoe UI"
-                        font.pointSize: 11
-                    }
-                }
+    CustomButton {
+        id: browseLocal
+        anchors.top: parent.top
+        anchors.right: parent.right
 
-                Row {
-                    TreeWidget {
-                        id: tree2
-                        //                        anchors.fill: parent
+        anchors.topMargin: 20
+        anchors.rightMargin: 20
 
-                        Component.onCompleted: {
-                            iconSize = (Qt.size(12, 12));
-                            font.family = "Monaco";
-                            font.pointSize = 16;
+        text: "Browse"
+        width: 100
+        height: 40
 
-                            var C = tree.createItem("C");
-                            var D = tree.createItem("D");
+        onClicked: fileDialog.visible = true
+    }
 
-                            C.appendChild(tree.createItem("Program Files"));
-                            C.appendChild(tree.createItem("Program Files (x86)"));
-                            C.appendChild(tree.createItem("Users"));
-                            C.appendChild(tree.createItem("Windows"));
-                            tree.addTopLevelItem(C);
-                            tree.addTopLevelItem(D);
-                        }
-                    }
+    Label {
+        id: serverPathLabel
+        color: "#ffffff"
+        text: qsTr("Path to copy file: ")
+        font.pointSize: 10
+        font.family: "Segoe UI"
+        font.weight: Font.Normal
 
-                    //                    Button{
-                    //                        id: buttonRename
-                    //                        text: "Rename"
+        anchors.top: localPathLabel.bottom
+        anchors.left: parent.left
 
-                    //                        anchors.left: parent.left;
-                    //                        anchors.bottom: parent.bottom;
+        anchors.topMargin: 40
+        anchors.leftMargin: 20
+    }
 
-                    //                        onClicked: {
-                    //                            var curItem = tree.getCurrentItem();
-                    //                            if(curItem){
-                    //                                curItem.setText("New Name");
-                    //                            }
-                    //                        }
-                }
-            }
-        }
+    CustomTextField {
+        id: serverPath
+        height: 40
+
+        anchors.top: localPath.bottom
+        anchors.left: serverPathLabel.right
+        anchors.right: upload.left
+
+        anchors.topMargin: 20
+        anchors.leftMargin: 10
+        anchors.rightMargin: 20
+
+        text: "D:/"
+
+        font.pointSize: 12
+    }
+
+    CustomButton {
+        id: upload
+        anchors.top: browseLocal.bottom
+        anchors.right: parent.right
+
+        anchors.topMargin: 20
+        anchors.rightMargin: 20
+
+        text: "Upload"
+        width: 100
+        height: 40
+
+        colorDefault: "#4632a8"
+        colorMouseOver: "#5643b5"
+        colorPressed: "#7963e6"
+    }
+
+    FileDialog {
+        id: fileDialog
+        title: "Please choose a file"
+        folder: shortcuts.home
+        onAccepted: localPath.text = fileDialog.fileUrl
+        visible: false
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.33;height:480;width:640}
-}
-##^##*/

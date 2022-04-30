@@ -54,5 +54,6 @@
         <file>assets/images/settings.png</file>
         <file>qml/components/LogButton.qml</file>
         <file>qml/pages/users.qml</file>
+        <file>qml/pages/transfer2.qml</file>
     </qresource>
 </RCC>
