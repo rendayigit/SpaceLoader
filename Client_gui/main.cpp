@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     app.setOrganizationName("somename");    // TODO
     app.setOrganizationDomain("somename");  // TODO
 
-    app.setWindowIcon(QIcon(":/images/icon.ico"));
+    app.setWindowIcon(QIcon(":/assets/svg_images/logo_37x50.svg"));
 
     QQmlApplicationEngine engine;
 
@@ -22,5 +22,3 @@ int main(int argc, char *argv[]) {
 
     return app.exec();
 }
-
-#include "main.moc"  // defined in .cpp file instead of .h file moc fails to process it properly.

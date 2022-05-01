@@ -233,13 +233,14 @@ Window {
                     onClicked: stackView.push("pages/logs.qml")
                 }
 
-                CustomAppButton {
-                    text: "Image"
-                    setIcon: "../assets/images/binary.png"
-                    font.pointSize: 9
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: stackView.push("pages/image.qml")
-                }
+                // TODO re-enable after presentation
+//                CustomAppButton {
+//                    text: "Image"
+//                    setIcon: "../assets/images/binary.png"
+//                    font.pointSize: 9
+//                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+//                    onClicked: stackView.push("pages/image.qml")
+//                }
 
                 CustomAppButton {
                     text: "File Transfer"
