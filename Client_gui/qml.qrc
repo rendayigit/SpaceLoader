@@ -55,5 +55,7 @@
         <file>qml/components/LogButton.qml</file>
         <file>qml/pages/users.qml</file>
         <file>qml/pages/transfer2.qml</file>
+        <file>assets/svg_images/connect.svg</file>
+        <file>qml/pages/listen.qml</file>
     </qresource>
 </RCC>

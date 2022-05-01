@@ -258,13 +258,14 @@ Window {
                     onClicked: stackView.push("pages/cli.qml")
                 }
 
-                CustomAppButton {
-                    text: "Listeners"
-                    setIcon: "../assets/images/connect.png"
-                    font.pointSize: 9
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: stackView.push("pages/listeners.qml")
-                }
+                //TODO add later
+//                CustomAppButton {
+//                    text: "Listeners"
+//                    setIcon: "../assets/images/connect.png"
+//                    font.pointSize: 9
+//                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+//                    onClicked: stackView.push("pages/listeners.qml")
+//                }
 
                 CustomAppButton {
                     text: "Users"
@@ -315,6 +316,22 @@ Window {
                     actualPage.showValue = isValueVisible
                 }
             }
+
+            CustomCircularButton {
+                id: btnListen
+                width: 50
+                height: 50
+                visible: true
+                CustomToolTip {
+                    text: "Listen To"
+                }
+//                btnIconSource: "../assets/svg_images/conenct.svg" // FIXME
+                onClicked: {
+                    stackView.push(Qt.resolvedUrl("pages/listen.qml"))
+                    actualPage.showValue = isValueVisible
+                }
+            }
+
             CustomCircularButton {
                 id: btnSettings
                 width: 50

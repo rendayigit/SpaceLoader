@@ -3,10 +3,14 @@
 #include <QtCore/QFile>
 #include <QtCore/QThread>
 
+#include "../constants.h"
 #include "../lib/Logger/logger.h"
 #include "iostream"
-#include "../constants.h"
+#include "listener.h"
 
+Listener* listener;
+
+Backend::Backend() { listener = new Listener(this); }
 
 void Backend::onReceived(QByteArray message) {
     parse(message);
@@ -83,12 +87,29 @@ void Backend::fileTransfer(QString localFile, QString serverPath) {
     }
 }
 
+void Backend::listen(QString ipPort) {
+    int idx1 = ipPort.indexOf(" ", QString("Listen").size(), Qt::CaseInsensitive) + 1;
+
+    QString ip;
+    QString port;
+
+    int idx2 = ipPort.indexOf(":", idx1, Qt::CaseInsensitive);
+    int idx3 = ipPort.size();
+
+    ip = ipPort.mid(idx1, idx2 - idx1);
+    port = ipPort.mid(idx2 + 1, idx3 - idx2 - 1);
+
+    listener->attemptConnection(ip, port.toInt());
+}
+
+void Backend::stopListen() { listener->disconnect(); }
+
 void Backend::parse(QString text) {
     if (text.contains("Server Logs")) {
         emit clearLogs();
         QStringList logs = text.split("\n");
         logs.removeFirst();
-        for (auto &log : logs) {
+        for (auto& log : logs) {
             emit getLogList(log);
         }
     } else if (text.contains("Reading")) {

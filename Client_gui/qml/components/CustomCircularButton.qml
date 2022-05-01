@@ -5,7 +5,7 @@ import QtGraphicalEffects 1.15
 Button{
     id: btnTopBar
     // CUSTOM PROPERTIES
-    property url btnIconSource: "../../assets/svg_images/settings_icon.svg"
+    property url btnIconSource: "../../assets/svg_images/connect.svg" // TODO revert to settings
     property color btnColorDefault: "#33334c"
     property color btnColorMouseOver: "#40405f"
     property color btnColorClicked: "#55aaff"

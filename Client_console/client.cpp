@@ -118,7 +118,7 @@ void Client::stopListen(QString ipPort) {
 
 void Client::stopAllListeners() {
     for (auto &listener : listeners) {
-        listener->disconnect();
+        listener->getSocket()->abort();
         delete listener;
         listeners.removeOne(listener);
     }

@@ -7,7 +7,7 @@ class Backend : public TCPClient {
     Q_OBJECT
 
    public:
-    Backend() = default;
+    Backend();
     void onReceived(QByteArray message);
     void onDisconnected();
 
@@ -18,6 +18,8 @@ class Backend : public TCPClient {
     Q_INVOKABLE void listLogs();
     Q_INVOKABLE void getUserList();
     Q_INVOKABLE void fileTransfer(QString localFile, QString serverPath);
+    Q_INVOKABLE void listen(QString ipPort);
+    Q_INVOKABLE void stopListen();
 
    signals:
     void getReceivedText(QString text);
@@ -25,6 +27,7 @@ class Backend : public TCPClient {
     void getLogText(QString text);
     void clearLogs();
     void getUsers(QString text);
+    void getListenerText(QString text);
 
    private:
     void parse(QString text);

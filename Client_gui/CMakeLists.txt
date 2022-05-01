@@ -18,6 +18,7 @@ set(PROJECT_SOURCES
         ../lib/Logger/logger.cpp
         ../lib/TCP/client/tcpClient.cpp
         ../lib/YAML/yaml.cpp
+        listener.cpp
         backend.cpp
         main.cpp
         qml.qrc
