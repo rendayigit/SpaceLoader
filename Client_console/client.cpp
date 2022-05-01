@@ -59,7 +59,7 @@ void Client::start(QList<QString> commandArguments) {
 }
 
 void Client::listenTo(QString msg) {
-    int idx1 = msg.indexOf(" ", QString("ListenTo").size(), Qt::CaseInsensitive) + 1;
+    int idx1 = msg.indexOf(" ", QString("Listen").size(), Qt::CaseInsensitive) + 1;
 
     QString ip;
     QString port;
@@ -87,7 +87,7 @@ void Client::stopListen(QString ipPort) {
     QString socketAddress;
     QString givenIpPortPair;
 
-    int idx1 = ipPort.indexOf(" ", QString("StopListeningTo").size(), Qt::CaseInsensitive) + 1;
+    int idx1 = ipPort.indexOf(" ", QString("StopListen").size(), Qt::CaseInsensitive) + 1;
 
     vector<YAML::Node> nodeList =
         Yaml::getNodeListByKey(Paths().getConfigYaml().toStdString(), "name",
@@ -168,9 +168,9 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
     if (Cmp(message, "help")) {
         std::cout << (" - Client Commands - \n" + Operations::help()).toStdString();
         sendCommand("help");
-    } else if (Cmp(message, "ListenTo")) {
+    } else if (Cmp(message, "Listen")) {
         listenTo(message);
-    } else if (Cmp(message, "StopListeningTo")) {
+    } else if (Cmp(message, "StopListen")) {
         stopListen(message);
     } else if (Cmp(message, "transmit")) {
         message = message.simplified();

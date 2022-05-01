@@ -3,7 +3,7 @@
         <file>qml/main.qml</file>
         <file>qml/splashScreen.qml</file>
         <file>qml/pages/homePage.qml</file>
-        <file>qml/pages/pageNoInternet.qml</file>
+        <file>qml/pages/404.qml</file>
         <file>qml/components/CircularProgressBar.qml</file>
         <file>qml/components/CustomAppButton.qml</file>
         <file>qml/components/CustomButton.qml</file>

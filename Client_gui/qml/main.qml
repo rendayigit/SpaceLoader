@@ -369,19 +369,19 @@ Window {
                 anchors.bottom: parent.bottom
                 LeftButton {
                     text: "Help"
-                    onClicked: stackView.push("pages/pageNoInternet.qml")
+                    onClicked: stackView.push("pages/404.qml")
                 }
 
                 LeftButton {
                     text: "Profile"
                     btnIconSource: "../assets/svg_images/user_icon.svg"
-                    onClicked: stackView.push("pages/pageNoInternet.qml")
+                    onClicked: stackView.push("pages/404.qml")
                 }
 
                 LeftButton {
                     text: "Settings"
                     btnIconSource: "../assets/images/settings.png"
-                    onClicked: stackView.push("pages/pageNoInternet.qml")
+                    onClicked: stackView.push("pages/404.qml")
                 }
 
                 anchors.topMargin: 10

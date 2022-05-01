@@ -65,7 +65,7 @@ Item {
                         LeftButton {
                             text: "192.168.1.2:8081.log"
                             btnIconSource: "../../assets/images/connect.png"
-                            //                            onClicked: stackView.push("pageNoInternet.qml")
+                            //                            onClicked: stackView.push("404.qml")
                             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                         }
                     }
@@ -117,9 +117,3 @@ Item {
         }
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;formeditorColor:"#c0c0c0";height:580;width:800}D{i:19;property:"opacity";target:"labelNoInternet"}
-}
-##^##*/

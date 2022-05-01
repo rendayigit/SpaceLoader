@@ -1,17 +1,17 @@
 Cmds:
   Cmd:
-    - CmdCallString: ListenTo
+    - CmdCallString: Listen
       Description: >-
         Connect to provided tcp address. (only receives, does not transmit.)
-        Syntax: "ListenTo 127.0.0.1:1234"
-      id: listento
+        Syntax: "Listen 127.0.0.1:1234"
+      id: listen
       type: internal
-    - CmdCallString: StopListeningTo
+    - CmdCallString: StopListen
       Description: >-
-        Stop listening to provided tcp address. `ListenTo` must have been called
-        before to be able to use this command. "Syntax: StopListeningTo
+        Stop listening to provided tcp address. `Listen` must have been called
+        before to be able to use this command. "Syntax: StopListen
         127.0.0.1:1234"
-      id: stoplisteningto
+      id: stoplisten
       type: internal
     - CmdCallString: help
       Description: >-
