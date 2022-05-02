@@ -21,7 +21,7 @@ Window {
     flags: Qt.Window | Qt.FramelessWindowHint
 
     // Text Edit Properties
-    property alias actualPage: stackView.currentItem
+//    property alias actualPage: loaderView.currentItem
     property bool isValueVisible: true
     property int windowStatus: 0
     property int windowMargin: 10
@@ -230,7 +230,7 @@ Window {
                     setIcon: "../assets/images/logs.png"
                     font.pointSize: 9
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: stackView.push("pages/logs.qml")
+                    onClicked: loaderView.source = "pages/logs.qml"
                 }
 
                 // TODO re-enable after presentation
@@ -239,7 +239,7 @@ Window {
 //                    setIcon: "../assets/images/binary.png"
 //                    font.pointSize: 9
 //                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-//                    onClicked: stackView.push("pages/image.qml")
+//                    onClicked: loaderView.source = "pages/image.qml"
 //                }
 
                 CustomAppButton {
@@ -247,7 +247,7 @@ Window {
                     setIcon: "../assets/images/transfer.png"
                     font.pointSize: 9
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: stackView.push("pages/transfer.qml")
+                    onClicked: loaderView.source = "pages/transfer.qml"
                 }
 
                 CustomAppButton {
@@ -255,7 +255,7 @@ Window {
                     setIcon: "../assets/images/terminal.png"
                     font.pointSize: 9
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: stackView.push("pages/cli.qml")
+                    onClicked: loaderView.source = "pages/cli.qml"
                 }
 
                 //TODO add later
@@ -264,7 +264,7 @@ Window {
 //                    setIcon: "../assets/images/connect.png"
 //                    font.pointSize: 9
 //                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-//                    onClicked: stackView.push("pages/listeners.qml")
+//                    onClicked: loaderView.source = "pages/listeners.qml")
 //                }
 
                 CustomAppButton {
@@ -272,7 +272,7 @@ Window {
                     setIcon: "../assets/svg_images/user_icon.svg"
                     font.pointSize: 9
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                    onClicked: stackView.push("pages/users.qml")
+                    onClicked: loaderView.source = "pages/users.qml"
                 }
             }
             ScrollBar.horizontal: ScrollBar {
@@ -312,8 +312,8 @@ Window {
                 }
                 btnIconSource: "../assets/svg_images/home_icon.svg"
                 onClicked: {
-                    stackView.push(Qt.resolvedUrl("pages/homePage.qml"))
-                    actualPage.showValue = isValueVisible
+                    loaderView.source = Qt.resolvedUrl("pages/homePage.qml")
+//                    actualPage.showValue = isValueVisible
                 }
             }
 
@@ -327,7 +327,7 @@ Window {
                 }
 //                btnIconSource: "../assets/svg_images/conenct.svg" // FIXME
                 onClicked: {
-                    stackView.push(Qt.resolvedUrl("pages/listen.qml"))
+                    loaderView.source = Qt.resolvedUrl("pages/listen.qml")
 //                    actualPage.showValue = isValueVisible
                 }
             }
@@ -386,19 +386,19 @@ Window {
                 anchors.bottom: parent.bottom
                 LeftButton {
                     text: "Help"
-                    onClicked: stackView.push("pages/404.qml")
+                    onClicked: loaderView.source = "pages/404.qml"
                 }
 
                 LeftButton {
                     text: "Profile"
                     btnIconSource: "../assets/svg_images/user_icon.svg"
-                    onClicked: stackView.push("pages/404.qml")
+                    onClicked: loaderView.source = "pages/404.qml"
                 }
 
                 LeftButton {
                     text: "Settings"
                     btnIconSource: "../assets/images/settings.png"
-                    onClicked: stackView.push("pages/404.qml")
+                    onClicked: loaderView.source = "pages/404.qml"
                 }
 
                 anchors.topMargin: 10
@@ -429,11 +429,11 @@ Window {
             anchors.bottomMargin: 10
             anchors.topMargin: 10
 
-            StackView {
-                id: stackView
+            Loader {
+                id: loaderView
                 anchors.fill: parent
                 clip: true
-                initialItem: Qt.resolvedUrl("pages/homePage.qml")
+                source: Qt.resolvedUrl("pages/homePage.qml")
             }
         }
 

@@ -230,6 +230,9 @@ Item {
                         anchors.bottomMargin: 17
                         anchors.rightMargin: 15
                         colorPressed: "#55aaff"
+                        onPressed: {
+
+                        }
                     }
 
                     anchors.bottomMargin: 10
