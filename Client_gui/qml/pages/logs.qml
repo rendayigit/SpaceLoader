@@ -94,6 +94,7 @@ Item {
                     font.family: "Segoe UI"
                     font.pointSize: 11
                     anchors.centerIn: parent
+                    textFormat: TextEdit.RichText
                 }
             }
         }
@@ -109,7 +110,7 @@ Item {
 
             logText.visible = false
             selectFile.visible = true
-            logDisplay.text = "clear"
+            logDisplay.text = ""
         }
 
         function onGetLogList(text) {
@@ -124,7 +125,22 @@ Item {
         function onGetLogText(text) {
             selectFile.visible = false
             logText.visible = true
-            logDisplay.text = text
+            logDisplay.text = ""
+
+            var textList = text.split("\n")
+            var color
+            for (var i = 0; i < textList.length; i++) {
+                if(textList[i].includes("FATAL")) { color = "red" }
+                else if(textList[i].includes("ERROR")) { color = "#ff0000" }
+                else if(textList[i].includes("WARN")) { color = "#f5ad42" }
+                else if(textList[i].includes("INFO")) { color = "#adf542" }
+                else if(textList[i].includes("DEBUG")) { color = "#428df5" }
+                else if(textList[i].includes("TRACE")) { color = "#c242f5" }
+                else { color = "#ffffff" }
+                logDisplay.text += "<font color='" + color + "'>" + textList[i] + "</font>\n"
+            }
+
+            logDisplay.cursorPosition += logDisplay.length
         }
     }
 }

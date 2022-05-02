@@ -328,7 +328,7 @@ Window {
 //                btnIconSource: "../assets/svg_images/conenct.svg" // FIXME
                 onClicked: {
                     stackView.push(Qt.resolvedUrl("pages/listen.qml"))
-                    actualPage.showValue = isValueVisible
+//                    actualPage.showValue = isValueVisible
                 }
             }
 

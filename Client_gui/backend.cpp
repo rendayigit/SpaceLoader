@@ -100,6 +100,7 @@ void Backend::listen(QString ipPort) {
     port = ipPort.mid(idx2 + 1, idx3 - idx2 - 1);
 
     listener->attemptConnection(ip, port.toInt());
+    listener->setConnected();
 }
 
 void Backend::stopListen() { listener->disconnect(); }
