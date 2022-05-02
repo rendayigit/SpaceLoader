@@ -20,6 +20,7 @@ static QString GetCmd(QString msg) {
     return msg.mid(0, msg.indexOf(" ", 0));
 }
 
+// TODO add an index param to this function and get param from that index
 static QString GetParam(QString msg) {
     msg = msg.simplified();
     return msg.mid(msg.indexOf(" ", 0) + 1, msg.size());

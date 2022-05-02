@@ -1,14 +1,12 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include <QtCore/qglobal.h>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QPair>
 #include <QtCore/QTimer>
 #include <QtNetwork/QTcpSocket>
 
 #include "../Client_console/client.h"
-#include "../Commands/cmd_plugin_interface.h"
 #include "../Operations/Operations.h"
 #include "../constants.h"
 #include "../lib/TCP/server/tcpServer.h"

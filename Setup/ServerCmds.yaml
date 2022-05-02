@@ -120,3 +120,7 @@ Cmds:
       Description: View available log files in the server.
       id: listlogs
       type: internal
+    - CmdCallString: plugin
+      Description: Run provided plugin
+      id: plugin
+      type: internal

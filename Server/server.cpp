@@ -1,6 +1,6 @@
 #include "server.h"
-#include <QtCore/qglobal.h>
 
+#include "../Commands/cmd_plugin_interface.h"
 #include "User/userOperations.h"
 #include "logging.h"
 
@@ -152,6 +152,22 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
         std::cout << "serverPath: " << serverPath.toStdString() << std::endl;
 
         fileTransfer(sender, localFileAndPath, serverPath);
+    } else if (Cmp(message, "plugin")) {
+        QPluginLoader loader(Path::getInstance().getBinDir() + "cmds/lib" +
+                             GetParam(message).mid(0, GetParam(message).indexOf(" ")) + ".dll");
+        std::cout << (Path::getInstance().getBinDir() + "cmds/lib" +
+                      GetParam(message).mid(0, GetParam(message).indexOf(" ")) + ".dll")
+                         .toStdString()
+                  << std::endl;
+        if (auto *instance = loader.instance()) {
+            if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
+                plugin->run(sender, GetParam(message).toLocal8Bit());
+            } else {
+                Log().Error("qobject_cast<> returned nullptr");
+            }
+        } else {
+            Log().Error(loader.errorString());
+        }
     }
 }
 
