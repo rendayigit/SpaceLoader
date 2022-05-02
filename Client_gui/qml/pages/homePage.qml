@@ -6,7 +6,7 @@ import "../components"
 import QtQuick.Timeline 1.0
 
 Item {
-
+    id: homePage
     property bool showValue: true
 
     Flickable {
@@ -220,6 +220,7 @@ Item {
                     CustomButton {
                         x: 227
                         y: 153
+                        id: accessBtn
                         width: 108
                         height: 30
                         text: "ACCESS"
@@ -231,7 +232,8 @@ Item {
                         anchors.rightMargin: 15
                         colorPressed: "#55aaff"
                         onPressed: {
-
+                            var window = Qt.createComponent("debug.qml").createObject(homePage)
+                            window.show()
                         }
                     }
 
@@ -264,6 +266,7 @@ Item {
                 }
 
                 Label {
+                    id: mubAvailability
                     y: 40
                     color: "#00ff00"
                     text: qsTr("Available")

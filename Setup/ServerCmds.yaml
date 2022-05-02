@@ -85,6 +85,12 @@ Cmds:
       id: hello
       type: call
       auth: 'true'
+    - CmdCallString: gdb
+      Description: debugger
+      ScriptDir: 'C:\Users\renda\Documents\Projects\SpaceLoader\scripts\'
+      ScriptFileName: gdb.bat
+      id: gdb
+      type: call
     - CmdCallString: SA
       Description: >-
         Server replies `AS` to this message. Can be used to check if server is

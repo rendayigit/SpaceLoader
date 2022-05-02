@@ -11,4 +11,18 @@ void Listener::disconnect() {
         getSocket()->abort();
         connected = false;
     }
+
+    /* TODO
+    create a disconnect function in TcpClient Class:
+    disconnect() {
+        if (connected) {
+            getSocket()->abort();
+            connected = false;
+        }
+    }
+    And then create a isConnected function:
+    bool isConnected() { return connected; }
+    in the attemptConnection function set this flag to true
+    After this, use these new functions in listener.cpp and the other clients that may need them
+    */
 }
