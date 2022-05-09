@@ -1,60 +1,170 @@
-name: WINDOWS_CI
+name: WINDOWS_CI_2
 
 on: push
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
-  CI:
+  build:
     runs-on: windows-latest
-
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
-      - name: Install gtest
-        uses: MarkusJx/googletest-installer@v1.1
-
-      - name: Install yaml-cpp
-        run: |
-          git clone "https://github.com/jbeder/yaml-cpp.git" 
-          cd yaml-cpp
-          cmake -S . -B build/ "MinGW Makefiles"
-          cd build
-          cmake --build . --config Release
-          mkdir D:/yaml-cpp
-          mkdir D:/yaml-cpp/lib
-          mkdir D:/yaml-cpp/include
-          cd ..
-          cd ..
-          cp -R yaml-cpp/include/yaml-cpp D:/yaml-cpp/include
-          cp yaml-cpp/build/Release/yaml-cpp.lib D:/yaml-cpp/lib
+      - name: Install MSYS2
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: |
+            mingw-w64-x86_64-qt5
+            mingw-w64-x86_64-qt5-base
+            mingw-w64-x86_64-qt5-declarative
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-make
+            mingw-w64-x86_64-gtest
+            mingw-w64-x86_64-yaml-cpp
 
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Cache Qt
-        id: cache-qt
-        uses: actions/cache@v2
-        with:
-          path: ${{ runner.workspace }}/Qt
-          key: ${{ runner.os }}-QtCache
-
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2
-        with:
-          cached: ${{ steps.cache-qt.outputs.cache-hit }}
-          host: "windows"
-          target: "desktop"
-
       - name: Build All
         run: |
-          cmake -S . -B build/
-          cd build
-          cmake --build .
-          cd ..
+          # TODO - find the correct path to the msys installation
+          mkdir rendayigit/SpaceLoader/build
+          cmake -DCMAKE_PREFIX_PATH:STRING=D:/a/_temp/msys64/mingw64/lib/cmake/ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=D:/a/_temp/msys64/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=D:/a/_temp/msys64/mingw64/bin/g++.exe -S D:/a/SpaceLoader/SpaceLoader/ -B D:/a/SpaceLoader/SpaceLoader/build/ -G "MinGW Makefiles"
+          set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
+          cmake --build rendayigit/SpaceLoader/build/ --config Debug --target all -j %coreCount% --
+
       - name: Run Unit Tests
         run: |
-          cd  ${GITHUB_WORKSPACE}
-          cd build
-          cd tests
+          cd D:\a\SpaceLoader\SpaceLoader\build\tests\
           ./tests.exe
+
+
+# VERSION 3
+# name: WINDOWS_CI_3
+
+# on: push
+
+# jobs:
+#   build:
+#     runs-on: windows-latest
+#     defaults:
+#         run:
+#           shell: msys2 {0}
+#     steps:
+#       - name: Install MSYS2
+#         uses: msys2/setup-msys2@v2
+#         with:
+#           msystem: MINGW64
+#           update: true
+#           install: |
+#             mingw-w64-x86_64-qt5
+#             mingw-w64-x86_64-qt5-base
+#             mingw-w64-x86_64-qt5-declarative
+#             mingw-w64-x86_64-cmake
+#             mingw-w64-x86_64-make
+#             mingw-w64-x86_64-gtest
+#             mingw-w64-x86_64-yaml-cpp
+#             mingw-w64-x86_64-ninja
+
+#         #--> MSYS2_PATH="/usr/local/bin:/usr/bin:/bin"
+#         #  D:\a\_temp\setup-msys2\msys2.CMD {0} --> cmd
+
+#       - name: Checkout
+#         uses: actions/checkout@v2
+
+#       - name: Build All
+#         run: |
+#           # TODO - find the correct path to the msys installation
+#           mkdir runCmake
+#           cd runCmake
+#           ls
+#           dir
+#           echo "build path is: $(pwd)/build:$PATH"
+#           echo "make path is :  $MAKE"
+#           echo "make path is :  $(mkfile_path)"
+
+#           cmake .. -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_PREFIX_PATH:STRING=/d/a/SpaceLoader/SpaceLoader/runCmake/CMakeFiles/
+
+#/d/deneme/build:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/c/Windows/System32:/c/Windows:/c/Windows/System32/Wbem:/c/Windows/System32/WindowsPowerShell/v1.0/:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+#/d/a/_temp/setup-msys2/build:/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/c/Windows/System32:/c/Windows:/c/Windows/System32/Wbem:/c/Windows/System32/WindowsPowerShell/v1.0/:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+
+#          cd "D://a//_temp//setup-msys2//"
+
+#          cmake -DCMAKE_PREFIX_PATH:STRING=/msys64/mingw64/lib/cmake/
+#           -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
+#           -DCMAKE_BUILD_TYPE:STRING=Debug
+#           -DCMAKE_CC_COMPILER:FILEPATH=/mingw64/bin/gcc.exe
+#           -DCMAKE_CXX_COMPILER:FILEPATH=/mingw64/bin/g++.exe
+#           -S /d/SpaceLoader/SpaceLoader/
+#           -B /d/SpaceLoader/SpaceLoader/build/
+#           -G "MinGW Makefiles"
+#          set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
+#          cmake --build /d/SpaceLoader/SpaceLoader/build/ --config Debug --target all -j %coreCount% --
+
+#      - name: Run Unit Tests
+#        run: |
+#          cd D:/a/SpaceLoader/SpaceLoader/build/tests/
+#          ./tests.exe
+
+# VERSION 1
+# name: WINDOWS_CI
+
+# on: push
+
+# defaults:
+#   run:
+#     shell: bash
+
+# jobs:
+#   CI:
+#     runs-on: windows-latest
+
+#     steps:
+#       - name: Install gtest
+#         uses: MarkusJx/googletest-installer@v1.1
+
+#       - name: Install yaml-cpp
+#         run: |
+#           git clone "https://github.com/jbeder/yaml-cpp.git"
+#           cd yaml-cpp
+#           cmake -S . -B build/ "MinGW Makefiles"
+#           cd build
+#           cmake --build . --config Release
+#           mkdir D:/yaml-cpp
+#           mkdir D:/yaml-cpp/lib
+#           mkdir D:/yaml-cpp/include
+#           cd ..
+#           cd ..
+#           cp -R yaml-cpp/include/yaml-cpp D:/yaml-cpp/include
+#           cp yaml-cpp/build/Release/yaml-cpp.lib D:/yaml-cpp/lib
+
+#       - name: Checkout
+#         uses: actions/checkout@v2
+
+#       - name: Cache Qt
+#         id: cache-qt
+#         uses: actions/cache@v2
+#         with:
+#           path: ${{ runner.workspace }}/Qt
+#           key: ${{ runner.os }}-QtCache
+
+#       - name: Install Qt
+#         uses: jurplel/install-qt-action@v2
+#         with:
+#           cached: ${{ steps.cache-qt.outputs.cache-hit }}
+#           host: "windows"
+#           target: "desktop"
+
+#       - name: Build All
+#         run: |
+#           cmake -S . -B build/
+#           cd build
+#           cmake --build .
+#           cd ..
+#       - name: Run Unit Tests
+#         run: |
+#           cd  ${GITHUB_WORKSPACE}
+#           cd build
+#           cd tests
+#           ./tests.exe
