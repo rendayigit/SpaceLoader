@@ -16,8 +16,8 @@ int main(int argc, char *argv[]) {
     QQmlApplicationEngine engine;
 
     engine.rootContext()->setContextProperty("backend", new Backend());
-    // engine.load("qrc:/qml/splashScreen.qml"); // Bypass password screen for debugging
-    engine.load("qrc:/qml/main.qml");
+    engine.load("qrc:/qml/splashScreen.qml"); // Bypass password screen for debugging
+    // engine.load("qrc:/qml/main.qml");
 
 
     return app.exec();
