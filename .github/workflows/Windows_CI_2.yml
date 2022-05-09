@@ -76,10 +76,10 @@ jobs:
       - name: Build All
         run: |
           # TODO - find the correct path to the msys installation
-          mkdir D:/rendayigit/SpaceLoader/build
+          mkdir C:\home\runner\work\SpaceLoader\SpaceLoader\build
           cmake -DCMAKE_PREFIX_PATH:STRING=D:/a/_temp/msys64/mingw64/lib/cmake/ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=D:/a/_temp/msys64/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=D:/a/_temp/msys64/mingw64/bin/g++.exe -S D:/a/SpaceLoader/SpaceLoader/ -B D:/a/SpaceLoader/SpaceLoader/build/ -G "MinGW Makefiles"
           set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
-          cmake --build rendayigit/SpaceLoader/build/ --config Debug --target all -j %coreCount% --
+          cmake --build C:\home\runner\work\SpaceLoader\SpaceLoader\build --config Debug --target all -j %coreCount% --
 
           cmake .. -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_PREFIX_PATH:STRING=/d/a/SpaceLoader/SpaceLoader/runCmake/CMakeFiles/
 
@@ -87,3 +87,5 @@ jobs:
         run: |
           cd D:/a/SpaceLoader/SpaceLoader/build/tests/
           ./tests.exe
+
+# /home/runner/work/SpaceLoader/SpaceLoader/build
