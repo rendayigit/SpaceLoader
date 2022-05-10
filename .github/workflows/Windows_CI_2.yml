@@ -71,6 +71,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - run: msys2
+
       - name: Build All
         run: |
             # TODO - find the correct path to the msys installation
