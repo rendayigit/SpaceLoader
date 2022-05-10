@@ -67,7 +67,9 @@ jobs:
             mingw-w64-x86_64-yaml-cpp
             mingw-w64-x86_64-ninja
 
+      - run: "D:"
       - run: dir
+
         
 
 
