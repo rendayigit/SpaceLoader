@@ -66,54 +66,20 @@ jobs:
             mingw-w64-x86_64-make
             mingw-w64-x86_64-gtest
             mingw-w64-x86_64-yaml-cpp
-            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-ninja     
 
-      - run: cd D:\
-      - run: dir
+      - name: Checkout
+        uses: actions/checkout@v2
 
-        
+      - name: Build All
+          run: |
+            # TODO - find the correct path to the msys installation
+            mkdir D:/a/SpaceLoader/SpaceLoader/build/
+            cmake -DCMAKE_PREFIX_PATH:STRING=D:/msys64/mingw64/lib/cmake/ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=D:/msys64/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=D:/msys64/mingw64/bin/g++.exe -S D:/a/SpaceLoader/SpaceLoader/ -B D:/a/SpaceLoader/SpaceLoader/build/ -G "MinGW Makefiles"
+            set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
+            cmake --build D:/a/SpaceLoader/SpaceLoader/build --config Debug --target all -j %coreCount% --
 
-
-        #--> MSYS2_PATH="/usr/local/bin:/usr/bin:/bin"
-        #  D:\a\_temp\setup-msys2\msys2.CMD {0} --> cmd
-      # - name: Install Qt
-      #   uses: jurplel/install-qt-action@v2
-      #   with:
-      #     version: '5.12.11'
-      #     host: 'windows'
-      #     target: 'desktop'
-      #     arch: 'win64_mingw73'
-      #     dir: '${{github.workspace}}/qt/'
-      #     install-deps: 'true'
-          
-      # - name: List files in Qt
-      #   run: find ${{env.Qt5_Dir}}
-
-      # - name: Checkout
-      #   uses: actions/checkout@v2
-
-      # - name: Build All
-      #   run: |
-      #     # TODO - find the correct path to the msys installation
-      #     mkdir C:\home\runner\work\SpaceLoader\SpaceLoader\build
-      #     cmake -DCMAKE_PREFIX_PATH:STRING=D:/a/_temp/msys64/mingw64/lib/cmake/ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=D:/a/_temp/msys64/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=D:/a/_temp/msys64/mingw64/bin/g++.exe -S D:/a/SpaceLoader/SpaceLoader/ -B D:/a/SpaceLoader/SpaceLoader/build/ -G "MinGW Makefiles"
-      #     set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
-      #     cmake --build C:\home\runner\work\SpaceLoader\SpaceLoader\build --config Debug --target all -j %coreCount% --
-
-      #     cmake .. -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_PREFIX_PATH:STRING=/d/a/SpaceLoader/SpaceLoader/runCmake/CMakeFiles/
-      
-      # - name: Configure CMake
-      #   env:
-      #     CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
-      #   run: cmake -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_PREFIX_PATH="${{env.Qt5_Dir}}/lib/cmake/" -DQt5_DIR=${{env.Qt5_Dir}}/lib/cmake/Qt5/ -G "CodeBlocks - MinGW Makefiles" -B '${{github.workspace}}'/build
-
-      # - name: Build
-      #   run: cmake --build '${{github.workspace}}'/build --target RePr
-
-      # - name: Run Unit Tests
-      #   run: |
-      #     cd D:/a/SpaceLoader/SpaceLoader/build/tests/
-      #     ./tests.exe
-
-
-# /home/runner/work/SpaceLoader/SpaceLoader/build
+      - name: Run Unit Tests
+          run: |
+            cd D:/a/SpaceLoader/SpaceLoader/build/tests/
+            ./tests.exe
