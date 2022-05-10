@@ -71,7 +71,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - run: msys2
+      - shell: cmd
+        run: msys2 -c
 
       - name: Build All
         run: |
