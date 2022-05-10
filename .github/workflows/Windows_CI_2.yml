@@ -66,7 +66,6 @@ jobs:
             mingw-w64-x86_64-gtest
             mingw-w64-x86_64-yaml-cpp
             mingw-w64-x86_64-ninja
-          release: false
 
         #--> MSYS2_PATH="/usr/local/bin:/usr/bin:/bin"
         #  D:\a\_temp\setup-msys2\msys2.CMD {0} --> cmd
