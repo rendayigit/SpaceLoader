@@ -13,7 +13,7 @@ TEST(Commands, hello) {
     TEST_COUT(testPlugin->getDescription().toStdString());
 
     /* Read logs and see if string ("Ran Hello !!") exists */
-    QFile file(Log().getLogDir() + Log().getLogFileName());
+    QFile file(Log().getLogDir()+"/" + Log().getLogFileName());
 
     if (file.exists()) {
         file.open(QIODevice::ReadOnly);
