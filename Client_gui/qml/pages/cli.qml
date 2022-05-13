@@ -40,11 +40,11 @@ Item {
                     font.pointSize: 11
                     textFormat: TextEdit.PlainText
 
-                    Keys.onReturnPressed: {
-                        backend.getTerminalData(text)
-
-                        text = text + "\n > "
-                        cursorPosition += text.length
+                    Keys.onPressed: {
+                        if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                            backend.getTerminalData(text)
+                            cursorPosition += text.length
+                        }
                     }
                 }
             }
