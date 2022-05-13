@@ -6,8 +6,6 @@
 #include <QtCore/QSharedMemory>
 #include <QtCore/QStandardPaths>
 #include <mutex>
-#include <QtCore/QCoreApplication>
-
 
 #include "../../path.h"
 
@@ -18,9 +16,8 @@ void exit() { Log().Flush(); }
 
 Logger::Logger()
     : isLoggingEnabled(true),
-    //   logDir(Path::getInstance().getExecutablePath() + QDir::separator() + "Logggggs" +
-    //          QDir::separator()),
-      logDir("Logs"),
+      logDir(Path::getInstance().getExecutablePath() + QDir::separator() + "Logs" +
+             QDir::separator()),
       logFileName(""),
       flushRate(100000),
       buffer({}),
@@ -64,7 +61,7 @@ void Logger::Flush() {
     std::unique_lock<std::mutex> lock(fileMutex);
 
     updateLogFilePath();
-    QFile file(logDir+"/"+logFileName);
+    QFile file(logDir + logFileName);
 
     if (file.open(QIODevice::WriteOnly | QIODevice::Append) and not buffer.isNull()) {
         file.write(buffer);
@@ -92,4 +89,3 @@ void Logger::writer(QString logMsg, QString logType, bool isErrorLog) {
         }
     }
 }
-

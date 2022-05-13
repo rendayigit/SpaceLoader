@@ -6,20 +6,21 @@
 QString logString = "Testing Logger";
 
 void deleteLogFile() {
-    QFile file(Log().getLogDir()+"/"+Log().getLogFileName());
+    QFile file(Log().getLogDir() + Log().getLogFileName());
     if (file.exists()) {
         file.resize(0);
     }
 }
 
 TEST(Logger, Write) {
+    Log().setLogDir("Logs");
     deleteLogFile();
     Log().Info(logString);
     Log().Flush();
 }
 
 TEST(Logger, Read) {
-    QFile file(Log().getLogDir()+"/"+Log().getLogFileName());
+    QFile file(Log().getLogDir() + Log().getLogFileName());
 
     if (file.exists()) {
         file.open(QIODevice::ReadOnly);
@@ -70,7 +71,7 @@ TEST(Logger, ThreadSafety) {
         logsArray.at(i) = false;
     }
 
-    QFile file(Log().getLogDir()+"/"+Log().getLogFileName());
+    QFile file(Log().getLogDir() + Log().getLogFileName());
 
     if (file.exists()) {
         file.open(QIODevice::ReadOnly);
