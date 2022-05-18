@@ -21,8 +21,8 @@ Item {
 
             anchors.topMargin: 20
             anchors.leftMargin: 20
-
-            text: "127.0.0.1:1235"
+            
+            text: backend.getServerIP()+":1235"
 
             font.pointSize: 12
         }

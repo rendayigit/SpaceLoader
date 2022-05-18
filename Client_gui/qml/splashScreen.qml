@@ -46,6 +46,10 @@ Window {
         function checkLogin(){
             // TODO: This is the password
             if(loginTextField.text == "1"){
+                if(labelNubank.text.lenght===""){
+                    //by default
+                    labelNubank.text="127.0.0.1"
+                }
                 loginTextField.borderColor = "#00ff7f"
                 labelPassword.visible = false
                 loginAnimationFrameMarginTop.running = true
@@ -63,7 +67,8 @@ Window {
             loginTextField.borderColor = "#55aaff"
         }
         function dynamicServerIP(){
-            backend.setServerIP(labelNubank.text);
+            if(labelNubank.text.lenght==0) backend.setServerIP("127.0.0.1")
+            else backend.setServerIP(labelNubank.text);            
         }
     }
     
@@ -254,7 +259,7 @@ Window {
             x: 30
             y: 102
             color: "#55aaff"
-            text: qsTr(backend.getUserIP())
+            text: qsTr("User IP: "+backend.getUserIP())
             font.pointSize: 10
             font.bold: false
             font.family: "Segoe UI"

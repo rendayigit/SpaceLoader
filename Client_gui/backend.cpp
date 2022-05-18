@@ -12,7 +12,6 @@
 #include "iostream"
 #include "listener.h"
 
-
 Listener* listener;
 QString ip = "";
 
@@ -26,11 +25,16 @@ void Backend::onReceived(QByteArray message) {
 void Backend::onDisconnected() { Log().Error("Disconnected From Server!"); }
 void Backend::setServerIP(QString text) { ip = text; }
 
-QString Backend::getServerIP() { return ip; }
+QString Backend::getServerIP() {
+    if (ip == "")
+        return "127.0.0.1";
+    else
+        return ip;
+}
 
 QString Backend::getUserIP() {
     // QHostAddress ip(getSocket()->localAddress().toIPv4Address()); //this function gives error
-    // return ip.toString(); 
+    // return ip.toString();
     QHostAddress address;
     const QHostAddress& localhost = QHostAddress(QHostAddress::LocalHost);
     for (const QHostAddress& address : QNetworkInterface::allAddresses()) {

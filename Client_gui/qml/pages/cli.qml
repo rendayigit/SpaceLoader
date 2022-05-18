@@ -35,7 +35,7 @@ Item {
                     anchors.centerIn: parent
                     anchors.fill: parent
                     color: "#ffffff"
-                    text: "Server Console (192.168.1.2:1234)\n > "
+                    text: "Server Console ("+backend.getServerIP()+ ":1234)\n > "
                     font.family: "Segoe UI"
                     font.pointSize: 11
                     textFormat: TextEdit.PlainText
