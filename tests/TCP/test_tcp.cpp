@@ -20,14 +20,14 @@ QString testString2 = "TEST STRING 2";
 bool allClientsInitiated = false;
 
 TEST(tcp_test, startServer) {
-    GTEST_SKIP_("Skip TCP Tests");
+    // GTEST_SKIP_("Skip TCP Tests");
     server = new TestServer();
     qint32 serverPort = 1234;
     server->startServer(serverPort);
 }
 
 TEST(tcp_test, startClients) {
-    GTEST_SKIP_("Skip TCP Tests");
+    // GTEST_SKIP_("Skip TCP Tests");
     QFuture<void> future = QtConcurrent::run([=]() {
         client1 = new TestClient();
         client1->attemptConnection("127.0.0.1", 1234);
@@ -46,25 +46,25 @@ TEST(tcp_test, startClients) {
 }
 
 TEST(tcp_test, transmitFromClient) {
-    GTEST_SKIP_("Skip TCP Tests");
+    // GTEST_SKIP_("Skip TCP Tests");
     while (allClientsInitiated != true) QThread::msleep(10);
     client2->sendCommand(testString1.toLocal8Bit());
 }
 
 TEST(tcp_test, ReceiveFromServer) {
-    GTEST_SKIP_("Skip TCP Tests");
+    // GTEST_SKIP_("Skip TCP Tests");
     EXPECT_TRUE(server->receivedString == testString1)
         << "String received from the server and string transmitted from one of the clients are not "
            "identical!";
 }
 
 TEST(tcp_test, broadcastFromServer) {
-    GTEST_SKIP_("Skip TCP Tests");
+    // GTEST_SKIP_("Skip TCP Tests");
     server->broadcast(testString2.toLocal8Bit());
 }
 
 TEST(tcp_test, ReceiveFromClients) {
-    GTEST_SKIP_("Skip TCP Tests");
+    // GTEST_SKIP_("Skip TCP    Tests");
     client1->waitForData();
     client2->waitForData();
     client3->waitForData();

@@ -1,14 +1,20 @@
 #include "backend.h"
 
+#include <QHostInfo>
+#include <QNetworkInterface>
+#include <QTcpSocket>
 #include <QtCore/QFile>
 #include <QtCore/QThread>
+#include <QtNetwork/QHostAddress>
 
 #include "../constants.h"
 #include "../lib/Logger/logger.h"
 #include "iostream"
 #include "listener.h"
 
+
 Listener* listener;
+QString ip = "";
 
 Backend::Backend() { listener = new Listener(this); }
 
@@ -18,6 +24,23 @@ void Backend::onReceived(QByteArray message) {
 }
 
 void Backend::onDisconnected() { Log().Error("Disconnected From Server!"); }
+void Backend::setServerIP(QString text) { ip = text; }
+
+QString Backend::getServerIP() { return ip; }
+
+QString Backend::getUserIP() {
+    // QHostAddress ip(getSocket()->localAddress().toIPv4Address()); //this function gives error
+    // return ip.toString(); 
+    QHostAddress address;
+    const QHostAddress& localhost = QHostAddress(QHostAddress::LocalHost);
+    for (const QHostAddress& address : QNetworkInterface::allAddresses()) {
+        if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost) {
+            qDebug() << "ip:" << address.toString();
+            return address.toString();
+        }
+    }
+    return "";
+}
 
 void Backend::getTerminalData(QString text) {
     sendCommand(text.mid(text.lastIndexOf(">") + 2, text.size()).toLocal8Bit());

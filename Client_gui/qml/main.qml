@@ -28,7 +28,7 @@ Window {
     property int bgRadius: 20
 
     Component.onCompleted: {
-        backend.start("127.0.0.1")
+        backend.start(backend.getServerIP())        
     }
 
     // Internal functions

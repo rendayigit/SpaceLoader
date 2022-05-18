@@ -33,6 +33,7 @@ Window {
             var win = component.createObject(splashScreen)
             win.show()
             visible = false
+            
             splashScreen.timeout()
         }
     }
@@ -53,13 +54,19 @@ Window {
                 loginTextField.borderColor = "#55aaff"
                 labelPassword.visible = true
             }
+            dynamicServerIP();             
+            
         }
         // Reset Text Erro
         function resetTextLogin(){
             labelPassword.visible = false
             loginTextField.borderColor = "#55aaff"
         }
+        function dynamicServerIP(){
+            backend.setServerIP(labelNubank.text);
+        }
     }
+    
 
     Rectangle {
         id: bg
@@ -216,25 +223,38 @@ Window {
             duration: 950
             easing.type: Easing.InOutQuint
         }
-
-        Label {
-            id: labelNubank
+        Label{
+            id: labelNubanks
             x: 30
-            y: 50
+            y: 60
             color: "#ffffff"
-            text: qsTr("Server IP: 192.168.1.2")
+            text: qsTr("Server IP:")
+            font.weight: Font.DemiBold
+            font.bold: true
+            font.pointSize: 14
+            font.family: "Segoe UI"
+            
+        }
+        CustomTextField {
+            id: labelNubank
+            x: 150
+            y: 50
+            implicitWidth: 200
+            color: "#ffffff"
+            placeholderText: qsTr("192.168.1.2")
             font.weight: Font.DemiBold
             font.bold: true
             font.pointSize: 14
             font.family: "Segoe UI"
         }
+       
 
         Label {
             id: labelUnlockInfo
             x: 30
-            y: 72
+            y: 102
             color: "#55aaff"
-            text: qsTr("User IP: 174.15.42.3")
+            text: qsTr(backend.getUserIP())
             font.pointSize: 10
             font.bold: false
             font.family: "Segoe UI"
@@ -284,7 +304,7 @@ Window {
             horizontalAlignment: Text.AlignHCenter
             font.pointSize: 12
             placeholderText: "Server password"
-            anchors.bottomMargin: 60
+            anchors.bottomMargin: 50
             anchors.rightMargin: 110
             opacity: 0
             echoMode: TextInput.Password

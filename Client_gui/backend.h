@@ -20,6 +20,10 @@ class Backend : public TCPClient {
     Q_INVOKABLE void fileTransfer(QString localFile, QString serverPath);
     Q_INVOKABLE void listen(QString ipPort);
     Q_INVOKABLE void stopListen();
+    Q_INVOKABLE void setServerIP(QString text);
+    Q_INVOKABLE QString getServerIP();
+    Q_INVOKABLE QString getUserIP();
+    
 
    signals:
     void getReceivedText(QString text);
