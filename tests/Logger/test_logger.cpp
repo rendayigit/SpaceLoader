@@ -4,6 +4,8 @@
 #include "../Test_common.h"
 
 QString logString = "Testing Logger";
+QString logDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation) +
+                 QDir::separator() + "Logs" + QDir::separator();
 
 void deleteLogFile() {
     QFile file(Log().getLogDir() + Log().getLogFileName());
@@ -13,13 +15,14 @@ void deleteLogFile() {
 }
 
 TEST(Logger, Write) {
-    Log().setLogDir("Logs");
+    Log().setLogDir(logDir);
     deleteLogFile();
     Log().Info(logString);
     Log().Flush();
 }
 
 TEST(Logger, Read) {
+    Log().setLogDir(logDir);
     QFile file(Log().getLogDir() + Log().getLogFileName());
 
     if (file.exists()) {
@@ -45,6 +48,7 @@ TEST(Logger, Read) {
 }
 
 TEST(Logger, Benchmark) {
+    Log().setLogDir(logDir);
     TEST_BENCHMARK("Logger", "loggingManualBenchmark", Log().Info("benchmark log"));
     Log().Flush();
 }
@@ -62,6 +66,7 @@ void writeThreadSecond() {
 }
 
 TEST(Logger, ThreadSafety) {
+    Log().setLogDir(logDir);
     deleteLogFile();
     std::array<bool, 200> logsArray{};
     bool allLogsFound = true;
@@ -74,38 +79,40 @@ TEST(Logger, ThreadSafety) {
     QFile file(Log().getLogDir() + Log().getLogFileName());
 
     if (file.exists()) {
-        file.open(QIODevice::ReadOnly);
         std::thread first(writeThreadFirst);
         std::thread second(writeThreadSecond);
         first.join();
         second.join();
+
+        file.open(QIODevice::ReadOnly);
+
+        QRegExp rx;
+        rx.setPattern("log (.*)");
+        QString lines;
+
+        while (!file.atEnd()) {
+            lines = file.readLine();
+            if (lines.contains("Thread")) {
+                logCount++;
+                if (rx.indexIn(lines) != -1) {
+                    int idx = rx.cap(1).toInt();
+                    logsArray.at(idx) = true;
+                }
+            }
+        }
+
+        EXPECT_EQ(logCount, 200);
+
+        for (bool i : logsArray) {
+            if (not i) {
+                allLogsFound = false;
+                break;
+            }
+        }
+
+        EXPECT_TRUE(allLogsFound);
     } else {
         GTEST_FAIL() << "Log file not found: " +
                             (Log().getLogDir() + Log().getLogFileName()).toStdString();
     }
-
-    QRegExp rx;
-    rx.setPattern("log (.*)");
-    QString lines;
-    while (!file.atEnd()) {
-        lines = file.readLine();
-        if (lines.contains("Thread")) {
-            logCount++;
-            if (rx.indexIn(lines) != -1) {
-                int idx = rx.cap(1).toInt();
-                logsArray.at(idx) = true;
-            }
-        }
-    }
-
-    EXPECT_EQ(logCount, 200);
-
-    for (bool i : logsArray) {
-        if (not i) {
-            allLogsFound = false;
-            break;
-        }
-    }
-
-    EXPECT_TRUE(allLogsFound);
 }

@@ -33,16 +33,19 @@ class Logger {
 
     void updateLogFilePath();
 
-    bool isEnabled() { return Logger::isLoggingEnabled; }
+    bool isEnabled() { return isLoggingEnabled; }
     void enableLogging(bool enableLogging) { Logger::isLoggingEnabled = enableLogging; }
 
-    QString getLogDir() { return Logger::logDir; }
-    void setLogDir(const QString &logDir) { Logger::logDir = logDir; }
+    QString getLogDir() { return logDir; }
+    void setLogDir(const QString &logDir) {
+        Logger::logDir = logDir;
+        createLogsDirectory();
+    }
 
-    QString getLogFileName() { return Logger::logFileName; }
+    QString getLogFileName() { return logFileName; }
     void setLogFileName(const QString &logFileName) { Logger::logFileName = logFileName; }
 
-    int getFlushRate() { return Logger::flushRate; }
+    int getFlushRate() { return flushRate; }
     void setFlushRate(int flushRate) { Logger::flushRate = flushRate; }
 
    private:
