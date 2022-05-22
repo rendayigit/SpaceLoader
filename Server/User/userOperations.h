@@ -3,6 +3,7 @@
 
 #include <QtCore/QList>
 #include <QtCore/QtCore>
+#include <QtNetwork/QHostAddress>
 #include <QtNetwork/QTcpSocket>
 
 #include "user.h"
@@ -16,9 +17,9 @@ class UserOperations {
 
     void addUser(QTcpSocket *sender, QByteArray message);
     QString getUserList(QTcpSocket *sender);
-    void removeUser(User *user);
-    User *getUser(QString userName);
+    void removeUser(QTcpSocket *socket);
     User *getUser(QTcpSocket *socket);
+    User *getUser(QHostAddress ip);
 
    private:
     UserOperations() = default;

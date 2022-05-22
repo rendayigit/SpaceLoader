@@ -78,8 +78,7 @@ void Server::clientDisconnected(QTcpSocket *clientSocket) {
 
     clearUserAuths(clientSocket);
 
-    UserOperations::getInstance().removeUser(user);
-    Log().Info(user->getIp() + " disconnected");
+    UserOperations::getInstance().removeUser(clientSocket);
 }
 
 void Server::fileTransfer(QTcpSocket *sender, QString localFile, QString serverPath) {
