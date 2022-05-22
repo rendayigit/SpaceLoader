@@ -8,7 +8,8 @@ bool TCPClient::attemptConnection(QString serverIP, qint32 serverPort) {
 
     if (socket->waitForConnected(3000)) {
         connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-        connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
+        connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
+                SLOT(onError(QAbstractSocket::SocketError)));
         //        socket->waitForReadyRead(500);
         return true;
     } else {
@@ -24,9 +25,7 @@ void TCPClient::sendCommand(QByteArray data) {
     }
 }
 
-void TCPClient::waitForData(qint32 timeout) {
-    socket->waitForReadyRead(timeout);
-}
+void TCPClient::waitForData(qint32 timeout) { socket->waitForReadyRead(timeout); }
 
 void TCPClient::onReadyRead() {
     QByteArray message = socket->readAll();
@@ -34,6 +33,7 @@ void TCPClient::onReadyRead() {
 }
 
 void TCPClient::onError(QAbstractSocket::SocketError socketError) {
-    if (socketError == QAbstractSocket::SocketError::RemoteHostClosedError)
+    if (socketError == QAbstractSocket::SocketError::RemoteHostClosedError) {
         onDisconnected();
+    }
 }

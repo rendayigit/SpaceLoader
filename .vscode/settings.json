@@ -40,5 +40,6 @@
   "clangd.arguments": [
     "--compile-commands-dir=${workspaceFolder}/build/compile_commands.json"
   ],
-  "testMate.cpp.test.executables": "{build,Build,BUILD,out,Out,OUT}/**/*{test,tests,Test,Tests,TEST,TESTS}*"
+  "testMate.cpp.test.executables": "{build,Build,BUILD,out,Out,OUT}/**/*{test,tests,Test,Tests,TEST,TESTS}*",
+  "docwriter.style": "Doxygen"
 }
