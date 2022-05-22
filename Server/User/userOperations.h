@@ -19,7 +19,7 @@ class UserOperations {
     QString getUserList(QTcpSocket *sender);
     void removeUser(QTcpSocket *socket);
     User *getUser(QTcpSocket *socket);
-    User *getUser(QHostAddress ip);
+    User *getUser(QString ip);
 
    private:
     UserOperations() = default;

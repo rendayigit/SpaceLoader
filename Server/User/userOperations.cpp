@@ -5,15 +5,14 @@
 
 void UserOperations::addUser(QTcpSocket *sender, QByteArray message) {
     QString username = GetParam(message);
-    QHostAddress ip(sender->localAddress().toIPv4Address());
 
-    if (getUser(ip) == nullptr) {
+    if (getUser(GetIp(sender)) == nullptr) {
         userList.append(new User(username, sender));
     } else {
-        getUser(ip)->addSocket(sender);
+        getUser(GetIp(sender))->addSocket(sender);
     }
 
-    Log().Event(username + " (" + ip.toString() + ") connected.");
+    Log().Event(username + " (" + GetIp(sender) + ") connected.");
 }
 
 QString UserOperations::getUserList(QTcpSocket *sender) {
@@ -53,9 +52,9 @@ User *UserOperations::getUser(QTcpSocket *socket) {
     return nullptr;
 }
 
-User *UserOperations::getUser(QHostAddress ip) {
+User *UserOperations::getUser(QString ip) {
     for (auto &user : userList) {
-        if (GetIp(user->getSocketInstances()->at(0)) == ip.toString()) {
+        if (Cmp(GetIp(user->getSocketInstances()->at(0)), ip)) {
             return user;
         }
     }
