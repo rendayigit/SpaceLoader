@@ -22,7 +22,7 @@ QString UserOperations::getUserList(QTcpSocket *sender) {
     for (int i = 0; i < userList.size(); i++) {
         users += "User #" + QString::number(i + 1);
         users += ": " + userList.at(i)->getUserName();
-        users += " (" + GetIp(userList.at(i)->getSocketInstances()->at(i)) + ")\n";
+        users += " (" + GetIp(userList.at(i)->getSocketInstances()->at(0)) + ")\n";
     }
 
     return users;
