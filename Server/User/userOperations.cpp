@@ -22,19 +22,19 @@ QString UserOperations::getUserList(QTcpSocket *sender) {
     for (int i = 0; i < userList.size(); i++) {
         users += "User #" + QString::number(i + 1);
         users += ": " + userList.at(i)->getUserName();
-        users += " (" + GetIp(sender) + ")\n";
+        users += " (" + GetIp(userList.at(i)->getSocketInstances()->at(i)) + ")\n";
     }
 
     return users;
 }
 
-void UserOperations::removeUser(QTcpSocket *socket) { 
+void UserOperations::removeUser(QTcpSocket *socket) {
     User *user = getUser(socket);
     QList<QTcpSocket *> *userSockets = user->getSocketInstances();
 
     userSockets->removeOne(socket);
-    
-    if(userSockets->isEmpty()) {
+
+    if (userSockets->isEmpty()) {
         userList.removeOne(user);
         Log().Event(user->getUserName() + " (" + GetIp(socket) + ") disconnected.");
         delete user;
@@ -54,9 +54,8 @@ User *UserOperations::getUser(QTcpSocket *socket) {
 }
 
 User *UserOperations::getUser(QHostAddress ip) {
-
     for (auto &user : userList) {
-        if(GetIp(user->getSocketInstances()->at(0)) == ip.toString()) {
+        if (GetIp(user->getSocketInstances()->at(0)) == ip.toString()) {
             return user;
         }
     }
