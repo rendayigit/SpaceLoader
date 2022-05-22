@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <iostream>
 
+// TODO convert to a singleton class
+
 #define TEST_COUT(message) ((std::cerr << "[   PRINT  ] " << (message) << std::endl))
 
 #define GET_TIME()                                                \

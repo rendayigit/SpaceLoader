@@ -5,7 +5,12 @@
 #include "../../lib/Logger/logger.h"
 #include "../Test_common.h"
 
+QString cmdLogDir = QStandardPaths::writableLocation(QStandardPaths::TempLocation) +
+                    QDir::separator() + "Logs" + QDir::separator();
+
 TEST(Commands, hello) {
+    Log().setLogDir(cmdLogDir);
+
     QTcpSocket *testSocket{};
 
     CmdPlugin *testPlugin = new CmdPlugin();
