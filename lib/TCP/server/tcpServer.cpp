@@ -62,10 +62,10 @@ void TCPServer::onDisconnected() {
 }
 
 void TCPServer::onReadyRead() {
-    for (int i = 0; i < socketList.size(); i++) {
-        while (socketList[i]->bytesAvailable() > 0) {
-            QByteArray message = socketList[i]->readAll();
-            onReceived(socketList[i], message);
+    for (auto &i : socketList) {
+        while (i->bytesAvailable() > 0) {
+            QByteArray message = i->readAll();
+            onReceived(i, message);
         }
     }
 }
