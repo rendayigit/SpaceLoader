@@ -20,11 +20,9 @@ class User {
     QList<QTcpSocket *> *getSocketInstances() { return socketInstances; }
 
     void addSocket(QTcpSocket *socket);
-    QString getIp();
 
    private:
     QString userName;
-    QHostAddress ip;
     QList<QTcpSocket *> *socketInstances;
 };
 

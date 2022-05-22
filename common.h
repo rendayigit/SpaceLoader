@@ -42,6 +42,12 @@ static void Transmit(QTcpSocket *socket, QByteArray message, bool transmitTime =
     }
 }
 
+// TODO this function may replace some lines of code in server.cpp
+static QString GetIp(QTcpSocket *socket) {
+    QHostAddress ip(socket->localAddress().toIPv4Address());
+    return ip.toString();
+}
+
 static QList<QString> getDlibs(QString path) {
     QList<QString> libList;
 
