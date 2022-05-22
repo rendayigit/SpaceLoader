@@ -31,7 +31,7 @@ class Logger {
      * @returns None
      */
     void Flush();
-    
+
     /**
      * Logs a FATAL type message.
      *
@@ -40,7 +40,7 @@ class Logger {
      * @returns None
      */
     void Fatal(QString msg);
-    
+
     /**
      * Logs an ERROR type message.
      *
@@ -49,7 +49,7 @@ class Logger {
      * @returns None
      */
     void Error(QString msg);
-    
+
     /**
      * Logs a WARN type message.
      *
@@ -58,7 +58,7 @@ class Logger {
      * @returns None
      */
     void Warn(QString msg);
-    
+
     /**
      * Logs an INFO type message.
      *
@@ -67,7 +67,7 @@ class Logger {
      * @returns None
      */
     void Info(QString msg);
-    
+
     /**
      * Logs a DEBUG type message.
      *
@@ -76,7 +76,7 @@ class Logger {
      * @returns None
      */
     void Debug(QString msg);
-    
+
     /**
      * Logs a TRACE type message.
      *
@@ -108,7 +108,7 @@ class Logger {
      * @returns Bool value indicating whether logging is enabled.
      */
     bool isEnabled() { return Logger::isLoggingEnabled; }
-    
+
     /**
      * Enables or disables logging.
      *
@@ -124,7 +124,7 @@ class Logger {
      * @returns The log directory.
      */
     QString getLogDir() { return Logger::logDir; }
-    
+
     /**
      * Sets the log directory.
      *
@@ -132,7 +132,10 @@ class Logger {
      *
      * @returns None
      */
-    void setLogDir(const QString &logDir) { Logger::logDir = logDir; }
+    void setLogDir(const QString &logDir) {
+        Logger::logDir = logDir;
+        createLogsDirectory();
+    }
 
     /**
      * Returns the name of the log file.
@@ -140,7 +143,7 @@ class Logger {
      * @returns The name of the log file.
      */
     QString getLogFileName() { return Logger::logFileName; }
-    
+
     /**
      * Sets the log file name.
      *
@@ -156,7 +159,7 @@ class Logger {
      * @returns The flush rate of the logger.
      */
     int getFlushRate() { return Logger::flushRate; }
-    
+
     /**
      * Sets the flush rate of the logger.
      *
