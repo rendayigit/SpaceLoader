@@ -23,9 +23,10 @@ void Backend::getTerminalData(QString text) {
     sendCommand(text.mid(text.lastIndexOf(">") + 2, text.size()).toLocal8Bit());
 }
 
-void Backend::start(QString ip) {
+void Backend::start() {
     attemptConnection(ip, 1234);
     QThread::msleep(100);
+    // TODO - This delay is importand. Consider adding same delay for console client
 
     /* Transmit username */
     QByteArray username = getenv("USERNAME");
@@ -104,6 +105,10 @@ void Backend::listen(QString ipPort) {
 }
 
 void Backend::stopListen() { listener->disconnect(); }
+
+void Backend::setServerIp(QString ip) {
+    this->ip = ip;
+}
 
 void Backend::parse(QString text) {
     if (text.contains("Server Logs")) {

@@ -49,6 +49,7 @@ Window {
                 labelPassword.visible = false
                 loginAnimationFrameMarginTop.running = true
                 timer.running = true
+                backend.setServerIp(textServerIp.text)
             } else{
                 loginTextField.borderColor = "#55aaff"
                 labelPassword.visible = true
@@ -218,21 +219,35 @@ Window {
         }
 
         Label {
-            id: labelNubank
+            id: labelServerIp
             x: 30
             y: 50
             color: "#ffffff"
-            text: qsTr("Server IP: 192.168.1.2")
+            text: qsTr("Server IP:")
             font.weight: Font.DemiBold
             font.bold: true
             font.pointSize: 14
             font.family: "Segoe UI"
         }
 
+        CustomTextField {
+            id: textServerIp
+            height: 30
+            width: 120
+
+            x: 120
+            y: 47
+
+            placeholderText: "server ip"
+            text: "127.0.0.1"
+
+            font.pointSize: 10
+        }
+
         Label {
             id: labelUnlockInfo
             x: 30
-            y: 72
+            y: 150
             color: "#55aaff"
             text: qsTr("User IP: 174.15.42.3")
             font.pointSize: 10
@@ -662,5 +677,9 @@ Window {
                 frame: 0
             }
         }
+    }
+
+    Connections {
+        target: backend
     }
 }

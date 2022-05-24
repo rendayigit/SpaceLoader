@@ -13,13 +13,14 @@ class Backend : public TCPClient {
 
    public slots:
     Q_INVOKABLE void getTerminalData(QString text);
-    Q_INVOKABLE void start(QString ip);
+    Q_INVOKABLE void start();
     Q_INVOKABLE void selectLogFile(QString fileName);
     Q_INVOKABLE void listLogs();
     Q_INVOKABLE void getUserList();
     Q_INVOKABLE void fileTransfer(QString localFile, QString serverPath);
     Q_INVOKABLE void listen(QString ipPort);
     Q_INVOKABLE void stopListen();
+    Q_INVOKABLE void setServerIp(QString ip);
 
    signals:
     void getReceivedText(QString text);
@@ -31,6 +32,7 @@ class Backend : public TCPClient {
 
    private:
     void parse(QString text);
+    QString ip = "";
 };
 
 #endif  // BACKEND_H
