@@ -1,20 +1,53 @@
 #include "backend.h"
 
+#include <QTimer>
 #include <QtCore/QFile>
 #include <QtCore/QThread>
 
 #include "../constants.h"
 #include "../lib/Logger/logger.h"
+#include "backendOperations.h"
 #include "iostream"
 #include "listener.h"
 
 Listener* listener;
+BackendOperations* backendOp;
 
-Backend::Backend() { listener = new Listener(this); }
+Backend::Backend() {
+    listener = new Listener(this);
+    backendOp = new BackendOperations(this);
+}
+
+// void Backend::onReceived(QByteArray message) {
+//     parse(message);
+//     Backend::buff=message;
+//     emit getReceivedText(buff);
+// }
 
 void Backend::onReceived(QByteArray message) {
+    // Timer set up
+    QElapsedTimer t;
+    t.start();
+
     parse(message);
-    emit getReceivedText(message);
+
+    Backend::buff.append(message);
+
+    // timer
+    while (t.elapsed() < 5000) {
+        if (buff.size() > 0) {
+            flushBuff();
+            return;
+        }
+    }
+    flushBuff();
+}
+
+void Backend::flushBuff() {
+    // if called flush the message
+    emit getReceivedText(buff);
+    // clear the buff var
+    buff.clear();
 }
 
 void Backend::onDisconnected() { Log().Error("Disconnected From Server!"); }
@@ -23,14 +56,7 @@ void Backend::getTerminalData(QString text) {
     sendCommand(text.mid(text.lastIndexOf(">") + 2, text.size()).toLocal8Bit());
 }
 
-void Backend::start(QString ip) {
-    attemptConnection(ip, 1234);
-    QThread::msleep(100);
-
-    /* Transmit username */
-    QByteArray username = getenv("USERNAME");
-    sendCommand("addUser " + username);
-}
+void Backend::start(QString ip) { backendOp->start(ip); }
 
 void Backend::selectLogFile(QString fileName) { sendCommand("readLog " + fileName.toLocal8Bit()); }
 
@@ -39,69 +65,10 @@ void Backend::listLogs() { sendCommand("listLogs"); }
 void Backend::getUserList() { sendCommand("getUserList"); }
 
 void Backend::fileTransfer(QString localFile, QString serverPath) {
-    // localFile = localFile.replace('"', "");
-    // serverPath = serverPath.replace('"', "");
-
-    localFile = localFile.replace("file:///", "");
-
-    qDebug() << "1:" << localFile;
-    qDebug() << "2:" << serverPath;
-
-    sendCommand("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
-
-    QThread::msleep(10);
-
-    QFile file(localFile);
-    file.open(QIODevice::ReadOnly);
-    QByteArray fileData = file.readAll();
-    if (fileData.isNull()) {
-        std::cout << "An error occured: Cannot open the provided file" << std::endl;
-        Log().Error("Error opening" + localFile);
-        return;
-    }
-    std::cout << "File size: " << fileData.size() / BYTE_TO_KILOBYTE << "KiloByte" << std::endl;
-    int approxfileSize = fileData.size() / (FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE * 10) + 1;
-    std::cout << "Progress: ";
-    int iteration = 0;
-    while (!fileData.isNull()) {
-        if (fileData.size() >= FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE) {
-            sendCommand(fileData.mid(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE));
-            fileData.remove(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE);
-        } else {
-            sendCommand(fileData.mid(0, fileData.size()));
-            fileData.clear();
-        }
-        iteration++;
-        QThread::msleep(30);
-        if (iteration % approxfileSize == 0) {
-            std::cout << ".";
-        }
-    }
-    sendCommand("#END");
-
-    if (iteration >= 10) {
-        std::cout << " Transfer Complete" << std::endl;
-    } else {
-        std::cout << "An error occured white transferring the file." << std::endl;
-        Log().Error("An error occured white transferring file: " + localFile);
-    }
+    backendOp->fileTransfer(localFile, serverPath);
 }
 
-void Backend::listen(QString ipPort) {
-    int idx1 = ipPort.indexOf(" ", QString("Listen").size(), Qt::CaseInsensitive) + 1;
-
-    QString ip;
-    QString port;
-
-    int idx2 = ipPort.indexOf(":", idx1, Qt::CaseInsensitive);
-    int idx3 = ipPort.size();
-
-    ip = ipPort.mid(idx1, idx2 - idx1);
-    port = ipPort.mid(idx2 + 1, idx3 - idx2 - 1);
-
-    listener->attemptConnection(ip, port.toInt());
-    listener->setConnected();
-}
+void Backend::listen(QString ipPort) { backendOp->listen(ipPort); }
 
 void Backend::stopListen() { listener->disconnect(); }
 

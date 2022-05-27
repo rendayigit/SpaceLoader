@@ -3,6 +3,7 @@
 
 #include "../lib/TCP/client/tcpClient.h"
 
+
 class Backend : public TCPClient {
     Q_OBJECT
 
@@ -10,6 +11,8 @@ class Backend : public TCPClient {
     Backend();
     void onReceived(QByteArray message);
     void onDisconnected();
+    void flushBuff();
+    
 
    public slots:
     Q_INVOKABLE void getTerminalData(QString text);
@@ -31,6 +34,9 @@ class Backend : public TCPClient {
 
    private:
     void parse(QString text);
+    QByteArray buff;
+    QElapsedTimer t;
+    
 };
 
 #endif  // BACKEND_H

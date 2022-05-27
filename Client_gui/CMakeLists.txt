@@ -22,6 +22,7 @@ set(PROJECT_SOURCES
         backend.cpp
         main.cpp
         qml.qrc
+        backendOperations.cpp
 )
 
 add_executable(GUI ${PROJECT_SOURCES})

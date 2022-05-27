@@ -85,6 +85,13 @@ Cmds:
       id: hello
       type: call
       auth: 'true'
+    - CmdCallString: helloo
+      Description: hello script for bash.
+      ScriptDir: '/home/pc/Desktop/SpaceLoader/scripts/'
+      ScriptFileName: hello.sh
+      id: helloo
+      type: call
+      auth: 'true'
     - CmdCallString: gdb
       Description: debugger
       ScriptDir: 'C:\Users\renda\Documents\Projects\SpaceLoader\scripts\'
