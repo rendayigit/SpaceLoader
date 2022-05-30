@@ -7,6 +7,8 @@ import QtQuick.Layouts 1.15
 Item {
     id: item1
 
+    var loglist
+
     Component.onCompleted: {
         backend.listLogs()
     }
@@ -17,27 +19,44 @@ Item {
         radius: 10
         color: "#27273a"
 
-        Rectangle {
-            border.width: 3
-            border.color: "#33334c"
+        CustomTextField {
+            id: searchInput
+            
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.leftMargin: 5
-            anchors.topMargin: 15
+            anchors.topMargin: 5
+            
+            height: 40
+            width: 248
+            
+            placeholderText: "Search"
+            
+            font.pointSize: 12
+            Keys.onReleased: {
+                //TODO - reset (everthing is invisible)
+                // filter items and push to new list
+                // call func that accepts a list and makes each item on this list visible and reorders this list.
+                console.log(searchInput.text)
 
-            CustomTextField {
-                anchors.bottom: parent.bottom
-                anchors.top: parent.top
+                var searchedComponents = []
 
-                id: searchInput
-                height: 30
-                width: 120
-
-                placeholderText: "Search"
-
-                font.pointSize: 10
-
-                Keys.onPressed: internal.updateLogList();
+                for(var i = 0 ; i < logsColumn.children.length; i++) {
+                    if (logsColumn.children[i].text.trim().startsWith(searchInput.text)) {
+                        searchedComponents.push(logsColumn.children[i]);
+                        logsColumn.children[i].visible = false
+                    }
+                    logsColumn.children[i].destroy()
+                }
+                
+                for(var i = 0; i < searchedComponents.length; i++) {
+                    Qt.createComponent("../components/LogButton.qml")
+                    .createObject(logsColumn, {
+                        "text": searchedComponents[i].text,
+                        "btnIconSource": "../../assets/images/logs.png",
+                        "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
+                    });
+                }
             }
         }
 
@@ -48,11 +67,11 @@ Item {
             border.color: "#00000000"
             border.width: 0
             anchors.left: parent.left
-            anchors.top: parent.top
+            anchors.top: searchInput.bottom
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 10
             anchors.leftMargin: 5
-            anchors.topMargin: 30
+            anchors.topMargin: 5
 
             ScrollView {
                 anchors.left: parent.left
@@ -138,12 +157,13 @@ Item {
         }
 
         function onGetLogList(text) {
-            Qt.createComponent("../components/LogButton.qml")
-            .createObject(logsColumn, {
-                              "text": text,
-                              "btnIconSource": "../../assets/images/logs.png",
-                              "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
-                          });
+            var logItem = Qt.createComponent("../components/LogButton.qml")
+                        .createObject(logsColumn, {
+                                        "text": text,
+                                        "btnIconSource": "../../assets/images/logs.png",
+                                        "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
+                                    });
+            loglist.push(logItem)
         }
 
         function onGetLogText(text) {
@@ -165,30 +185,6 @@ Item {
             }
 
             logDisplay.cursorPosition += logDisplay.length
-        }
-    }
-
-    QtObject {
-        id: internal
-
-        function updateLogList() {
-            var searchedComponents = []
-
-            for(var i = 0 ; i < logsColumn.children.length; i++) {
-                if (logsColumn.children[i].text.trim().startsWith(searchInput.text)) {
-                    searchedComponents.push(logsColumn.children[i]);
-                }
-                logsColumn.children[i].destroy()
-            }
-            
-            // for(var i = 0; i < startsWith.length; i++) {
-            //     Qt.createComponent("../components/LogButton.qml")
-            //     .createObject(logsColumn, {
-            //         "text": startsWith[i].text,
-            //         "btnIconSource": "../../assets/images/logs.png",
-            //         "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
-            //     });
-            // }
         }
     }
 }
