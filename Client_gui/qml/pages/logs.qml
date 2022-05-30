@@ -18,6 +18,30 @@ Item {
         color: "#27273a"
 
         Rectangle {
+            border.width: 3
+            border.color: "#33334c"
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.leftMargin: 5
+            anchors.topMargin: 15
+
+            CustomTextField {
+                anchors.bottom: parent.bottom
+                anchors.top: parent.top
+
+                id: searchInput
+                height: 30
+                width: 120
+
+                placeholderText: "Search"
+
+                font.pointSize: 10
+
+                Keys.onPressed: internal.updateLogList();
+            }
+        }
+
+        Rectangle {
             id: leftMenu
             width: 240
             color: "#00000000"
@@ -28,7 +52,7 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 10
             anchors.leftMargin: 5
-            anchors.topMargin: 10
+            anchors.topMargin: 30
 
             ScrollView {
                 anchors.left: parent.left
@@ -141,6 +165,30 @@ Item {
             }
 
             logDisplay.cursorPosition += logDisplay.length
+        }
+    }
+
+    QtObject {
+        id: internal
+
+        function updateLogList() {
+            var searchedComponents = []
+
+            for(var i = 0 ; i < logsColumn.children.length; i++) {
+                if (logsColumn.children[i].text.trim().startsWith(searchInput.text)) {
+                    searchedComponents.push(logsColumn.children[i]);
+                }
+                logsColumn.children[i].destroy()
+            }
+            
+            // for(var i = 0; i < startsWith.length; i++) {
+            //     Qt.createComponent("../components/LogButton.qml")
+            //     .createObject(logsColumn, {
+            //         "text": startsWith[i].text,
+            //         "btnIconSource": "../../assets/images/logs.png",
+            //         "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
+            //     });
+            // }
         }
     }
 }
