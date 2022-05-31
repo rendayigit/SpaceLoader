@@ -7,7 +7,8 @@ import QtQuick.Layouts 1.15
 Item {
     id: item1
 
-    var loglist
+
+    property var loglist: []
 
     Component.onCompleted: {
         backend.listLogs()
@@ -34,30 +35,22 @@ Item {
             
             font.pointSize: 12
             Keys.onReleased: {
-                //TODO - reset (everthing is invisible)
-                // filter items and push to new list
-                // call func that accepts a list and makes each item on this list visible and reorders this list.
-                console.log(searchInput.text)
-
                 var searchedComponents = []
 
-                for(var i = 0 ; i < logsColumn.children.length; i++) {
-                    if (logsColumn.children[i].text.trim().startsWith(searchInput.text)) {
-                        searchedComponents.push(logsColumn.children[i]);
-                        logsColumn.children[i].visible = false
+                for(var i = 0 ; i < loglist.length; i++) {
+                    if (loglist[i].text.startsWith(searchInput.text)) {
+                        searchedComponents.push(loglist[i].text);
                     }
-                    logsColumn.children[i].destroy()
                 }
-                
-                for(var i = 0; i < searchedComponents.length; i++) {
-                    Qt.createComponent("../components/LogButton.qml")
-                    .createObject(logsColumn, {
-                        "text": searchedComponents[i].text,
-                        "btnIconSource": "../../assets/images/logs.png",
-                        "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
-                    });
+
+                for(var i = 0; i < logsColumn.children.length; i++) {
+                    if(searchedComponents.includes(logsColumn.children[i].text)){
+                        logsColumn.children[i].visible = true;
+                    }else{
+                        logsColumn.children[i].visible = false;
+                    }
                 }
-            }
+            }            
         }
 
         Rectangle {
@@ -111,9 +104,67 @@ Item {
             }
         }
 
+        CustomTextField {
+            id: searchText
+            
+            anchors.left: searchInput.right
+            anchors.top: parent.top
+            anchors.leftMargin: 5
+            anchors.topMargin: 5
+            
+            height: 40
+            width: 600
+            
+            placeholderText: "Search Log"
+
+            Keys.onReleased: {
+                var textList = logDisplay.text.split("\n")
+                textList.shift()
+                textList.shift()
+                textList.shift()
+                textList.shift()
+                textList.shift()
+
+                var colorList = textList.map((text) => {
+                    return text.match("color:" + "(.*)" + ";")[1]
+                })
+
+                textList = textList.map((text) => {
+                    var temp = text.match("<span" + "(.*)" + "/span>")[1]
+                    return temp.match(">" + "(.*)" + "<")[1]
+                })
+
+                var color
+                selectFile.visible = false
+                logText.visible = true
+                logDisplay.text = ""
+
+                for (var i = 0; i < textList.length; i++) {
+                    var searchList = textList[i].split(searchText.text)
+
+                    if(textList[i].indexOf(searchText.text) == 0) {
+                        logDisplay.text += "<font color='#ff0101'>" + searchText.text + "</font>"
+                    }
+                    // Exception is here
+                    // for(var j = 0; j < searchList.length; j++) {
+                    //     logDisplay.text += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
+                    //     if(j != searchList.length -1) {
+                    //         logDisplay.text += "<font color='#ff0101'>" + searchText.text + "</font>"
+                    //     }
+                    // }
+                    if(textList[i].lastIndexOf(searchText.text) == textList[i].length - searchText.text.length - 1) {
+                        logDisplay.text += "<font color='#ff0101'>" + searchText.text + "</font>"
+                    }
+                    logDisplay.text += "\n"
+                }
+
+                logDisplay.cursorPosition += logDisplay.length
+            }
+        }
+
         Rectangle {
             id: logText
-            anchors.top: parent.top
+            anchors.top: searchText.bottom
             anchors.bottom: parent.bottom
             anchors.left: leftMenu.right
             anchors.right: parent.right
