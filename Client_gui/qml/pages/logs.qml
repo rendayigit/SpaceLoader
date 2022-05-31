@@ -118,13 +118,14 @@ Item {
             placeholderText: "Search Log"
 
             Keys.onReleased: {
-                var textList = logDisplay.text.split("\n")
+                var textList = logDisplay.text.split("<br>")
+                console.log(textList)
                 textList.shift()
                 textList.shift()
                 textList.shift()
                 textList.shift()
                 textList.shift()
-
+            
                 var colorList = textList.map((text) => {
                     return text.match("color:" + "(.*)" + ";")[1]
                 })
@@ -137,28 +138,29 @@ Item {
                 var color
                 selectFile.visible = false
                 logText.visible = true
-                logDisplay.text = ""
+                var edittedText
+                var keyword = searchText.text
 
                 for (var i = 0; i < textList.length; i++) {
-                    var searchList = textList[i].split(searchText.text)
+                    var searchList = textList[i].split(keyword)
 
-                    if(textList[i].indexOf(searchText.text) == 0) {
-                        logDisplay.text += "<font color='#ff0101'>" + searchText.text + "</font>"
+                    if(textList[i].indexOf(keyword) == 0) {
+                        edittedText += "<font color='#ff0101'>" + keyword + "</font>"
                     }
                     // Exception is here
-                    // for(var j = 0; j < searchList.length; j++) {
-                    //     logDisplay.text += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
-                    //     if(j != searchList.length -1) {
-                    //         logDisplay.text += "<font color='#ff0101'>" + searchText.text + "</font>"
-                    //     }
-                    // }
-                    if(textList[i].lastIndexOf(searchText.text) == textList[i].length - searchText.text.length - 1) {
-                        logDisplay.text += "<font color='#ff0101'>" + searchText.text + "</font>"
+                    for(var j = 0; j < searchList.length; j++) {
+                        edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
+                        if(j != searchList.length -1) {
+                            edittedText += "<font color='#ff0101'>" + keyword + "</font>"
+                        }
                     }
-                    logDisplay.text += "\n"
+                    if(textList[i].lastIndexOf(keyword) == textList[i].length - keyword.length - 1) {
+                        edittedText += "<font color='#ff0101'>" + keyword + "</font>"
+                    }
+                    edittedText += "<br>"
                 }
 
-                logDisplay.cursorPosition += logDisplay.length
+                logDisplay.text = edittedText
             }
         }
 
@@ -220,6 +222,7 @@ Item {
         function onGetLogText(text) {
             selectFile.visible = false
             logText.visible = true
+            var edittedText
             logDisplay.text = ""
 
             var textList = text.split("\n")
@@ -232,9 +235,10 @@ Item {
                 else if(textList[i].includes("DEBUG")) { color = "#428df5" }
                 else if(textList[i].includes("TRACE")) { color = "#c242f5" }
                 else { color = "#ffffff" }
-                logDisplay.text += "<font color='" + color + "'>" + textList[i] + "</font>\n"
+                edittedText += "<font color='" + color + "'>" + textList[i] + "</font><br>"
             }
 
+            logDisplay.text = edittedText
             logDisplay.cursorPosition += logDisplay.length
         }
     }
