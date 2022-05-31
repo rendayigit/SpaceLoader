@@ -9,6 +9,7 @@ Item {
 
 
     property var loglist: []
+    property var displayLogText: ""
 
     Component.onCompleted: {
         backend.listLogs()
@@ -118,16 +119,17 @@ Item {
             placeholderText: "Search Log"
 
             Keys.onReleased: {
-                var textList = logDisplay.text.split("<br>")
-                console.log(textList)
+                var textList = displayLogText.split("<br />")
                 textList.shift()
                 textList.shift()
                 textList.shift()
                 textList.shift()
                 textList.shift()
+                textList.pop()
+                textList.pop()
             
                 var colorList = textList.map((text) => {
-                    return text.match("color:" + "(.*)" + ";")[1]
+                    return text.match("color" + "(.*)" + ";")[1].substring(1)
                 })
 
                 textList = textList.map((text) => {
@@ -143,23 +145,20 @@ Item {
 
                 for (var i = 0; i < textList.length; i++) {
                     var searchList = textList[i].split(keyword)
-
                     if(textList[i].indexOf(keyword) == 0) {
-                        edittedText += "<font color='#ff0101'>" + keyword + "</font>"
+                        edittedText += "<font color='#ffff28' font-weight=bold>" + keyword + "</font>"
                     }
-                    // Exception is here
                     for(var j = 0; j < searchList.length; j++) {
                         edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
-                        if(j != searchList.length -1) {
-                            edittedText += "<font color='#ff0101'>" + keyword + "</font>"
+                        if(j != searchList.length -1 && searchList[j] != "") {
+                            edittedText += "<font color='#ffff28' font-weight=bold>" + keyword + "</font>"
                         }
                     }
                     if(textList[i].lastIndexOf(keyword) == textList[i].length - keyword.length - 1) {
-                        edittedText += "<font color='#ff0101'>" + keyword + "</font>"
+                        edittedText += "<font color='#ffff28'>" + keyword + "</font>"
                     }
                     edittedText += "<br>"
                 }
-
                 logDisplay.text = edittedText
             }
         }
@@ -239,6 +238,7 @@ Item {
             }
 
             logDisplay.text = edittedText
+            displayLogText = logDisplay.text
             logDisplay.cursorPosition += logDisplay.length
         }
     }
