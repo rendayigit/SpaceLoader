@@ -34,6 +34,8 @@
         <file>assets/svg_images/save_icon.svg</file>
         <file>assets/svg_images/settings_icon.svg</file>
         <file>assets/svg_images/user_icon.svg</file>
+        <file>assets/sfx/starkit_ready.mp3</file>
+        <file>assets/sfx/server_connection_lost.mp3</file>
         <file>qml/pages/image.qml</file>
         <file>qml/pages/logs.qml</file>
         <file>assets/images/upload.png</file>

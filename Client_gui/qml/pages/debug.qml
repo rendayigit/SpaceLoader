@@ -28,7 +28,6 @@ Window {
         hp_mubAvailability.text = "Accessed"
     }
 
-
     Component.onDestruction: {
         hp_accessBtn.enabled = true
         hp_accessBtn.colorDefault = "#33334c"
