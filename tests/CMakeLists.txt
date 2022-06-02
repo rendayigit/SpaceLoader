@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 
 project(tests LANGUAGES CXX)
 
-enable_testing()
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -43,5 +41,4 @@ target_link_libraries(tests PRIVATE
         -lm
         )
 
-include(GoogleTest)
-# gtest_discover_tests(tests)
+gtest_discover_tests(tests)
