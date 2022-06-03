@@ -15,8 +15,12 @@ class Logger {
     Logger &operator=(Logger const &) = delete;
     Logger(Logger &&) = delete;
     Logger &operator=(Logger &&) = delete;
+    ~Logger() = default;
 
-    static Logger *getInstance();
+    static auto &getInstance() {
+        static Logger instance;
+        return instance;
+    }
 
     void Flush();
     void Fatal(QString msg);
@@ -29,22 +33,24 @@ class Logger {
 
     void updateLogFilePath();
 
-    bool isEnabled() { return Logger::isLoggingEnabled; }
+    bool isEnabled() { return isLoggingEnabled; }
     void enableLogging(bool enableLogging) { Logger::isLoggingEnabled = enableLogging; }
 
-    QString getLogDir() { return Logger::logDir; }
-    void setLogDir(const QString &logDir) { Logger::logDir = logDir; }
+    QString getLogDir() { return logDir; }
+    void setLogDir(const QString &logDir) {
+        Logger::logDir = logDir;
+        createLogsDirectory();
+    }
 
-    QString getLogFileName() { return Logger::logFileName; }
+    QString getLogFileName() { return logFileName; }
     void setLogFileName(const QString &logFileName) { Logger::logFileName = logFileName; }
 
-    int getFlushRate() { return Logger::flushRate; }
+    int getFlushRate() { return flushRate; }
     void setFlushRate(int flushRate) { Logger::flushRate = flushRate; }
 
    private:
     Logger();
-    ~Logger();
-    
+
     bool createLogsDirectory();
     void writer(QString logMsg, QString logType, bool isErrorLog);
 
@@ -53,7 +59,6 @@ class Logger {
     QString logFileName;
     int flushRate;
 
-    static Logger *m_instance;
     QByteArray buffer;
     bool errorLog;
 };

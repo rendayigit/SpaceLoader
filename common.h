@@ -1,81 +1,82 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <QtCore/QDebug>
+#include <QtCore/QByteArray>
+#include <QtCore/QDateTime>
+#include <QtCore/QDirIterator>
+#include <QtCore/QLibrary>
+#include <QtCore/QPluginLoader>
 #include <QtCore/QString>
+#include <QtCore/QtPlugin>
+#include <QtNetwork/QTcpSocket>
 
-#include "lib/YAML/yaml.h"
+#include "Commands/cmd_plugin_interface.h"
+#include "lib/Logger/logger.h"
+#include "path.h"
 
-#ifdef Q_OS_WIN
-#include <windows.h>
-#else
-#include <unistd.h>
 
-#include <climits>
-#endif
+static QString GetCmd(QString msg) {
+    msg = msg.simplified();
+    return msg.mid(0, msg.indexOf(" ", 0));
+}
 
-#ifdef Paths
-#undef Paths
-#endif
+// TODO add an index param to this function and get param from that index
+static QString GetParam(QString msg) {
+    msg = msg.simplified();
+    return msg.mid(msg.indexOf(" ", 0) + 1, msg.size());
+}
 
-#define Paths Path::getInstance
+static bool Cmp(const QString source, const QString command) {
+    return GetCmd(source).compare(command, Qt::CaseInsensitive) == 0;
+}
 
-class Path {
-   public:
-    Path(const Path &) = delete;
-    Path &operator=(const Path &) = delete;
-    Path(Path &&) = delete;
-    Path &operator=(Path &&) = delete;
-    ~Path() = default;
-
-    static auto &getInstance() {
-        static Path instance;
-        return instance;
-    }
-
-    QString getBinaryPath() const {
-#ifdef Q_OS_WIN
-        WCHAR dest[MAX_PATH];
-        GetModuleFileNameW(NULL, dest, MAX_PATH);
-        QString path = QString::fromStdWString(dest);
-        return path.left(path.lastIndexOf(QChar('\\')));
-#else
-        char dest[PATH_MAX];
-        memset(dest, 0, sizeof(dest));
-        if (readlink("/proc/self/exe", dest, PATH_MAX) == -1) {
-            return "";
+static void Transmit(QTcpSocket *socket, QByteArray message, bool transmitTime = false) {
+    if (socket != nullptr) {
+        if (socket->state() != QAbstractSocket::SocketState::UnconnectedState) {
+            if (transmitTime) {
+                message = QDateTime::currentDateTime().toString().toLocal8Bit() + "\n" + message;
+            }
+            socket->write(message);
+            socket->waitForBytesWritten();
         }
-        QString path = dest;
-        return path.left(path.lastIndexOf(QChar('/')));
-#endif
+    }
+}
+
+static QList<QString> getDlibs(QString path) {
+    QList<QString> libList;
+
+    QDirIterator iterator(path, QDirIterator::Subdirectories);
+
+    while (iterator.hasNext()) {
+        QFile file(iterator.next());
+        if (file.open(QIODevice::ReadOnly) and QLibrary::isLibrary(file.fileName())) {
+            libList.append(file.fileName());
+        }
     }
 
-    QString getProjectRoot() const { return getBinaryPath() + "/../../"; }
+    return libList;
+}
 
-    QString getPathsYaml() const { return getProjectRoot() + "Setup/Paths.yaml"; }
-
-    QString getBinDir() const {
-        return getProjectRoot() +
-               QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "bin_Dir"));
+static void runDynamicCmd(QTcpSocket *sender, QByteArray message) {
+    QList<QString> commandLibs = getDlibs(Paths().getCmdsDir());
+    if (commandLibs.isEmpty()) {
+        Log().Error("no libs found at " + Paths().getCmdsDir());
+    } else {
+        for (auto &lib : commandLibs) {
+            if (lib.contains(GetCmd(message), Qt::CaseInsensitive)) {
+                QPluginLoader loader(lib);
+                if (auto *instance = loader.instance()) {
+                    if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
+                        plugin->run(sender, message);
+                    } else {
+                        Log().Error("qobject_cast<> returned nullptr");
+                    }
+                } else {
+                    Log().Error(loader.errorString());
+                }
+            }
+        }
     }
-
-    QString getServerCmdsYaml() const {
-        return getProjectRoot() + QString::fromStdString(Yaml::getValue(
-                                      getPathsYaml().toStdString(), "server_cmds_Yaml"));
-    }
-
-    QString getClientCmdsYaml() const {
-        return getProjectRoot() + QString::fromStdString(Yaml::getValue(
-                                      getPathsYaml().toStdString(), "client_cmds_Yaml"));
-    }
-
-    QString getConfigYaml() const {
-        return getProjectRoot() +
-               QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "config_Yaml"));
-    }
-
-   private:
-    Path() = default;
-};
+}
 
 #endif  // COMMON_H

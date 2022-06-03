@@ -1,0 +1,1 @@
+START C:\msys64\mingw64\bin\gdbserver 127.0.0.1:1236 C:\Users\renda\Documents\Projects\SpaceLoader\build\Client_console\CONSOLE.exe

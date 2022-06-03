@@ -22,8 +22,8 @@ class tcpUnitTests : public QObject {
     void ReceiveFromClients();
 
    private:
-    Server *server;
-    Client *client1, *client2, *client3, *client4;
+    TestServer *server;
+    TestClient *client1, *client2, *client3, *client4;
     QString testString1 = "TEST STRING 1";
     QString testString2 = "TEST STRING 2";
     bool allClientsInitiated = false;
