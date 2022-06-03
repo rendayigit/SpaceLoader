@@ -1,14 +1,14 @@
 {
-  // "clangd.path": "C:/msys64/mingw64/bin/clangd.exe", // For Windows
-  // "cmake.cmakePath": "C:/msys64/mingw64/bin/cmake.exe", //For Windows
-  "cmake.cmakePath": "/home/pc/Qt/Tools/CMake/bin/cmake", //For Linux
+  "clangd.path": "C:/msys64/mingw64/bin/clangd.exe", // For Windows
+  "cmake.cmakePath": "C:/msys64/mingw64/bin/cmake.exe", //For Windows
+  // "cmake.cmakePath": "/home/pc/Qt/Tools/CMake/bin/cmake", //For Linux
   "cmake.mingwSearchDirs": [
     "C:/msys64/mingw64/**"
   ],
-  // "cmake.generator": "MinGW Makefiles", // For Windows
+  "cmake.generator": "MinGW Makefiles", // For Windows
   "cmake.configureSettings": {
-    // "CMAKE_PREFIX_PATH": "C:/msys64/mingw64/lib/cmake/", //For Windows
-    "CMAKE_PREFIX_PATH": "/home/pc/Qt/5.15.2/gcc_64/lib/cmake/", // For Linux
+    "CMAKE_PREFIX_PATH": "C:/msys64/mingw64/lib/cmake/", //For Windows
+    // "CMAKE_PREFIX_PATH": "/home/pc/Qt/5.15.2/gcc_64/lib/cmake/", // For Linux
   },
   "cmake.sourceDirectory": "${workspaceFolder}/",
   "terminal.integrated.profiles.windows": {
