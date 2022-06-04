@@ -126,6 +126,7 @@ Item {
             selectFile.visible = false
             logText.visible = true
             logDisplay.text = ""
+            var tempText = ""
 
             var textList = text.split("\n")
             var color
@@ -137,10 +138,11 @@ Item {
                 else if(textList[i].includes("DEBUG")) { color = "#428df5" }
                 else if(textList[i].includes("TRACE")) { color = "#c242f5" }
                 else { color = "#ffffff" }
-                logDisplay.text += "<font color='" + color + "'>" + textList[i] + "</font>\n"
+                tempText += "<font color='" + color + "'>" + textList[i] + "</font><br>"
             }
 
-            logDisplay.cursorPosition += logDisplay.length
+            logDisplay.text = tempText
+            logDisplay.cursorPosition = logDisplay.length
         }
     }
 }
