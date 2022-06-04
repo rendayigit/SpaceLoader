@@ -251,8 +251,8 @@ Item {
         function onGetLogText(text) {
             selectFile.visible = false
             logText.visible = true
-            var edittedText
             logDisplay.text = ""
+            var tempText = ""
 
             var textList = text.split("\n")
             var color
@@ -264,10 +264,10 @@ Item {
                 else if(textList[i].includes("DEBUG")) { color = "#428df5" }
                 else if(textList[i].includes("TRACE")) { color = "#c242f5" }
                 else { color = "#ffffff" }
-                edittedText += "<font color='" + color + "'>" + textList[i] + "</font><br>"
+                tempText += "<font color='" + color + "'>" + textList[i] + "</font><br>"
             }
 
-            logDisplay.text = edittedText
+            logDisplay.text = tempText
             displayLogText = logDisplay.text
             logDisplay.cursorPosition += logDisplay.length
         }
