@@ -8,12 +8,12 @@
 #include <QtCore/QPluginLoader>
 #include <QtCore/QString>
 #include <QtCore/QtPlugin>
+#include <QtNetwork/QNetworkInterface>
 #include <QtNetwork/QTcpSocket>
 
 #include "Commands/cmd_plugin_interface.h"
 #include "lib/Logger/logger.h"
 #include "path.h"
-
 
 static QString GetCmd(QString msg) {
     msg = msg.simplified();
@@ -46,6 +46,18 @@ static void Transmit(QTcpSocket *socket, QByteArray message, bool transmitTime =
 static QString GetIp(QTcpSocket *socket) {
     QHostAddress ip(socket->peerAddress().toIPv4Address());
     return ip.toString();
+}
+
+static QList<QString> GetLocalIp() {
+    QList<QString> ipList;
+    QHostAddress address;
+    const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
+    for (const QHostAddress &address : QNetworkInterface::allAddresses()) {
+        if (address.protocol() == QAbstractSocket::IPv4Protocol && address != localhost) {
+            ipList.append(address.toString());
+        }
+    }
+    return ipList;
 }
 
 static QList<QString> getDlibs(QString path) {
