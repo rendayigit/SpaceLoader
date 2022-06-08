@@ -4,7 +4,7 @@
 #include "../lib/Logger/logger.h"
 
 QString Logging::getLogData(QString fileName) {
-    if(not fileName.contains(".log")) {
+    if (not fileName.contains(".log")) {
         fileName += ".log";
     }
 
