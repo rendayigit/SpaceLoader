@@ -15,7 +15,6 @@ Item {
     }
 
     Rectangle {
-        id: rectangle
         anchors.fill: parent
         radius: 10
         color: "#27273a"
@@ -51,7 +50,7 @@ Item {
                         logsColumn.children[j].visible = false;
                     }
                 }
-            }            
+            }
         }
 
         Rectangle {
@@ -119,81 +118,81 @@ Item {
             placeholderText: "Search Log"
 
             Keys.onReleased: (event) => {
-                if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                    logDisplay.cursorPosition = cursorList[cursorListIndex]
-                    
-                    if (event.key === Qt.Key_Return) {
-                        if (cursorListIndex != cursorList.length - 1) {
-                            cursorListIndex += 1
-                        } else {
-                            cursorListIndex = 0
-                        }
-                    } else {
-                        if (cursorListIndex == 0) {
-                            cursorListIndex = cursorList.length - 1
-                        } else {
-                            cursorListIndex -= 1
-                        }
-                    }
-                } else {
-                    cursorList = []                                                                                                                                                                                                                                     
-                    var count = 0
+                                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                                     logDisplay.cursorPosition = cursorList[cursorListIndex]
 
-                    var textList = displayLogText.split("<br />")
+                                     if (event.key === Qt.Key_Return) {
+                                         if (cursorListIndex != cursorList.length - 1) {
+                                             cursorListIndex += 1
+                                         } else {
+                                             cursorListIndex = 0
+                                         }
+                                     } else {
+                                         if (cursorListIndex == 0) {
+                                             cursorListIndex = cursorList.length - 1
+                                         } else {
+                                             cursorListIndex -= 1
+                                         }
+                                     }
+                                 } else {
+                                     cursorList = []
+                                     var count = 0
 
-                    textList.pop(0)
-                    textList.pop(1)
-                    textList.pop(2)
-                    textList.pop(3)
-                    textList.pop(4)
-                    textList.pop()
-                    textList.pop()
-                
-                    var colorList = textList.map((text) => {
-                        return text.match("color(.*);")[1].substring(1)
-                    })
+                                     var textList = displayLogText.split("<br />")
 
-                    textList = textList.map((text) => {
-                        return text.match(">(.*)</span>")[1]
-                    })
+                                     textList.pop(0)
+                                     textList.pop(1)
+                                     textList.pop(2)
+                                     textList.pop(3)
+                                     textList.pop(4)
+                                     textList.pop()
+                                     textList.pop()
 
-                    var edittedText = ""
-                    var keyword = searchText.text
+                                     var colorList = textList.map((text) => {
+                                                                      return text.match("color(.*);")[1].substring(1)
+                                                                  })
 
-                    for (var i = 0; i < textList.length; i++) {
-                        var searchList = textList[i].split(keyword)
+                                     textList = textList.map((text) => {
+                                                                 return text.match(">(.*)</span>")[1]
+                                                             })
 
-                        if (textList[i].indexOf(keyword) === 0) {
-                            edittedText += "<font color='#ff0000'>" + keyword + "</font>"
-                            cursorList.push(count)
-                            count += keyword.length
-                        }
+                                     var edittedText = ""
+                                     var keyword = searchText.text
 
-                        for (var j = 0; j < searchList.length; j++) {
-                            edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
-                            count += searchList[j].length
+                                     for (var i = 0; i < textList.length; i++) {
+                                         var searchList = textList[i].split(keyword)
 
-                            if (j != searchList.length -1 && searchList[j] !== "") {
-                                edittedText += "<font color='#ff0000'>" + keyword + "</font>"
-                                cursorList.push(count)
-                                count += keyword.length
-                            }
-                        }
+                                         if (textList[i].indexOf(keyword) === 0) {
+                                             edittedText += "<font color='#ff0000'>" + keyword + "</font>"
+                                             cursorList.push(count)
+                                             count += keyword.length
+                                         }
 
-                        // Go back up when at the very bottom
-                        // Go back down when at the very top
-                        if (textList[i].lastIndexOf(keyword) === textList[i].length - keyword.length - 1) {
-                            edittedText += "<font color='#ff0000'>" + keyword + "</font>"
-                            cursorList.push(count)
-                            count += keyword.length
-                        }
+                                         for (var j = 0; j < searchList.length; j++) {
+                                             edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
+                                             count += searchList[j].length
 
-                        edittedText += "<br>"
-                    }
+                                             if (j != searchList.length -1 && searchList[j] !== "") {
+                                                 edittedText += "<font color='#ff0000'>" + keyword + "</font>"
+                                                 cursorList.push(count)
+                                                 count += keyword.length
+                                             }
+                                         }
 
-                    logDisplay.text = edittedText
-                }
-            }
+                                         // Go back up when at the very bottom
+                                         // Go back down when at the very top
+                                         if (textList[i].lastIndexOf(keyword) === textList[i].length - keyword.length - 1) {
+                                             edittedText += "<font color='#ff0000'>" + keyword + "</font>"
+                                             cursorList.push(count)
+                                             count += keyword.length
+                                         }
+
+                                         edittedText += "<br>"
+                                     }
+
+                                     logDisplay.text = edittedText
+                                 }
+                             }
         }
 
         Rectangle {
@@ -212,11 +211,10 @@ Item {
             color: "#000000"
 
             ScrollView {
-                id: view
                 anchors.fill: parent
 
                 TextArea {
-                    id: logDisplay            
+                    id: logDisplay
                     anchors.fill: parent
                     color: "#ffffff"
                     font.family: "Segoe UI"
@@ -244,11 +242,11 @@ Item {
 
         function onGetLogList(text) {
             var logItem = Qt.createComponent("../components/LogButton.qml")
-                        .createObject(logsColumn, {
-                                        "text": text,
-                                        "btnIconSource": "../../assets/images/logs.png",
-                                        "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
-                                    });
+            .createObject(logsColumn, {
+                              "text": text,
+                              "btnIconSource": "../../assets/images/logs.png",
+                              "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
+                          });
             loglist.push(logItem)
         }
 
