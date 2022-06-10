@@ -142,22 +142,23 @@ Item {
                     var count = 0
 
                     var textList = displayLogText.split("<br />")
-                    textList.shift()
-                    textList.shift()
-                    textList.shift()
-                    textList.shift()
-                    textList.shift()
+                    textList.pop(0)
+                    textList.pop(1)
+                    textList.pop(2)
+                    textList.pop(3)
+                    textList.pop(4)
                     textList.pop()
                     textList.pop()
                 
                     var colorList = textList.map((text) => {
-                        return text.match("color" + "(.*)" + ";")[1].substring(1)
+                        return text.match("color(.*);")[1].substring(1)
                     })
 
+                    console.log(textList)
+
                     textList = textList.map((text) => {
-                        var temp = text.match("<span" + "(.*)" + "/span>")[1]
-                        return temp.match(">" + "(.*)" + "<")[1]
-                    })
+                        return text.match(">(.*)</span>")[1]
+                    })//?????
 
                     var color
                     selectFile.visible = false
@@ -167,28 +168,40 @@ Item {
 
                     for (var i = 0; i < textList.length; i++) {
                         var searchList = textList[i].split(keyword)
+                        
                         if(textList[i].indexOf(keyword) == 0) {
-                            edittedText += "<font color='#ffff28' font-weight=bold>" + keyword + "</font>"
+                            edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                             cursorList.push(count)
                             count += keyword.length
                         }
+
                         for(var j = 0; j < searchList.length; j++) {
                             edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
                             count += searchList[j].length
                             if(j != searchList.length -1 && searchList[j] != "") {
-                                edittedText += "<font color='#ffff28' font-weight=bold>" + keyword + "</font>"
+                                edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                                 cursorList.push(count)
                                 count += keyword.length
                             }
                         }
+
+                        // Go back up when at the very bottom
+                        // Go back down when at the very top
                         if(textList[i].lastIndexOf(keyword) == textList[i].length - keyword.length - 1) {
-                            edittedText += "<font color='#ffff28'>" + keyword + "</font>"
+                            edittedText += "<font color='#0000ff'>" + keyword + "</font>"
                             cursorList.push(count)
                             count += keyword.length
                         }
+
+                        //if(searchList.length == 0){
+                         //   edittedText = textList
+                        //}//Not complete...supposed to return original log when search bar is empty without the 'undefined'
+                        
                         edittedText += "<br>"
                     }
+
                     logDisplay.text = edittedText
+
                 }
             }
         }
