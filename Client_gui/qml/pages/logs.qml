@@ -140,7 +140,6 @@ Item {
                                      }
                                  } else {
                                      var keyword = searchText.text
-                                     var edittedText = ""
                                      cursorList = [] // Used to focus on the current hit
                                      var count = 0   // Used to focus on the current hit
 
@@ -161,7 +160,9 @@ Item {
                                                                  return text.match(">(.*)</span>")[1]
                                                              })
 
-                                     for (var i = 0; i < textList.length; i++) {
+                                    var edittedText = textList[0] + "<br>" // Don't search first line
+
+                                     for (var i = 1; i < textList.length; i++) {
                                          if (keyword !== "") {
                                              // If there is a keword at the beginning of the line, we color the keyword red then continue with the line
                                              if (textList[i].indexOf(keyword) === 0) {
@@ -172,9 +173,7 @@ Item {
 
                                              // If the middle of the line contains multiple hits we do:
                                              // line beginning (original color) + searched word (red) + line center (original color) + ... + searched word (red) + line end (original color)
-                                             
                                              var searchList = textList[i].split(keyword)
-
                                              for (var j = 0; j < searchList.length; j++) {
                                                  edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
                                                  count += searchList[j].length
