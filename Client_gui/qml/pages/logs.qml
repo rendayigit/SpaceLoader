@@ -122,12 +122,16 @@ Item {
                                      logDisplay.cursorPosition = cursorList[cursorListIndex]
 
                                      if (event.key === Qt.Key_Return) {
+                                         // Focus on next hit
+                                         // If we are at the last hit, we jump to the first one
                                          if (cursorListIndex != cursorList.length - 1) {
                                              cursorListIndex += 1
                                          } else {
                                              cursorListIndex = 0
                                          }
                                      } else {
+                                         // Focus on previous hit
+                                         // If we are at the first hit, we jump to the last one
                                          if (cursorListIndex == 0) {
                                              cursorListIndex = cursorList.length - 1
                                          } else {
@@ -135,62 +139,69 @@ Item {
                                          }
                                      }
                                  } else {
-                                     cursorList = []
-                                     var count = 0
+                                     var keyword = searchText.text
+                                     var edittedText = ""
+                                     cursorList = [] // Used to focus on the current hit
+                                     var count = 0   // Used to focus on the current hit
 
+                                     // List of all lines (includes all html data)
                                      var textList = displayLogText.split("<br />")
 
-                                     textList.pop(0)
-                                     textList.pop(1)
-                                     textList.pop(2)
-                                     textList.pop(3)
-                                     textList.pop(4)
-                                     textList.pop()
-                                     textList.pop()
+                                     // Discard certain html header tags
+                                     var header1 = textList.pop(0)
+                                     var header2 = textList.pop(1)
 
+                                     // List of colors line by line
                                      var colorList = textList.map((text) => {
                                                                       return text.match("color:(.*);")[1]
                                                                   })
 
+                                     // list of line text
                                      textList = textList.map((text) => {
                                                                  return text.match(">(.*)</span>")[1]
                                                              })
 
-                                     var edittedText = ""
-                                     var keyword = searchText.text
-
                                      for (var i = 0; i < textList.length; i++) {
-                                         var searchList = textList[i].split(keyword)
-
-                                         if (textList[i].indexOf(keyword) === 0) {
-                                             edittedText += "<font color='#ff0000'>" + keyword + "</font>"
-                                             cursorList.push(count)
-                                             count += keyword.length
-                                         }
-
-                                         for (var j = 0; j < searchList.length; j++) {
-                                             edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
-                                             count += searchList[j].length
-
-                                             if (j != searchList.length -1 && searchList[j] !== "") {
+                                         if (keyword !== "") {
+                                             // If there is a keword at the beginning of the line, we color the keyword red then continue with the line
+                                             if (textList[i].indexOf(keyword) === 0) {
                                                  edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                                                  cursorList.push(count)
                                                  count += keyword.length
                                              }
+
+                                             // If the middle of the line contains multiple hits we do:
+                                             // line beginning (original color) + searched word (red) + line center (original color) + ... + searched word (red) + line end (original color)
+                                             
+                                             var searchList = textList[i].split(keyword)
+
+                                             for (var j = 0; j < searchList.length; j++) {
+                                                 edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
+                                                 count += searchList[j].length
+
+                                                 if (j != searchList.length -1 && searchList[j] !== "") {
+                                                     edittedText += "<font color='#ff0000'>" + keyword + "</font>"
+                                                     cursorList.push(count)
+                                                     count += keyword.length
+                                                 }
+                                             }
+
+                                             // If there is a keword at the end of the line, we color the keyword red then end the line
+                                             if (textList[i].lastIndexOf(keyword) === textList[i].length - keyword.length - 1) {
+                                                 edittedText += "<font color='#ff0000'>" + keyword + "</font>"
+                                                 cursorList.push(count)
+                                                 count += keyword.length
+                                             }
+                                         } else {
+                                             edittedText += "<font color='" + colorList[i] + "'>" + textList[i] + "</font>"
                                          }
 
-                                         // Go back up when at the very bottom
-                                         // Go back down when at the very top
-                                         if (textList[i].lastIndexOf(keyword) === textList[i].length - keyword.length - 1) {
-                                             edittedText += "<font color='#ff0000'>" + keyword + "</font>"
-                                             cursorList.push(count)
-                                             count += keyword.length
-                                         }
-
+                                         // Add a line break at the end of the line
                                          edittedText += "<br>"
                                      }
 
-                                     logDisplay.text = edittedText
+                                     // print the entire newly colored text along with the previously discarded html tags to the display
+                                     logDisplay.text = header1 + header2 + edittedText
                                  }
                              }
         }
