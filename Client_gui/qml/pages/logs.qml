@@ -6,9 +6,9 @@ import "../components"
 
 Item {
     property var loglist: []
-    property var displayLogText: ""
+    property string displayLogText: ""
     property var cursorList: []
-    property var cursorListIndex: 0
+    property int cursorListIndex: 0
 
     Component.onCompleted: {
         backend.listLogs()
@@ -44,11 +44,11 @@ Item {
                     }
                 }
 
-                for (var i = 0; i < logsColumn.children.length; i++) {
-                    if (searchedComponents.includes(logsColumn.children[i].text)) {
-                        logsColumn.children[i].visible = true;
+                for (var j = 0; j < logsColumn.children.length; j++) {
+                    if (searchedComponents.includes(logsColumn.children[j].text)) {
+                        logsColumn.children[j].visible = true;
                     } else {
-                        logsColumn.children[i].visible = false;
+                        logsColumn.children[j].visible = false;
                     }
                 }
             }            
@@ -163,7 +163,7 @@ Item {
                     for (var i = 0; i < textList.length; i++) {
                         var searchList = textList[i].split(keyword)
 
-                        if (textList[i].indexOf(keyword) == 0) {
+                        if (textList[i].indexOf(keyword) === 0) {
                             edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                             cursorList.push(count)
                             count += keyword.length
@@ -173,7 +173,7 @@ Item {
                             edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
                             count += searchList[j].length
 
-                            if (j != searchList.length -1 && searchList[j] != "") {
+                            if (j != searchList.length -1 && searchList[j] !== "") {
                                 edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                                 cursorList.push(count)
                                 count += keyword.length
@@ -182,7 +182,7 @@ Item {
 
                         // Go back up when at the very bottom
                         // Go back down when at the very top
-                        if (textList[i].lastIndexOf(keyword) == textList[i].length - keyword.length - 1) {
+                        if (textList[i].lastIndexOf(keyword) === textList[i].length - keyword.length - 1) {
                             edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                             cursorList.push(count)
                             count += keyword.length
