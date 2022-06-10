@@ -1,8 +1,8 @@
 import QtQuick 2.15
-import "../components"
 import QtQuick.Timeline 1.0
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import "../components"
 
 Item {
     property var loglist: []
@@ -118,18 +118,18 @@ Item {
             
             placeholderText: "Search Log"
 
-            Keys.onReleased:(event)=> {
+            Keys.onReleased: (event) => {
                 if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                     logDisplay.cursorPosition = cursorList[cursorListIndex]
                     
                     if (event.key === Qt.Key_Return) {
-                        if(cursorListIndex != cursorList.length - 1) {
+                        if (cursorListIndex != cursorList.length - 1) {
                             cursorListIndex += 1
                         } else {
                             cursorListIndex = 0
                         }
                     } else {
-                        if(cursorListIndex == 0) {
+                        if (cursorListIndex == 0) {
                             cursorListIndex = cursorList.length - 1
                         } else {
                             cursorListIndex -= 1
@@ -140,6 +140,7 @@ Item {
                     var count = 0
 
                     var textList = displayLogText.split("<br />")
+
                     textList.pop(0)
                     textList.pop(1)
                     textList.pop(2)
@@ -156,25 +157,23 @@ Item {
                         return text.match(">(.*)</span>")[1]
                     })
 
-                    var color
-                    selectFile.visible = false
-                    logText.visible = true
-                    var edittedText
+                    var edittedText = ""
                     var keyword = searchText.text
 
                     for (var i = 0; i < textList.length; i++) {
                         var searchList = textList[i].split(keyword)
 
-                        if(textList[i].indexOf(keyword) == 0) {
+                        if (textList[i].indexOf(keyword) == 0) {
                             edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                             cursorList.push(count)
                             count += keyword.length
                         }
 
-                        for(var j = 0; j < searchList.length; j++) {
+                        for (var j = 0; j < searchList.length; j++) {
                             edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
                             count += searchList[j].length
-                            if(j != searchList.length -1 && searchList[j] != "") {
+
+                            if (j != searchList.length -1 && searchList[j] != "") {
                                 edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                                 cursorList.push(count)
                                 count += keyword.length
@@ -183,7 +182,7 @@ Item {
 
                         // Go back up when at the very bottom
                         // Go back down when at the very top
-                        if(textList[i].lastIndexOf(keyword) == textList[i].length - keyword.length - 1) {
+                        if (textList[i].lastIndexOf(keyword) == textList[i].length - keyword.length - 1) {
                             edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                             cursorList.push(count)
                             count += keyword.length
@@ -193,7 +192,6 @@ Item {
                     }
 
                     logDisplay.text = edittedText
-
                 }
             }
         }
@@ -263,12 +261,12 @@ Item {
             var textList = text.split("\n")
             var color
             for (var i = 0; i < textList.length; i++) {
-                if(textList[i].includes("FATAL")) { color = "red" }
-                else if(textList[i].includes("ERROR")) { color = "#ff0000" }
-                else if(textList[i].includes("WARN")) { color = "#f5ad42" }
-                else if(textList[i].includes("INFO")) { color = "#adf542" }
-                else if(textList[i].includes("DEBUG")) { color = "#428df5" }
-                else if(textList[i].includes("TRACE")) { color = "#c242f5" }
+                if (textList[i].includes("FATAL")) { color = "red" }
+                else if (textList[i].includes("ERROR")) { color = "#ff0000" }
+                else if (textList[i].includes("WARN")) { color = "#f5ad42" }
+                else if (textList[i].includes("INFO")) { color = "#adf542" }
+                else if (textList[i].includes("DEBUG")) { color = "#428df5" }
+                else if (textList[i].includes("TRACE")) { color = "#c242f5" }
                 else { color = "#ffffff" }
                 tempText += "<font color='" + color + "'>" + textList[i] + "</font><br>"
             }
