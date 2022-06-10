@@ -149,7 +149,7 @@ Item {
                                      textList.pop()
 
                                      var colorList = textList.map((text) => {
-                                                                      return text.match("color(.*);")[1].substring(1)
+                                                                      return text.match("color:(.*);")[1]
                                                                   })
 
                                      textList = textList.map((text) => {
