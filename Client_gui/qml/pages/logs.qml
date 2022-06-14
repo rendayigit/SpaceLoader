@@ -8,7 +8,6 @@ Item {
     property var loglist: []
     property string displayLogText: ""
     property var cursorList: []
-    property int cursorListIndex: 0
 
     Component.onCompleted: {
         backend.listLogs()
@@ -118,6 +117,8 @@ Item {
             placeholderText: "Search Log"
 
             Keys.onReleased: (event) => {
+                                 var cursorListIndex = 1
+
                                  if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                                      logDisplay.cursorPosition = cursorList[cursorListIndex]
 
@@ -160,13 +161,21 @@ Item {
                                                                  return text.match(">(.*)</span>")[1]
                                                              })
 
-                                    var edittedText = textList[0] + "<br>" // Don't search first line
+                                     var edittedText = textList[0] + "<br>" // Don't search first line
 
                                      for (var i = 1; i < textList.length; i++) {
                                          if (keyword !== "") {
+
+                                             var size
+                                             if (i === cursorListIndex) size = 2
+                                             else size = 6
+
+                                             console.log("cursorListIndex: " + cursorListIndex)
+                                             console.log("i: " + i)
+
                                              // If there is a keword at the beginning of the line, we color the keyword red then continue with the line
                                              if (textList[i].indexOf(keyword) === 0) {
-                                                 edittedText += "<font color='#ff0000'>" + keyword + "</font>"
+                                                 edittedText += "<font color='#ff0000' size=" + size + ">" + keyword + "</font>"
                                                  cursorList.push(count)
                                                  count += keyword.length
                                              }
@@ -175,11 +184,11 @@ Item {
                                              // line beginning (original color) + searched word (red) + line center (original color) + ... + searched word (red) + line end (original color)
                                              var searchList = textList[i].split(keyword)
                                              for (var j = 0; j < searchList.length; j++) {
-                                                 edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
+                                                 edittedText += "<font color='" + colorList[i] + "' size=" + size + ">" + searchList[j] + "</font>"
                                                  count += searchList[j].length
 
                                                  if (j != searchList.length -1 && searchList[j] !== "") {
-                                                     edittedText += "<font color='#ff0000'>" + keyword + "</font>"
+                                                     edittedText += "<font color='#ff0000' size=" + size + ">" + keyword + "</font>"
                                                      cursorList.push(count)
                                                      count += keyword.length
                                                  }
@@ -187,7 +196,7 @@ Item {
 
                                              // If there is a keword at the end of the line, we color the keyword red then end the line
                                              if (textList[i].lastIndexOf(keyword) === textList[i].length - keyword.length - 1) {
-                                                 edittedText += "<font color='#ff0000'>" + keyword + "</font>"
+                                                 edittedText += "<font color='#ff0000' size=" + size + ">" + keyword + "</font>"
                                                  cursorList.push(count)
                                                  count += keyword.length
                                              }

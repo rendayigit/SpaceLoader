@@ -97,7 +97,6 @@ Cmds:
         up.
       id: sa
       type: internal
-      auth: 'true'
     - CmdCallString: clearAuth
       Description: Server clears the clients authorization.
       id: clearAuth
