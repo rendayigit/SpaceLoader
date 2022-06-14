@@ -6,10 +6,13 @@ Button {
     id: button
 
     // Custom Properties
+    property string buttonId;
     property color colorDefault: "#1d1d2b"
     property color colorMouseOver: "#40405f"
     property color colorPressed: "#55aaff"
     property url btnIconSource: "../../assets/svg_images/help_icon.svg"
+
+    signal logClicked(string buttonId);
 
     QtObject {
         id: internal
@@ -21,7 +24,10 @@ Button {
                                    }
     }
 
-    onClicked: backend.selectLogFile(text)
+    onClicked: {
+        backend.selectLogFile(text)
+        button.logClicked(buttonId)
+    }
 
     implicitWidth: 240
     implicitHeight: 40

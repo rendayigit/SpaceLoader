@@ -8,6 +8,7 @@ Item {
     property var loglist: []
     property string displayLogText: ""
     property var cursorList: []
+    property var lastButtonId: 0
 
     Component.onCompleted: {
         backend.listLogs()
@@ -49,7 +50,7 @@ Item {
                         logsColumn.children[j].visible = false;
                     }
                 }
-            }
+            }            
         }
 
         Rectangle {
@@ -116,7 +117,7 @@ Item {
             
             placeholderText: "Search Log"
 
-            Keys.onReleased: (event) => {
+Keys.onReleased: (event) => {
                                  var cursorListIndex = 1
 
                                  if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
@@ -233,7 +234,7 @@ Item {
                 anchors.fill: parent
 
                 TextArea {
-                    id: logDisplay
+                    id: logDisplay            
                     anchors.fill: parent
                     color: "#ffffff"
                     font.family: "Segoe UI"
@@ -249,7 +250,6 @@ Item {
         target: backend
 
         function onClearLogs() {
-
             for (var i = 0 ; i < logsColumn.children.length; i++) {
                 logsColumn.children[i].destroy()
             }
@@ -259,13 +259,27 @@ Item {
             logDisplay.text = ""
         }
 
+        function logButtonClicked(buttonId)
+        {
+            for (var i = 0 ; i < logsColumn.children.length; i++) {
+                if (logsColumn.children[i].buttonId === buttonId) {
+                    logsColumn.children[i].colorDefault = "#4e4e6e"
+                } else {
+                    logsColumn.children[i].colorDefault = "#1d1d2b"
+                }
+            }
+        }
+
         function onGetLogList(text) {
             var logItem = Qt.createComponent("../components/LogButton.qml")
-            .createObject(logsColumn, {
-                              "text": text,
-                              "btnIconSource": "../../assets/images/logs.png",
-                              "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
-                          });
+                        .createObject(logsColumn, {
+                                        "buttonId": lastButtonId,
+                                        "text": text,
+                                        "btnIconSource": "../../assets/images/logs.png",
+                                        "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
+                                    });
+            lastButtonId += 1
+            logItem.logClicked.connect(logButtonClicked)
             loglist.push(logItem)
         }
 
