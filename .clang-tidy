@@ -207,7 +207,7 @@ google-explicit-constructor,
 google-global-names-in-headers, # keep this
 google-objc-avoid-nsobject-new,	 
 google-objc-avoid-throwing-exception,
-google-objc-function-naming,
+google-objc-function-naming, # keep this
 google-objc-global-variable-declaration,
 google-readability-avoid-underscore-in-googletest-name, # keep this
 google-readability-casting,
@@ -334,7 +334,7 @@ readability-redundant-string-cstr,
 readability-redundant-string-init,
 readability-simplify-boolean-expr,
 readability-simplify-subscript-expr,
-readability-static-accessed-through-instance,
+readability-static-accessed-through-instance, # keep this
 readability-static-definition-in-anonymous-namespace,
 readability-string-compare,
 readability-uniqueptr-delete-release,
