@@ -286,8 +286,7 @@ Keys.onReleased: (event) => {
         function onGetLogText(text) {
             selectFile.visible = false
             logText.visible = true
-            logDisplay.text = ""
-            var tempText = ""
+            displayLogText = ""
 
             var textList = text.split("\n")
             var color
@@ -299,11 +298,10 @@ Keys.onReleased: (event) => {
                 else if (textList[i].includes("DEBUG")) { color = "#428df5" }
                 else if (textList[i].includes("TRACE")) { color = "#c242f5" }
                 else { color = "#ffffff" }
-                tempText += "<font color='" + color + "'>" + textList[i] + "</font><br>"
+                displayLogText += "<font color='" + color + "'>" + textList[i] + "</font><br>"
             }
 
-            logDisplay.text = tempText
-            displayLogText = logDisplay.text
+            logDisplay.text = displayLogText
             logDisplay.cursorPosition += logDisplay.length
         }
     }
