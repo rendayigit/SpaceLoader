@@ -4,10 +4,21 @@ import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.15
 import "../components"
 import QtQuick.Timeline 1.0
+import QtMultimedia 5.15
 
 Item {
     id: homePage
     property bool showValue: true
+
+    MediaPlayer {
+        id: sfxStarkitReady
+        source: "../../assets/sfx/starkit_ready.mp3"
+    }
+
+    MediaPlayer {
+        id: sfxServerConnectionLost
+        source: "../../assets/sfx/server_connection_lost.mp3"
+    }
 
     Flickable {
         id: flickable
@@ -159,6 +170,10 @@ Item {
                     anchors.topMargin: 17
                     anchors.rightMargin: 15
                     colorPressed: "#55aaff"
+
+                    onClicked: {
+                        sfxServerConnectionLost.play()
+                    }
                 }
 
                 CustomButton {
@@ -172,6 +187,10 @@ Item {
                     anchors.topMargin: 17
                     anchors.rightMargin: 10
                     colorPressed: "#55aaff"
+
+                    onClicked: {
+                        sfxStarkitReady.play()
+                    }
                 }
             }
 

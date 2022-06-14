@@ -21,6 +21,7 @@ class Backend : public TCPClient {
     Q_INVOKABLE void listen(QString ipPort);
     Q_INVOKABLE void stopListen();
     Q_INVOKABLE void setServerIp(QString ip);
+    Q_INVOKABLE QString getLocalIp();
 
    signals:
     void getReceivedText(QString text);
@@ -32,7 +33,8 @@ class Backend : public TCPClient {
 
    private:
     void parse(QString text);
-    QString ip = "";
+    QString serverIp = "";
+    QString localIp = "";
 };
 
 #endif  // BACKEND_H

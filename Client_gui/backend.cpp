@@ -7,10 +7,14 @@
 #include "../lib/Logger/logger.h"
 #include "iostream"
 #include "listener.h"
+#include "../common.h"
 
 Listener* listener;
 
-Backend::Backend() { listener = new Listener(this); }
+Backend::Backend() { 
+    listener = new Listener(this); 
+    localIp = GetLocalIp().last();
+}
 
 void Backend::onReceived(QByteArray message) {
     parse(message);
@@ -24,7 +28,7 @@ void Backend::getTerminalData(QString text) {
 }
 
 void Backend::start() {
-    attemptConnection(ip, 1234);
+    attemptConnection(serverIp, 1234);
     QThread::msleep(100);
     // TODO - This delay is importand. Consider adding same delay for console client
 
@@ -107,7 +111,11 @@ void Backend::listen(QString ipPort) {
 void Backend::stopListen() { listener->disconnect(); }
 
 void Backend::setServerIp(QString ip) {
-    this->ip = ip;
+    serverIp = ip;
+}
+
+QString Backend::getLocalIp() {
+    return localIp;
 }
 
 void Backend::parse(QString text) {

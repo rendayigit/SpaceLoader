@@ -23,6 +23,10 @@ Window {
     // Custom Properties
     property int timeoutInterval: 1000
 
+    Component.onCompleted: {
+        labelLocalIp.text += backend.getLocalIp()
+    }
+
     Timer {
         id: timer
         interval: timeoutInterval;
@@ -245,11 +249,11 @@ Window {
         }
 
         Label {
-            id: labelUnlockInfo
+            id: labelLocalIp
             x: 30
             y: 150
             color: "#55aaff"
-            text: qsTr("User IP: 174.15.42.3")
+            text: "Local IP: "
             font.pointSize: 10
             font.bold: false
             font.family: "Segoe UI"

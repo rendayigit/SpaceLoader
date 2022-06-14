@@ -136,6 +136,7 @@
                 "tests/tests",
                 "Server/SERVER",
                 "Client_console/CONSOLE",
+                "Client_gui/GUI"
             ],
             "default": "tests/tests"
         },
