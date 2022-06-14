@@ -8,7 +8,8 @@ Item {
     property var loglist: []
     property string displayLogText: ""
     property var cursorList: []
-    property var lastButtonId: 0
+    property int cursorListIndex: 0
+    property int lastButtonId: 0
 
     Component.onCompleted: {
         backend.listLogs()
@@ -30,9 +31,9 @@ Item {
             height: 40
             width: 248
             
-            placeholderText: "Search"
-            
             font.pointSize: 12
+
+            placeholderText: "Filter"
 
             Keys.onReleased: {
                 var searchedComponents = []
@@ -50,7 +51,7 @@ Item {
                         logsColumn.children[j].visible = false;
                     }
                 }
-            }            
+            }
         }
 
         Rectangle {
@@ -114,12 +115,12 @@ Item {
 
             height: 40
             width: 600
+
+            font.pointSize: 12
             
-            placeholderText: "Search Log"
+            placeholderText: "Search"
 
-Keys.onReleased: (event) => {
-                                 var cursorListIndex = 1
-
+            Keys.onReleased: (event) => {
                                  if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                                      logDisplay.cursorPosition = cursorList[cursorListIndex]
 
@@ -146,7 +147,7 @@ Keys.onReleased: (event) => {
                                      var count = 0   // Used to focus on the current hit
 
                                      // List of all lines (includes all html data)
-                                     var textList = displayLogText.split("<br />")
+                                     var textList = displayLogText.split("<br>")
 
                                      // Discard certain html header tags
                                      var header1 = textList.pop(0)
@@ -154,29 +155,22 @@ Keys.onReleased: (event) => {
 
                                      // List of colors line by line
                                      var colorList = textList.map((text) => {
-                                                                      return text.match("color:(.*);")[1]
+                                                                      return text.match("color='(.*)'>")[1]
                                                                   })
 
                                      // list of line text
                                      textList = textList.map((text) => {
-                                                                 return text.match(">(.*)</span>")[1]
+                                                                 return text.match(">(.*)</font>")[1]
                                                              })
+
 
                                      var edittedText = textList[0] + "<br>" // Don't search first line
 
                                      for (var i = 1; i < textList.length; i++) {
                                          if (keyword !== "") {
-
-                                             var size
-                                             if (i === cursorListIndex) size = 2
-                                             else size = 6
-
-                                             console.log("cursorListIndex: " + cursorListIndex)
-                                             console.log("i: " + i)
-
                                              // If there is a keword at the beginning of the line, we color the keyword red then continue with the line
                                              if (textList[i].indexOf(keyword) === 0) {
-                                                 edittedText += "<font color='#ff0000' size=" + size + ">" + keyword + "</font>"
+                                                 edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                                                  cursorList.push(count)
                                                  count += keyword.length
                                              }
@@ -185,11 +179,11 @@ Keys.onReleased: (event) => {
                                              // line beginning (original color) + searched word (red) + line center (original color) + ... + searched word (red) + line end (original color)
                                              var searchList = textList[i].split(keyword)
                                              for (var j = 0; j < searchList.length; j++) {
-                                                 edittedText += "<font color='" + colorList[i] + "' size=" + size + ">" + searchList[j] + "</font>"
+                                                 edittedText += "<font color='" + colorList[i] + "'>" + searchList[j] + "</font>"
                                                  count += searchList[j].length
 
                                                  if (j != searchList.length -1 && searchList[j] !== "") {
-                                                     edittedText += "<font color='#ff0000' size=" + size + ">" + keyword + "</font>"
+                                                     edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                                                      cursorList.push(count)
                                                      count += keyword.length
                                                  }
@@ -197,7 +191,7 @@ Keys.onReleased: (event) => {
 
                                              // If there is a keword at the end of the line, we color the keyword red then end the line
                                              if (textList[i].lastIndexOf(keyword) === textList[i].length - keyword.length - 1) {
-                                                 edittedText += "<font color='#ff0000' size=" + size + ">" + keyword + "</font>"
+                                                 edittedText += "<font color='#ff0000'>" + keyword + "</font>"
                                                  cursorList.push(count)
                                                  count += keyword.length
                                              }
@@ -232,15 +226,15 @@ Keys.onReleased: (event) => {
 
             ScrollView {
                 anchors.fill: parent
-
                 TextArea {
-                    id: logDisplay            
+                    id: logDisplay
                     anchors.fill: parent
                     color: "#ffffff"
                     font.family: "Segoe UI"
                     font.pointSize: 11
                     anchors.centerIn: parent
                     textFormat: TextEdit.RichText
+                    readOnly: true
                 }
             }
         }
@@ -272,12 +266,12 @@ Keys.onReleased: (event) => {
 
         function onGetLogList(text) {
             var logItem = Qt.createComponent("../components/LogButton.qml")
-                        .createObject(logsColumn, {
-                                        "buttonId": lastButtonId,
-                                        "text": text,
-                                        "btnIconSource": "../../assets/images/logs.png",
-                                        "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
-                                    });
+            .createObject(logsColumn, {
+                              "buttonId": lastButtonId,
+                              "text": text,
+                              "btnIconSource": "../../assets/images/logs.png",
+                              "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter
+                          });
             lastButtonId += 1
             logItem.logClicked.connect(logButtonClicked)
             loglist.push(logItem)
