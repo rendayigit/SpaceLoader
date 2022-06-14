@@ -26,7 +26,7 @@ add_executable(tests
         ../lib/TCP/server/tcpServer.cpp
         TCP/testClient.cpp
         TCP/testServer.cpp
-        # TCP/test_tcp.cpp
+        TCP/test_tcp.cpp
         Commands/test_commands.cpp
         ../Commands/hello/hello.cpp
 )   
