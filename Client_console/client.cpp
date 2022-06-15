@@ -46,13 +46,23 @@ void Client::start(QList<QString> commandArguments) {
     QByteArray username = getenv("USERNAME");
     QHostAddress ip(getSocket()->localAddress().toIPv4Address());
     sendCommand("addUser " + username);
+    sendCommand("");
+    QThread::usleep(1000);
+    sendCommand("");
 
-    while (!commandArguments.isEmpty()) {
-        QThread::usleep(100);
+    while (not commandArguments.isEmpty()) {
         QByteArray value = commandArguments.first().toLocal8Bit();
         commandArguments.removeFirst();
+        QThread::usleep(100);
+        if (value.compare("noloop", Qt::CaseInsensitive) == 0) {
+            noloop = true;
+        } else {
+            emit consoleInputReceived(value);
+        }
+    }
 
-        emit consoleInputReceived(value);
+    if (noloop) {
+        exit(0);
     }
 
     QtConcurrent::run(this, &Client::loopForCommands);

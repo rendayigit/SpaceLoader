@@ -50,6 +50,7 @@ class Client : public TCPClient, public Operations {
    private:
     Client();
     QList<Client *> listeners;
+    bool noloop = false;
 };
 
 #endif  // CLIENT_H
