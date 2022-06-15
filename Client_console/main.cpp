@@ -31,9 +31,7 @@ int main(int argc, char *argv[]) {
     /* Connect to server */
     Client::getInstance().start(commandArguments);
 
-    auto ret = a.exec();
-
     Client::getInstance().stopAllListeners();
 
-    return ret;
+    return a.exec();
 }

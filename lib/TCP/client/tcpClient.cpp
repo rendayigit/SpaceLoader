@@ -22,6 +22,7 @@ void TCPClient::sendCommand(QByteArray data) {
     if (socket->state() == QAbstractSocket::ConnectedState) {
         socket->write(data);
         socket->waitForBytesWritten();
+        socket->flush();
     }
 }
 

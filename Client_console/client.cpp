@@ -46,9 +46,9 @@ void Client::start(QList<QString> commandArguments) {
     QByteArray username = getenv("USERNAME");
     QHostAddress ip(getSocket()->localAddress().toIPv4Address());
     sendCommand("addUser " + username);
-    sendCommand("");
-    QThread::usleep(1000);
-    sendCommand("");
+    QThread::usleep(250);
+    getSocket()->flush();
+    QThread::usleep(250);
 
     while (not commandArguments.isEmpty()) {
         QByteArray value = commandArguments.first().toLocal8Bit();

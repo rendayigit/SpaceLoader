@@ -26,6 +26,7 @@ void TCPServer::transmit(QTcpSocket *client, QByteArray message) {
         if (client->state() != QAbstractSocket::SocketState::UnconnectedState) {
             client->write(QDateTime::currentDateTime().toString().toLocal8Bit() + "\n" + message);
             client->waitForBytesWritten();
+            client->flush();
         }
     }
 }
@@ -39,6 +40,7 @@ void TCPServer::onNewConnection() {
 
         socket->write("Connected to " + serverAddress.toString().toLocal8Bit());
         socket->waitForBytesWritten();
+        socket->flush();
 
         socketList.append(socket);
         qInfo().noquote() << peerAddress.toString() << " connected";

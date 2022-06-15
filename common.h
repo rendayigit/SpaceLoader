@@ -38,6 +38,7 @@ static void Transmit(QTcpSocket *socket, QByteArray message, bool transmitTime =
             }
             socket->write(message);
             socket->waitForBytesWritten();
+            socket->flush();
         }
     }
 }
