@@ -77,7 +77,7 @@ void Operations::populateCmdLists() {
             checkAuthFlag(cmdsWithTheAuthFlagSetNodeList, callCmd->getCmdCallString()));
 
         if (callCmd->getIsTimerSet()) {
-            callCmd->setTriggerTime(QString::fromStdString(Yaml::getValue(i, "type")));
+            callCmd->setTriggerTime(QString::fromStdString(Yaml::getValue(i, "TimerTime")));
         }
 
         cmdList.append(callCmd);
@@ -113,7 +113,7 @@ void Operations::populateCmdLists() {
         internalCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
 
         if (internalCmd->getIsTimerSet()) {
-            internalCmd->setTriggerTime(QString::fromStdString(Yaml::getValue(i, "id")));
+            internalCmd->setTriggerTime(QString::fromStdString(Yaml::getValue(i, "TimerTime")));
         }
 
         cmdList.append(internalCmd);
