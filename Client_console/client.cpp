@@ -33,8 +33,15 @@ void Client::start(QList<QString> commandArguments) {
 
     populateCmdLists();
 
-    while (!attemptConnection(commandArguments.first(), 1234)) {
+    while (not attemptConnection(commandArguments.first(), 1234)) {
         commandArguments.removeFirst();
+
+        for (auto c : commandArguments) {
+            if (c.contains("noloop")) {
+                exit(0);
+            }
+        }
+
         std::cout << "Connection error please re-enter IP: ";
         std::string ip;
         std::cin >> ip;
@@ -51,13 +58,20 @@ void Client::start(QList<QString> commandArguments) {
     QThread::usleep(250);
 
     while (not commandArguments.isEmpty()) {
-        QByteArray value = commandArguments.first().toLocal8Bit();
+        QString command = commandArguments.first();
         commandArguments.removeFirst();
         QThread::usleep(100);
-        if (value.compare("noloop", Qt::CaseInsensitive) == 0) {
+        if (command.contains("noloop", Qt::CaseInsensitive)) {
             noloop = true;
+            int idx = command.indexOf("noloop", 0, Qt::CaseInsensitive) + 7;
+            QString timeout = command.mid(idx, command.length() - idx);
+            if (timeout.size() > 0) {
+                std::cout << "Waiting for " << timeout.toStdString() << " seconds before exiting..."
+                          << std::endl;
+                QThread::sleep(timeout.toInt());
+            }
         } else {
-            emit consoleInputReceived(value);
+            emit consoleInputReceived(command.toLocal8Bit());
         }
     }
 
