@@ -24,7 +24,16 @@ set(PROJECT_SOURCES
         qml.qrc
 )
 
-add_executable(GUI ${PROJECT_SOURCES})
+# Set some Win32 Specific Settings
+IF(WIN32)
+SET(GUI_TYPE WIN32)
+ENDIF(WIN32)
+# Set some Apple MacOS Specific settings
+IF (APPLE)
+SET(GUI_TYPE MACOSX_BUNDLE)
+ENDIF (APPLE)
+
+add_executable(GUI ${GUI_TYPE} ${PROJECT_SOURCES})
 
 target_compile_definitions(GUI PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
