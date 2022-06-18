@@ -19,9 +19,10 @@ Window {
 
     // Remove title bar
     flags: Qt.Window | Qt.FramelessWindowHint
+    modality: Qt.ApplicationModal
 
     // Text Edit Properties
-//    property alias actualPage: loaderView.currentItem
+    //    property alias actualPage: loaderView.currentItem
     property bool isValueVisible: true
     property int windowStatus: 0
     property int windowMargin: 10
@@ -109,8 +110,8 @@ Window {
             id: btnClose
             x: 1140
             visible: true
-            anchors.right: parent.right
-            anchors.top: parent.top
+            anchors.right: bg.right
+            anchors.top: bg.top
             anchors.rightMargin: 8
             btnColorClicked: "#55aaff"
             btnColorMouseOver: "#ff007f"
@@ -119,7 +120,7 @@ Window {
             CustomToolTip {
                 text: "Close"
             }
-            onPressed: mainWindow.close()
+            onPressed: Qt.quit()
         }
 
         TopBarButton {
@@ -127,7 +128,7 @@ Window {
             x: 1105
             visible: true
             anchors.right: btnClose.left
-            anchors.top: parent.top
+            anchors.top: bg.top
             anchors.rightMargin: 0
             anchors.topMargin: 8
             btnColorMouseOver: "#40405f"
@@ -144,7 +145,7 @@ Window {
             x: 1070
             visible: true
             anchors.right: btnMaximizeRestore.left
-            anchors.top: parent.top
+            anchors.top: bg.top
             btnRadius: 17
             anchors.rightMargin: 0
             btnColorClicked: "#55aaff"
@@ -165,9 +166,9 @@ Window {
             height: 40
             color: "#33334c"
             radius: 14
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
+            anchors.left: bg.left
+            anchors.right: bg.right
+            anchors.top: bg.top
             anchors.rightMargin: 120
             anchors.leftMargin: 8
             anchors.topMargin: 8
@@ -183,8 +184,8 @@ Window {
                 y: 5
                 width: 30
                 height: 30
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
+                anchors.verticalCenter: titleBar.verticalCenter
+                anchors.left: titleBar.left
                 source: "../assets/svg_images/logo_37x50.svg"
                 sourceSize.height: 30
                 sourceSize.width: 30
@@ -197,7 +198,7 @@ Window {
                 y: 14
                 color: "#ffffff"
                 text: qsTr("Turkish Aerospace - SpaceLoader")
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.verticalCenter: titleBar.verticalCenter
                 anchors.left: iconTopLogo.right
                 font.pointSize: 12
                 font.family: "Segoe UI"
@@ -209,9 +210,9 @@ Window {
             id: flickable
             height: 106
             contentWidth: gridLayoutBottom.width
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
+            anchors.left: bg.left
+            anchors.right: bg.right
+            anchors.bottom: bg.bottom
             anchors.rightMargin: 15
             anchors.leftMargin: 15
             anchors.bottomMargin: 4
@@ -234,13 +235,13 @@ Window {
                 }
 
                 // TODO re-enable after presentation
-//                CustomAppButton {
-//                    text: "Image"
-//                    setIcon: "../assets/images/binary.png"
-//                    font.pointSize: 9
-//                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-//                    onClicked: loaderView.source = "pages/image.qml"
-//                }
+                //                CustomAppButton {
+                //                    text: "Image"
+                //                    setIcon: "../assets/images/binary.png"
+                //                    font.pointSize: 9
+                //                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                //                    onClicked: loaderView.source = "pages/image.qml"
+                //                }
 
                 CustomAppButton {
                     text: "File Transfer"
@@ -259,13 +260,13 @@ Window {
                 }
 
                 //TODO add later
-//                CustomAppButton {
-//                    text: "Listeners"
-//                    setIcon: "../assets/images/connect.png"
-//                    font.pointSize: 9
-//                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-//                    onClicked: loaderView.source = "pages/listeners.qml")
-//                }
+                //                CustomAppButton {
+                //                    text: "Listeners"
+                //                    setIcon: "../assets/images/connect.png"
+                //                    font.pointSize: 9
+                //                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                //                    onClicked: loaderView.source = "pages/listeners.qml")
+                //                }
 
                 CustomAppButton {
                     text: "Users"
@@ -294,7 +295,7 @@ Window {
         Column {
             id: columnCircularButtons
             width: 50
-            anchors.left: parent.left
+            anchors.left: bg.left
             anchors.top: titleBar.bottom
             anchors.bottom: flickable.top
             spacing: 5
@@ -313,7 +314,7 @@ Window {
                 btnIconSource: "../assets/svg_images/home_icon.svg"
                 onClicked: {
                     loaderView.source = Qt.resolvedUrl("pages/homePage.qml")
-//                    actualPage.showValue = isValueVisible
+                    //                    actualPage.showValue = isValueVisible
                 }
             }
 
@@ -325,10 +326,10 @@ Window {
                 CustomToolTip {
                     text: "Listen To"
                 }
-//                btnIconSource: "../assets/svg_images/conenct.svg" // FIXME
+                //                btnIconSource: "../assets/svg_images/conenct.svg" // FIXME
                 onClicked: {
                     loaderView.source = Qt.resolvedUrl("pages/listen.qml")
-//                    actualPage.showValue = isValueVisible
+                    //                    actualPage.showValue = isValueVisible
                 }
             }
 
@@ -380,10 +381,10 @@ Window {
 
             Column {
                 id: columnMenus
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                anchors.left: leftMenu.left
+                anchors.right: leftMenu.right
+                anchors.top: leftMenu.top
+                anchors.bottom: leftMenu.bottom
                 LeftButton {
                     text: "Help"
                     onClicked: loaderView.source = "pages/404.qml"
@@ -408,12 +409,12 @@ Window {
                 width: 220
                 height: 30
                 text: "Disconnect"
-                anchors.bottom: parent.bottom
+                anchors.bottom: leftMenu.bottom
                 colorPressed: "#55aaff"
                 colorMouseOver: "#40405f"
                 colorDefault: "#33334c"
                 anchors.bottomMargin: 0
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.horizontalCenter: leftMenu.horizontalCenter
             }
         }
 
@@ -421,7 +422,7 @@ Window {
             id: contentPages
             color: "#00000000"
             anchors.left: leftMenu.right
-            anchors.right: parent.right
+            anchors.right: bg.right
             anchors.top: titleBar.bottom
             anchors.bottom: flickable.top
             anchors.rightMargin: 15
@@ -455,9 +456,9 @@ Window {
     MouseArea {
         id: resizeLeft
         width: 12
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
+        anchors.left: mainWindow.left
+        anchors.top: mainWindow.top
+        anchors.bottom: mainWindow.bottom
         anchors.bottomMargin: 15
         anchors.leftMargin: 0
         anchors.topMargin: 10
@@ -471,9 +472,9 @@ Window {
     MouseArea {
         id: resizeRight
         width: 12
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
+        anchors.right: mainWindow.right
+        anchors.top: mainWindow.top
+        anchors.bottom: mainWindow.bottom
         anchors.rightMargin: 0
         anchors.bottomMargin: 25
         anchors.leftMargin: 6
@@ -488,9 +489,9 @@ Window {
     MouseArea {
         id: resizeBottom
         height: 12
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.left: mainWindow.left
+        anchors.right: mainWindow.right
+        anchors.bottom: mainWindow.bottom
         cursorShape: Qt.SizeVerCursor
         anchors.rightMargin: 25
         anchors.leftMargin: 15
@@ -507,8 +508,8 @@ Window {
         y: 697
         width: 25
         height: 25
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.right: mainWindow.right
+        anchors.bottom: mainWindow.bottom
         anchors.bottomMargin: 0
         anchors.rightMargin: 0
         cursorShape: Qt.SizeFDiagCursor

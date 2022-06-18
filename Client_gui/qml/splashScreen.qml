@@ -33,11 +33,10 @@ Window {
         running: false;
         repeat: false
         onTriggered: {
+            splashScreen.close()
             var component = Qt.createComponent("main.qml");
             var win = component.createObject(splashScreen)
             win.show()
-            visible = false
-            splashScreen.timeout()
         }
     }
 
