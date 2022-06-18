@@ -24,7 +24,7 @@ void Backend::onReceived(QByteArray message) {
 void Backend::onDisconnected() { Log().Error("Disconnected From Server!"); }
 
 void Backend::getTerminalData(QString text) {
-    sendCommand(text.mid(text.lastIndexOf(">") + 2, text.size()).toLocal8Bit());
+    sendCommand(text.mid(text.lastIndexOf("\n> ") + 3, text.size()).toLocal8Bit());
 }
 
 void Backend::start() {
