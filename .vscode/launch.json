@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "tests",
+            "name": "TESTS",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/tests/tests.exe",
@@ -35,15 +35,15 @@
             "showDisplayString": true,
         },
         {
-            "name": "Server",
+            "name": "SERVER",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Server/SERVER.exe",
+            "program": "${workspaceFolder}/bin/SERVER.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/",
+            "cwd": "${workspaceFolder}/bin/",
             "windows": {
-                "program": "${workspaceFolder}/build/Server/SERVER.exe",
+                "program": "${workspaceFolder}/bin/SERVER.exe",
                 "environment": [
                     {
                         "name": "PATH",
@@ -53,7 +53,7 @@
                 "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
             },
             "linux": {
-                "program": "${workspaceFolder}/build/Server/SERVER",
+                "program": "${workspaceFolder}/bin/SERVER",
             },
             "externalConsole": false,
             "MIMode": "gdb",
@@ -68,15 +68,15 @@
             "showDisplayString": true,
         },
         {
-            "name": "Client_console",
+            "name": "CONSOLE",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Client_console/CONSOLE.exe",
+            "program": "${workspaceFolder}/bin/CONSOLE.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/",
+            "cwd": "${workspaceFolder}/bin/",
             "windows": {
-                "program": "${workspaceFolder}/build/Client_console/CONSOLE.exe",
+                "program": "${workspaceFolder}/bin/CONSOLE.exe",
                 "environment": [
                     {
                         "name": "PATH",
@@ -86,7 +86,7 @@
                 "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
             },
             "linux": {
-                "program": "${workspaceFolder}/build/Client_console/CONSOLE",
+                "program": "${workspaceFolder}/bin/CONSOLE",
             },
             "externalConsole": false,
             "MIMode": "gdb",
@@ -101,15 +101,15 @@
             "showDisplayString": true,
         },
         {
-            "name": "Client_gui",
+            "name": "GUI",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Client_gui/GUI.exe",
+            "program": "${workspaceFolder}/bin/GUI.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/",
+            "cwd": "${workspaceFolder}/bin/",
             "windows": {
-                "program": "${workspaceFolder}/build/Client_gui/GUI.exe",
+                "program": "${workspaceFolder}/bin/GUI.exe",
                 "environment": [
                     {
                         "name": "PATH",
@@ -119,7 +119,7 @@
                 "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
             },
             "linux": {
-                "program": "${workspaceFolder}/build/Client_gui/GUI",
+                "program": "${workspaceFolder}/bin/GUI",
             },
             "externalConsole": false,
             "MIMode": "gdb",
