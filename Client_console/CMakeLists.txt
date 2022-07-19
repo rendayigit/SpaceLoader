@@ -11,6 +11,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin/)
+
 find_package(QT NAMES Qt5 COMPONENTS Core Quick REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED) # if error run: sudo apt-get install libgl1-mesa-dev
 
@@ -25,12 +27,6 @@ set(PROJECT_SOURCES
         )
 
 add_executable(CONSOLE ${PROJECT_SOURCES})
-
-add_custom_command(
-        TARGET CONSOLE POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_SOURCE_DIR}/Setup/
-            ${CMAKE_CURRENT_BINARY_DIR}/Setup/)
 
 target_include_directories(CONSOLE PRIVATE
         "../lib/TCP/client/"

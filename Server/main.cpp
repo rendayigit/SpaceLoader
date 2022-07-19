@@ -3,10 +3,10 @@
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
-    Server::getInstance()->populateCmdLists();
+    Server::getInstance().populateCmdLists();
 
     qint32 serverPort = 1234;
-    Server::getInstance()->startServer(serverPort);
+    Server::getInstance().startServer(serverPort);
 
     return a.exec();
 }

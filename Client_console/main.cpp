@@ -11,15 +11,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    /* If the dev is debugging the app and forgot
-     * to pass the IP as an argument this passes
-     * localhost as the IP
-     */
-#ifdef QT_DEBUG
+    /* If user forgets to pass the IP as an argument we use local IP */
     if (commandArguments.isEmpty()) {
         commandArguments.append("127.0.0.1");
     }
-#endif
 
     if (commandArguments.isEmpty()) {
         std::cout << "Enter Server IP: ";
@@ -29,11 +24,9 @@ int main(int argc, char *argv[]) {
     }
 
     /* Connect to server */
-    Client::getInstance()->start(commandArguments);
+    Client::getInstance().start(commandArguments);
 
-    auto ret = a.exec();
+    Client::getInstance().stopAllListeners();
 
-    Client::getInstance()->stopAllListeners();
-
-    return ret;
+    return a.exec();
 }

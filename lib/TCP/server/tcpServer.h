@@ -10,6 +10,9 @@
 #include <QtNetwork/QTcpServer>
 #include <QtNetwork/QTcpSocket>
 
+/**
+ * A class for TCP Server operations.
+ */
 class TCPServer : public QObject {
     Q_OBJECT
    public:
@@ -54,8 +57,26 @@ class TCPServer : public QObject {
     static void transmit(QTcpSocket *client, QByteArray message);
 
    public slots:
+
+    /**
+     * A callback function that is called when a new connection is established.
+     *
+     * @returns None
+     */
     void onNewConnection();
+
+    /**
+     * A callback function that is invoked when the input tensor is disconnected.
+     *
+     * @returns None
+     */
     void onDisconnected();
+
+    /**
+     * Forwards received data from the serial port to onReceived().
+     *
+     * @returns None
+     */
     void onReadyRead();
 
    private:

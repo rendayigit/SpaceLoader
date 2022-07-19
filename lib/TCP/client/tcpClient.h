@@ -8,6 +8,9 @@
 #include <QtCore/QThread>
 #include <QtNetwork/QTcpSocket>
 
+/**
+ * A class for TCP Client operations.
+ */
 class TCPClient : public QObject {
     Q_OBJECT
    protected:
@@ -26,7 +29,7 @@ class TCPClient : public QObject {
 
     /**
      * @brief onDisconnected - This virtual function is automatically called
-     * when the client is disconnected from the server. Please note that 
+     * when the client is disconnected from the server. Please note that
      * sometimes the client may need to attemp to contact the server to realize
      * the connection has dropped.
      */
@@ -54,10 +57,30 @@ class TCPClient : public QObject {
      */
     void sendCommand(QByteArray data);
 
+    /**
+     * Waits for data to be available on the input queue.
+     *
+     * @param timeout The number of milliseconds before timeout.
+     *
+     * @returns None
+     */
     void waitForData(qint32 timeout = 1000);
 
    private slots:
+    /**
+     * Forwards received data from the serial port to onReceived().
+     *
+     * @returns None
+     */
     void onReadyRead();
+
+    /**
+     * Disconnects from the server in any case of a server connection error.
+     *
+     * @param socketError The error code for the socket.
+     *
+     * @returns None
+     */
     void onError(QAbstractSocket::SocketError socketError);
 
    private:

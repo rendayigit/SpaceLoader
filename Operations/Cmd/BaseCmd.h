@@ -37,7 +37,33 @@ class BaseCmd {
     void setIsAuthRequired(const bool isAuthRequired) { authRequired = isAuthRequired; }
 
     QString getAuthorizedUser() const { return authorizedUser; }
-    void setAuthorizedUser(const QString &authorizedUser_) { authorizedUser = authorizedUser_; }
+
+    QString authorizeUser(const QString &authorizedUser_) {
+        if (authorizedUser.isEmpty()) {
+            authorizedUser = authorizedUser_;
+            return "You are now authorized for " + CmdCallString;
+        }
+
+        if (authorizedUser == authorizedUser_) {
+            return "You are already authorized for " + CmdCallString;
+        }
+        
+        return "Unable to acquire authorization";
+    }
+
+    QString forceAuthorizeUser(const QString &authorizedUser_) {
+        authorizedUser = authorizedUser_;
+        return "You are now authorized for " + CmdCallString;
+    }
+
+    QString clearAuthorizedUser() {
+        authorizedUser.clear();
+        return "Cleared authorization for " + CmdCallString;
+    }
+
+    bool isAuthenticated(QString userName) {
+        return not authRequired or authorizedUser == userName;
+    }
 
    private:
     QString CmdCallString;

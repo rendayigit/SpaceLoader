@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.15)
 
 project(tests LANGUAGES CXX)
 
-enable_testing()
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOUIC ON)
@@ -27,6 +25,8 @@ add_executable(tests
         TCP/testClient.cpp
         TCP/testServer.cpp
         TCP/test_tcp.cpp
+        Commands/test_commands.cpp
+        ../Commands/hello/hello.cpp
 )   
 
 target_compile_definitions(tests PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
@@ -39,8 +39,6 @@ target_link_libraries(tests PRIVATE
         yaml-cpp
         -lpthread 
         -lm
-        stdc++fs # required for std::filesystem
         )
 
-include(GoogleTest)
-# gtest_discover_tests(tests)
+gtest_discover_tests(tests)

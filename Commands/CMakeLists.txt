@@ -1,2 +1,1 @@
-add_subdirectory(Server/getUserList)
-add_subdirectory(Server/addUser)
+add_subdirectory(hello)
