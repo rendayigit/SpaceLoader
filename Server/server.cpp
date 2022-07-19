@@ -152,9 +152,9 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
 
         fileTransfer(sender, localFileAndPath, serverPath);
     } else if (Cmp(message, "plugin")) {
-        QPluginLoader loader(Path::getInstance().getBinDir() + "cmds/lib" +
+        QPluginLoader loader(Path::getInstance().getExecutablePath() + "cmds/lib" +
                              GetParam(message).mid(0, GetParam(message).indexOf(" ")) + ".dll");
-        std::cout << (Path::getInstance().getBinDir() + "cmds/lib" +
+        std::cout << (Path::getInstance().getExecutablePath() + "cmds/lib" +
                       GetParam(message).mid(0, GetParam(message).indexOf(" ")) + ".dll")
                          .toStdString()
                   << std::endl;

@@ -1,6 +1,0 @@
-Paths:
-  bin_Dir: bin/
-  cmd_lib_Dir: bin/cmds/
-  server_cmds_Yaml: Setup/ServerCmds.yaml
-  client_cmds_Yaml: Setup/ClientCmds.yaml
-  config_Yaml: Setup/Config.yaml

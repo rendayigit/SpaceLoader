@@ -2,7 +2,6 @@
 #define PATH_H
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
 #include <QtCore/QString>
 
 #include "lib/YAML/yaml.h"
@@ -25,35 +24,32 @@ class Path {
     QString getExecutablePath() const {
         QString bin =
             QString::fromStdWString(QCoreApplication::applicationFilePath().toStdWString());
-        return bin.mid(0, bin.lastIndexOf(QChar('/')));
+        return bin.mid(0, bin.lastIndexOf(QChar('/')) + 1);
     }
 
-    QString getProjectRoot() const { return getExecutablePath() + "/../../"; }
+    QString getProjectRoot() const { return getExecutablePath() + "../"; }
 
-    QString getPathsYaml() const { return getProjectRoot() + "Setup/Paths.yaml"; }
+    QString getSetupDir() const { return getExecutablePath() + "Setup/"; }
 
-    QString getBinDir() const {
-        return getProjectRoot() +
-               QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "bin_Dir"));
-    }
+    QString getPathsYaml() const { return getSetupDir() + "Paths.yaml"; }
 
     QString getCmdsDir() const {
-        return getProjectRoot() +
+        return getSetupDir() +
                QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "cmd_lib_Dir"));
     }
 
     QString getServerCmdsYaml() const {
-        return getProjectRoot() + QString::fromStdString(Yaml::getValue(
-                                      getPathsYaml().toStdString(), "server_cmds_Yaml"));
+        return getSetupDir() + QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(),
+                                                                     "server_cmds_Yaml"));
     }
 
     QString getClientCmdsYaml() const {
-        return getProjectRoot() + QString::fromStdString(Yaml::getValue(
-                                      getPathsYaml().toStdString(), "client_cmds_Yaml"));
+        return getSetupDir() + QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(),
+                                                                     "client_cmds_Yaml"));
     }
 
     QString getConfigYaml() const {
-        return getProjectRoot() +
+        return getSetupDir() +
                QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "config_Yaml"));
     }
 

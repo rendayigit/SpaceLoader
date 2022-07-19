@@ -106,10 +106,10 @@
             "label": "run",
             "type": "shell",
             "linux": {
-                "command": "./build/${input:PickExecutableToRun}"
+                "command": "./bin/${input:PickExecutableToRun}"
             },
             "windows": {
-                "command": "./build/${input:PickExecutableToRun}.exe"
+                "command": "./bin/${input:PickExecutableToRun}.exe"
             },
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -133,12 +133,11 @@
             "id": "PickExecutableToRun",
             "description": "Select executable:",
             "options": [
-                "tests/tests",
-                "Server/SERVER",
-                "Client_console/CONSOLE",
-                "Client_gui/GUI"
+                "SERVER",
+                "CONSOLE",
+                "GUI"
             ],
-            "default": "tests/tests"
+            "default": "SERVER"
         },
         {
             "type": "promptString",

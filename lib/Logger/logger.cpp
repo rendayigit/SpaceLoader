@@ -16,7 +16,7 @@ void exit() { Log().Flush(); }
 
 Logger::Logger()
     : isLoggingEnabled(true),
-      logDir(Path::getInstance().getExecutablePath() + QDir::separator() + "Logs" +
+      logDir(Path::getInstance().getExecutablePath() + "Logs" +
              QDir::separator()),
       logFileName(""),
       flushRate(100000),

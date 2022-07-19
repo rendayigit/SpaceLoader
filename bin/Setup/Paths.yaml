@@ -1,0 +1,5 @@
+Paths:
+  cmd_lib_Dir: ./cmds/
+  server_cmds_Yaml: ./ServerCmds.yaml
+  client_cmds_Yaml: ./ClientCmds.yaml
+  config_Yaml: ./Config.yaml
