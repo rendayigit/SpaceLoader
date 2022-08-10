@@ -7,6 +7,7 @@
         <file>qml/components/CircularProgressBar.qml</file>
         <file>qml/components/CustomAppButton.qml</file>
         <file>qml/components/CustomButton.qml</file>
+        <file>qml/components/CustomToggleButton.qml</file>
         <file>qml/components/CustomCircularButton.qml</file>
         <file>qml/components/CustomTextField.qml</file>
         <file>qml/components/CustomToolTip.qml</file>
@@ -38,6 +39,7 @@
         <file>assets/sfx/server_connection_lost.mp3</file>
         <file>qml/pages/image.qml</file>
         <file>qml/pages/logs.qml</file>
+        <file>qml/pages/egse.qml</file>
         <file>assets/images/upload.png</file>
         <file>assets/images/binary.png</file>
         <file>assets/images/logs.png</file>
