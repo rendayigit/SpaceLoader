@@ -24,7 +24,7 @@ void Backend::onReceived(QByteArray message) {
 void Backend::onDisconnected() { Log().Error("Disconnected From Server!"); }
 
 void Backend::getTerminalData(QString text) {
-    sendCommand(text.mid(text.lastIndexOf("\n> ") + 3, text.size()).toLocal8Bit());
+    transmit(text.mid(text.lastIndexOf("\n> ") + 3, text.size()).toLocal8Bit());
 }
 
 void Backend::start() {
@@ -34,14 +34,14 @@ void Backend::start() {
 
     /* Transmit username */
     QByteArray username = getenv("USERNAME");
-    sendCommand("addUser " + username);
+    transmit("addUser " + username);
 }
 
-void Backend::selectLogFile(QString fileName) { sendCommand("readLog " + fileName.toLocal8Bit()); }
+void Backend::selectLogFile(QString fileName) { transmit("readLog " + fileName.toLocal8Bit()); }
 
-void Backend::listLogs() { sendCommand("listLogs"); }
+void Backend::listLogs() { transmit("listLogs"); }
 
-void Backend::getUserList() { sendCommand("getUserList"); }
+void Backend::getUserList() { transmit("getUserList"); }
 
 void Backend::fileTransfer(QString localFile, QString serverPath) {
     // localFile = localFile.replace('"', "");
@@ -52,7 +52,7 @@ void Backend::fileTransfer(QString localFile, QString serverPath) {
     qDebug() << "1:" << localFile;
     qDebug() << "2:" << serverPath;
 
-    sendCommand("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
+    transmit("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
 
     QThread::msleep(10);
 
@@ -70,10 +70,10 @@ void Backend::fileTransfer(QString localFile, QString serverPath) {
     int iteration = 0;
     while (!fileData.isNull()) {
         if (fileData.size() >= FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE) {
-            sendCommand(fileData.mid(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE));
+            transmit(fileData.mid(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE));
             fileData.remove(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE);
         } else {
-            sendCommand(fileData.mid(0, fileData.size()));
+            transmit(fileData.mid(0, fileData.size()));
             fileData.clear();
         }
         iteration++;
@@ -82,7 +82,7 @@ void Backend::fileTransfer(QString localFile, QString serverPath) {
             std::cout << ".";
         }
     }
-    sendCommand("#END");
+    transmit("#END");
 
     if (iteration >= 10) {
         std::cout << " Transfer Complete" << std::endl;

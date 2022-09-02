@@ -24,7 +24,7 @@ void Client::parse(QByteArray message) {
     if (not parseMessage(nullptr, message)) {
         // If the command cannot be found in the client cmds xml then it must be a
         // command for the server
-        sendCommand(message);
+        transmit(message);
     }
 }
 
@@ -52,7 +52,7 @@ void Client::start(QList<QString> commandArguments) {
     /* Transmit username */
     QByteArray username = getenv("USERNAME");
     QHostAddress ip(getSocket()->localAddress().toIPv4Address());
-    sendCommand("addUser " + username);
+    transmit("addUser " + username);
     QThread::usleep(250);
     getSocket()->flush();
     QThread::usleep(250);
@@ -149,7 +149,7 @@ void Client::stopAllListeners() {
 }
 
 void Client::fileTransfer(QString localFile, QString serverPath) {
-    sendCommand("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
+    transmit("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
     QThread::msleep(10);
 
     QFile file(localFile);
@@ -166,10 +166,10 @@ void Client::fileTransfer(QString localFile, QString serverPath) {
     int iteration = 0;
     while (!fileData.isNull()) {
         if (fileData.size() >= FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE) {
-            sendCommand(fileData.mid(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE));
+            transmit(fileData.mid(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE));
             fileData.remove(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE);
         } else {
-            sendCommand(fileData.mid(0, fileData.size()));
+            transmit(fileData.mid(0, fileData.size()));
             fileData.clear();
         }
         iteration++;
@@ -178,7 +178,7 @@ void Client::fileTransfer(QString localFile, QString serverPath) {
             std::cout << ".";
         }
     }
-    sendCommand("#END");
+    transmit("#END");
 
     if (iteration >= 10) {
         std::cout << " Transfer Complete" << std::endl;
@@ -191,7 +191,7 @@ void Client::fileTransfer(QString localFile, QString serverPath) {
 void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray message) {
     if (Cmp(message, "help")) {
         std::cout << (" - Client Commands - \n" + Operations::help()).toStdString();
-        sendCommand("help");
+        transmit("help");
     } else if (Cmp(message, "exit")) {
         exit(0);
     } else if (Cmp(message, "Listen")) {

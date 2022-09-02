@@ -73,13 +73,15 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
     }
 }
 
-void Server::clientDisconnected(QTcpSocket *clientSocket) {
+void Server::onDisconnected(QTcpSocket *clientSocket) {
     User *user = UserOperations::getInstance().getUser(clientSocket);
 
     clearUserAuths(clientSocket);
 
     UserOperations::getInstance().removeUser(clientSocket);
 }
+
+void Server::onConnected(QTcpSocket *clientSocket) {}
 
 void Server::fileTransfer(QTcpSocket *sender, QString localFile, QString serverPath) {
     fileTransfererSocket = sender;

@@ -27,7 +27,8 @@ class Server : public TCPServer, public Operations {
     }
 
     void onReceived(QTcpSocket *sender, QByteArray message);
-    void clientDisconnected(QTcpSocket *clientSocket);
+    void onDisconnected(QTcpSocket *clientSocket);
+    void onConnected(QTcpSocket *clientSocket);
     BaseCmd *getCmd(QString cmdName);
     bool isAuthorized(QTcpSocket *sender, QString cmdName);
 

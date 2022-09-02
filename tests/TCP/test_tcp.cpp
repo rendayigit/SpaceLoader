@@ -48,7 +48,7 @@ TEST(tcp_test, startClients) {
 TEST(tcp_test, transmitFromClient) {
     GTEST_SKIP_("Skip TCP Tests");
     while (allClientsInitiated != true) QThread::msleep(10);
-    client2->sendCommand(testString1.toLocal8Bit());
+    client2->transmit(testString1.toLocal8Bit());
 }
 
 TEST(tcp_test, ReceiveFromServer) {

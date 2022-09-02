@@ -10,15 +10,13 @@ bool TCPClient::attemptConnection(QString serverIP, qint32 serverPort) {
         connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
         connect(socket, SIGNAL(error(QAbstractSocket::SocketError)), this,
                 SLOT(onError(QAbstractSocket::SocketError)));
-        //        socket->waitForReadyRead(500);
         return true;
-    } else {
-        qInfo() << socket->errorString();
-        return false;
     }
+    qInfo() << socket->errorString();
+    return false;
 }
 
-void TCPClient::sendCommand(QByteArray data) {
+void TCPClient::transmit(QByteArray data) {
     if (socket->state() == QAbstractSocket::ConnectedState) {
         socket->write(data);
         socket->waitForBytesWritten();

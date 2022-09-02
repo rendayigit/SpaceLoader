@@ -9,7 +9,8 @@ class TestServer : public TCPServer {
 public:
     TestServer();
     void onReceived(QTcpSocket *sender, QByteArray message);
-    void clientDisconnected(QTcpSocket *clientSocket);
+    void onDisconnected(QTcpSocket *clientSocket);
+    void onConnected(QTcpSocket *clientSocket);
     QString receivedString;
 };
 

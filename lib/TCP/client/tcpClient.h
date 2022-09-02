@@ -52,10 +52,10 @@ class TCPClient : public QObject {
     bool attemptConnection(QString serverIP, qint32 serverPort);
 
     /**
-     * @brief sendCommand - Transmit raw data to connected server.
+     * @brief transmit - Transmit raw data to connected server.
      * @param data - Raw data to transmit
      */
-    void sendCommand(QByteArray data);
+    void transmit(QByteArray data);
 
     /**
      * Waits for data to be available on the input queue.
