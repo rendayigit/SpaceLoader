@@ -33,21 +33,21 @@ class TCPServer : public QObject {
      * @param sender - Sender socket.
      * @param message - message received from the client in raw format.
      */
-    virtual void onReceived(QTcpSocket *sender, QByteArray message) = 0;
+    virtual void onReceived(QTcpSocket *sender, QByteArray message) {}
 
     /**
      * @brief onDisconnected - This virtual function is automatically called
      * when a client is disconnected from the server.
      * @param clientSocket - client socket.
      */
-    virtual void onDisconnected(QTcpSocket *clientSocket) = 0;
+    virtual void onDisconnected(QTcpSocket *clientSocket) {}
 
     /**
      * @brief onConnected - This virtual function is automatically called
      * when a client is connected to the server.
      * @param clientSocket - client socket.
      */
-    virtual void onConnected(QTcpSocket *clientSocket) = 0;
+    virtual void onConnected(QTcpSocket *clientSocket) {}
 
     /**
      * @brief broadcast - Broadcast a message to all connected clients.

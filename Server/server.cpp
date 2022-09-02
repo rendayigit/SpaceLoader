@@ -81,8 +81,6 @@ void Server::onDisconnected(QTcpSocket *clientSocket) {
     UserOperations::getInstance().removeUser(clientSocket);
 }
 
-void Server::onConnected(QTcpSocket *clientSocket) {}
-
 void Server::fileTransfer(QTcpSocket *sender, QString localFile, QString serverPath) {
     fileTransfererSocket = sender;
     isFileTransferInProgress = true;

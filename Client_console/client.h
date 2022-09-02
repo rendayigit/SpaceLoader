@@ -19,8 +19,8 @@ class Client : public TCPClient, public Operations {
         return instance;
     }
 
-    void onReceived(QByteArray message);
-    void onDisconnected();
+    void onReceived(QByteArray message) override;
+    void onDisconnected() override;
     void start(QList<QString> commandArguments);
     void stopAllListeners();
 

@@ -26,9 +26,8 @@ class Server : public TCPServer, public Operations {
         return instance;
     }
 
-    void onReceived(QTcpSocket *sender, QByteArray message);
-    void onDisconnected(QTcpSocket *clientSocket);
-    void onConnected(QTcpSocket *clientSocket);
+    void onReceived(QTcpSocket *sender, QByteArray message) override;
+    void onDisconnected(QTcpSocket *clientSocket) override;
     BaseCmd *getCmd(QString cmdName);
     bool isAuthorized(QTcpSocket *sender, QString cmdName);
 
@@ -38,7 +37,7 @@ class Server : public TCPServer, public Operations {
     void parseInternalCmd(QTcpSocket *sender, QByteArray message);
     void clearUserAuths(QTcpSocket *sender);
     void connectProcess(QTcpSocket *sender, QProcess *process);
-    
+
     QString transferredFileName;
     QString transferredFileLocation;
     QByteArray transferredFileBuffer;

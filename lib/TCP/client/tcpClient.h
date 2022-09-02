@@ -25,7 +25,7 @@ class TCPClient : public QObject {
      * when data from the server is received.
      * @param message - message received from the server in raw format.
      */
-    virtual void onReceived(QByteArray message) = 0;
+    virtual void onReceived(QByteArray message) {}
 
     /**
      * @brief onDisconnected - This virtual function is automatically called
@@ -33,7 +33,7 @@ class TCPClient : public QObject {
      * sometimes the client may need to attemp to contact the server to realize
      * the connection has dropped.
      */
-    virtual void onDisconnected() = 0;
+    virtual void onDisconnected() {}
 
     /**
      * @brief Get the Socket object of the client.

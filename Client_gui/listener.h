@@ -8,7 +8,6 @@ class Listener : public TCPClient {
    public:
     explicit Listener(Backend* backend) { this->backend = backend; };
     void onReceived(QByteArray message) override;
-    void onDisconnected() override;
     void disconnect();
     void setConnected() { connected = true; }
 
