@@ -192,6 +192,8 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
     if (Cmp(message, "help")) {
         std::cout << (" - Client Commands - \n" + Operations::help()).toStdString();
         sendCommand("help");
+    } else if (Cmp(message, "exit")) {
+        exit(0);
     } else if (Cmp(message, "Listen")) {
         listenTo(message);
     } else if (Cmp(message, "StopListen")) {

@@ -19,6 +19,10 @@ Cmds:
         `help` for full list.
       id: help
       type: internal
+    - CmdCallString: exit
+      Description: Exits program.
+      id: exit
+      type: internal
     - CmdCallString: TransmitImg
       Description: Send provided .elf image file to debug pc.
       DestinationDir: " "
