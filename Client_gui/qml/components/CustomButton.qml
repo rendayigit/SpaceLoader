@@ -9,6 +9,7 @@ Button {
     property color colorDefault: "#4891d9"
     property color colorMouseOver: "#55AAFF"
     property color colorPressed: "#3F7EBD"
+    property color textColor: "#ffffff"
 
     QtObject {
         id: internal
@@ -26,7 +27,7 @@ Button {
             id: name
             text: button.text
             font: button.font
-            color: "#ffffff"
+            color: textColor
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
         }

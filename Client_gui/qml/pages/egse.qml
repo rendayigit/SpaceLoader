@@ -29,6 +29,7 @@ Rectangle {
         height: 90
         opacity: 1
         text: "Remote"
+        
         anchors.top: labelEgse.bottom
         anchors.left: parent.left
         anchors.topMargin: 30
