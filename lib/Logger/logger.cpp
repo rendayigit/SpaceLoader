@@ -12,12 +12,11 @@
 std::mutex fileMutex;
 std::mutex bufferMutex;
 
-void exit() { Log().Flush(); }
+void exit() { /*Log().Flush();*/ }  // TODO - logDir value gone at program exit
 
 Logger::Logger()
     : isLoggingEnabled(true),
-      logDir(Path::getInstance().getExecutablePath() + "Logs" +
-             QDir::separator()),
+      logDir(Path::getInstance().getExecutablePath() + "Logs" + QDir::separator()),
       logFileName(""),
       flushRate(100000),
       buffer({}),
@@ -61,6 +60,7 @@ void Logger::Flush() {
     std::unique_lock<std::mutex> lock(fileMutex);
 
     updateLogFilePath();
+
     QFile file(logDir + logFileName);
 
     if (file.open(QIODevice::WriteOnly | QIODevice::Append) and not buffer.isNull()) {
