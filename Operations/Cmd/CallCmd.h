@@ -1,11 +1,21 @@
 #ifndef CALLCMD_H
 #define CALLCMD_H
 
-#include "BaseCmd.h"
+#include "CallCmd.h"
 
 class CallCmd : public BaseCmd {
    public:
+    CallCmd(const CallCmd &) = delete;
+    CallCmd &operator=(CallCmd const &) = delete;
+    CallCmd(CallCmd &&) = delete;
+    CallCmd &operator=(CallCmd &&) = delete;
     CallCmd() = default;
+    ~CallCmd() = default;
+
+    static auto &getInstance() {
+        static CallCmd instance;
+        return instance;
+    }
 
     QString getScriptDir() const { return ScriptDir; }
     void setScriptDir(const QString &scriptDir) { ScriptDir = scriptDir; }

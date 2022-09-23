@@ -7,6 +7,17 @@ class Backend : public TCPClient {
     Q_OBJECT
 
    public:
+    Backend(const Backend &) = delete;
+    Backend &operator=(Backend const &) = delete;
+    Backend(Backend &&) = delete;
+    Backend &operator=(Backend &&) = delete;
+    ~Backend() = default;
+
+    static auto &getInstance() {
+        static Backend instance;
+        return instance;
+    }
+
     Backend();
     void onReceived(QByteArray message);
     void onDisconnected();

@@ -7,6 +7,17 @@ class FileTransferCmd : public BaseCmd {
    public:
     FileTransferCmd() = default;
 
+    FileTransferCmd(const FileTransferCmd &) = delete;
+    FileTransferCmd &operator=(FileTransferCmd const &) = delete;
+    FileTransferCmd(FileTransferCmd &&) = delete;
+    FileTransferCmd &operator=(FileTransferCmd &&) = delete;
+    ~FileTransferCmd() = default;
+
+    static auto &getInstance() {
+        static FileTransferCmd instance;
+        return instance;
+    }
+
     QString getDestinationDir() const { return DestinationDir; }
     void setDestinationDir(const QString &destinationDir) { DestinationDir = destinationDir; }
 
