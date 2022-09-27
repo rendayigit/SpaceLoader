@@ -15,11 +15,6 @@ class User {
     User &operator=(User &&) = delete;
     User() = default;
 
-    static auto &getInstance() {
-        static User instance;
-        return instance;
-    }
-
     User(QString userName, QTcpSocket *socket)
         : userName(userName), socketInstances(new QList<QTcpSocket *>()) {
         socketInstances->append(socket);

@@ -12,11 +12,6 @@ class CallCmd : public BaseCmd {
     CallCmd() = default;
     ~CallCmd() = default;
 
-    static auto &getInstance() {
-        static CallCmd instance;
-        return instance;
-    }
-
     QString getScriptDir() const { return ScriptDir; }
     void setScriptDir(const QString &scriptDir) { ScriptDir = scriptDir; }
 

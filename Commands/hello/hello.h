@@ -16,12 +16,7 @@ class CmdPlugin : public QObject, public CmdPluginInterface {
     CmdPlugin &operator=(CmdPlugin const &) = delete;
     CmdPlugin(CmdPlugin &&) = delete;
     CmdPlugin &operator=(CmdPlugin &&) = delete;
-
-    static auto &getInstance() {
-        static CmdPlugin instance;
-        return instance;
-    }
-
+    
     CmdPlugin() { description = "This is a sample plugin"; }
     ~CmdPlugin() override = default;
     void run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) const override;

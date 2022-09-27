@@ -10,11 +10,6 @@ class AuthCmd : public BaseCmd {
     AuthCmd(AuthCmd &&) = delete;
     AuthCmd &operator=(AuthCmd &&) = delete;
     AuthCmd() = default;
-
-    static auto &getInstance() {
-        static AuthCmd instance;
-        return instance;
-    }
 };
 
 #endif  // AUTHCMD_H

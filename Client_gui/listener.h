@@ -6,7 +6,6 @@
 
 class Listener : public TCPClient {
    public:
-    Listener();
     Listener(const Listener &) = delete;
     Listener &operator=(Listener const &) = delete;
     Listener(Listener &&) = delete;
@@ -24,6 +23,7 @@ class Listener : public TCPClient {
     void setConnected() { connected = true; }
 
    private:
+    Listener();
     Backend* backend;
     bool connected = false;
 };

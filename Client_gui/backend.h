@@ -12,13 +12,13 @@ class Backend : public TCPClient {
     Backend(Backend &&) = delete;
     Backend &operator=(Backend &&) = delete;
     ~Backend() = default;
+    Backend();
 
     static auto &getInstance() {
         static Backend instance;
         return instance;
     }
 
-    Backend();
     void onReceived(QByteArray message);
     void onDisconnected();
 

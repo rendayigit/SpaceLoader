@@ -12,11 +12,6 @@ class Logging {
     Logging &operator=(Logging &&) = delete;
     ~Logging() = default;
 
-    static auto &getInstance() {
-        static Logging instance;
-        return instance;
-    }
-
     static QString getLogData(QString fileName);
     static QString getLogFileNames();
 };

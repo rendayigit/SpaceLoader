@@ -14,11 +14,6 @@ class BaseCmd {
     BaseCmd() = default;
     virtual ~BaseCmd() = default;
 
-    static auto &getInstance() {
-        static BaseCmd instance;
-        return instance;
-    }
-
     QString getCmdCallString() const { return CmdCallString; }
     void setCmdCallString(const QString &cmdCallString) { CmdCallString = cmdCallString; }
 

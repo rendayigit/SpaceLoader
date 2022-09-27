@@ -11,10 +11,6 @@ class InternalCmd : public BaseCmd {
     InternalCmd &operator=(InternalCmd &&) = delete;
     ~InternalCmd() = default;
 
-    static auto &getInstance() {
-        static InternalCmd instance;
-        return instance;
-    }
     InternalCmd() = default;
 };
 
