@@ -7,12 +7,13 @@ enum CmdType { null, call, fileTransfer, trigger, internal };
 
 class BaseCmd {
    public:
+    BaseCmd() = default;
+    virtual ~BaseCmd() = default;
+    
     BaseCmd(const BaseCmd &) = delete;
     BaseCmd &operator=(BaseCmd const &) = delete;
     BaseCmd(BaseCmd &&) = delete;
     BaseCmd &operator=(BaseCmd &&) = delete;
-    BaseCmd() = default;
-    virtual ~BaseCmd() = default;
 
     QString getCmdCallString() const { return CmdCallString; }
     void setCmdCallString(const QString &cmdCallString) { CmdCallString = cmdCallString; }
