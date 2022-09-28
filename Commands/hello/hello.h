@@ -12,13 +12,14 @@ class CmdPlugin : public QObject, public CmdPluginInterface {
     Q_INTERFACES(CmdPluginInterface)
 
    public:
+    CmdPlugin() { description = "This is a sample plugin"; }
+    ~CmdPlugin() override = default;
+
     CmdPlugin(const CmdPlugin &) = delete;
     CmdPlugin &operator=(CmdPlugin const &) = delete;
     CmdPlugin(CmdPlugin &&) = delete;
     CmdPlugin &operator=(CmdPlugin &&) = delete;
-    
-    CmdPlugin() { description = "This is a sample plugin"; }
-    ~CmdPlugin() override = default;
+
     void run(QTcpSocket *sender, [[maybe_unused]] QByteArray message) const override;
 };
 #endif  // HELLO_H
