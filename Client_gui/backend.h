@@ -7,12 +7,12 @@ class Backend : public TCPClient {
     Q_OBJECT
 
    public:
+    ~Backend() override = default;
+
     Backend(const Backend &) = delete;
     Backend &operator=(Backend const &) = delete;
     Backend(Backend &&) = delete;
     Backend &operator=(Backend &&) = delete;
-    ~Backend() = default;
-    Backend();
 
     static auto &getInstance() {
         static Backend instance;
@@ -43,6 +43,7 @@ class Backend : public TCPClient {
     void getListenerText(QString text);
 
    private:
+    Backend();
     void parse(QString text);
     QString serverIp = "";
     QString localIp = "";
