@@ -59,5 +59,4 @@ jobs:
         pwd
         ls
         cd bin
-        touch deneme.txt
-        # sed -i 's/0.1.1/0..1.2/g' file.txt
+        echo "Some text here." > VERSION
