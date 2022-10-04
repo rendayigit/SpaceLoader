@@ -56,6 +56,6 @@ jobs:
 
     - name: Increase Version
       run: |
-        cd ${{ github.workspace }}/bin
+        cd ${{ github.workspace }}/bin/
         touch foo.txt
         sed -i 's/0.1.1/0..1.2/g' file.txt
