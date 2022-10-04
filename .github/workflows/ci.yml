@@ -57,6 +57,7 @@ jobs:
     - name: Increase Version
       run: |
         pwd
-        cd bin/
+        ls
+        cd bin
         touch foo.txt
         # sed -i 's/0.1.1/0..1.2/g' file.txt
