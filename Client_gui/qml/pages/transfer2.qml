@@ -1,123 +1,148 @@
-import QtQuick 2.0
-import "../components"
-import QtQuick.Timeline 1.0
+import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import "../QmlTreeWidget"
+import QtQuick.Dialogs 1.3
+import "../components"
 
 // TODO Dont forget to implement this page
 
 Item {
-    Rectangle {
-        anchors.fill: parent
-        radius: 10
-        color: "#27273a"
+    Label {
+        id: localPathLabel
+        color: "#ffffff"
+        text: qsTr("Path to local file: ")
+        font.pointSize: 10
+        font.family: "Segoe UI"
+        font.weight: Font.Normal
 
-        GridLayout {
-            id: gridLayout
-            columns: 3
-            rows: 2
-            anchors.fill: parent
-            anchors.margins: 30
-            columnSpacing: 10
-            rowSpacing: 50
-            Column {
-                Row {
-                    Label {
-                        id: userPc
-                        color: "#ffffff"
-                        text: qsTr("User PC")
-                        font.family: "Segoe UI"
-                        font.pointSize: 11
-                    }
-                }
+        anchors.top: parent.top
+        anchors.left: parent.left
 
-                Row {
-                    TreeWidget {
-                        id: tree
-                        //                        anchors.fill: parent
+        anchors.topMargin: 25
+        anchors.leftMargin: 20
+    }
 
-                        Component.onCompleted: {
-                            iconSize = (Qt.size(12, 12));
-                            font.family = "Monaco";
-                            font.pointSize = 16;
+    DropArea {
+        id: dropArea
+        height: 40
 
-                            var C = tree.createItem("C");
-                            var D = tree.createItem("D");
+        anchors.top: parent.top
+        anchors.left: localPathLabel.right
+        anchors.right: browseLocal.left
 
-                            C.appendChild(tree.createItem("Program Files"));
-                            C.appendChild(tree.createItem("Program Files (x86)"));
-                            C.appendChild(tree.createItem("Users"));
-                            C.appendChild(tree.createItem("Windows"));
-                            tree.addTopLevelItem(C);
-                            tree.addTopLevelItem(D);
-                        }
-                    }
+        anchors.topMargin: 20
+        anchors.leftMargin: 10
+        anchors.rightMargin: 20
 
-                    //                    Button{
-                    //                        id: buttonRename
-                    //                        text: "Rename"
-
-                    //                        anchors.left: parent.left;
-                    //                        anchors.bottom: parent.bottom;
-
-                    //                        onClicked: {
-                    //                            var curItem = tree.getCurrentItem();
-                    //                            if(curItem){
-                    //                                curItem.setText("New Name");
-                    //                            }
-                    //                        }
-                }
-            }
-            Column {
-                Row {
-                    Label {
-                        id: serverPc
-                        color: "#ffffff"
-                        text: qsTr("Server PC")
-                        font.family: "Segoe UI"
-                        font.pointSize: 11
-                    }
-                }
-
-                Row {
-                    TreeWidget {
-                        id: tree2
-                        //                        anchors.fill: parent
-
-                        Component.onCompleted: {
-                            iconSize = (Qt.size(12, 12));
-                            font.family = "Monaco";
-                            font.pointSize = 16;
-
-                            var C = tree.createItem("C");
-                            var D = tree.createItem("D");
-
-                            C.appendChild(tree.createItem("Program Files"));
-                            C.appendChild(tree.createItem("Program Files (x86)"));
-                            C.appendChild(tree.createItem("Users"));
-                            C.appendChild(tree.createItem("Windows"));
-                            tree.addTopLevelItem(C);
-                            tree.addTopLevelItem(D);
-                        }
-                    }
-
-                    //                    Button{
-                    //                        id: buttonRename
-                    //                        text: "Rename"
-
-                    //                        anchors.left: parent.left;
-                    //                        anchors.bottom: parent.bottom;
-
-                    //                        onClicked: {
-                    //                            var curItem = tree.getCurrentItem();
-                    //                            if(curItem){
-                    //                                curItem.setText("New Name");
-                    //                            }
-                    //                        }
-                }
-            }
+        onDropped: (drop) => {
+            localPath.text = drop.text.split("file:///").join("")
         }
+    }
+
+    CustomTextField {
+        id: localPath
+        height: 40
+
+        anchors.top: parent.top
+        anchors.left: localPathLabel.right
+        anchors.right: browseLocal.left
+
+        anchors.topMargin: 20
+        anchors.leftMargin: 10
+        anchors.rightMargin: 20
+
+        placeholderText: ""
+        onEditingFinished: if(serverPath.text.length > 0 && localPath.text.length > 0) {
+                            upload.enabled = true
+                        } else {
+                            upload.enabled = false
+                        }
+
+        font.pointSize: 12
+    }
+    
+    
+    CustomButton {
+        id: browseLocal
+        anchors.top: parent.top
+        anchors.right: parent.right
+
+        anchors.topMargin: 20
+        anchors.rightMargin: 20
+
+        text: "Browse"
+        width: 100
+        height: 40
+
+        onClicked: fileDialog.visible = true
+    }
+     Label {
+        id: serverPathLabel
+        color: "#ffffff"
+        text: qsTr("Path to copy file: ")
+        font.pointSize: 10
+        font.family: "Segoe UI"
+        font.weight: Font.Normal
+
+        anchors.top: localPathLabel.bottom
+        anchors.left: parent.left
+
+        anchors.topMargin: 40
+        anchors.leftMargin: 20
+    }
+
+    CustomTextField {
+        id: serverPath
+        height: 40
+
+        anchors.top: localPath.bottom
+        anchors.left: serverPathLabel.right
+        anchors.right: upload.left
+
+        anchors.topMargin: 20
+        anchors.leftMargin: 10
+        anchors.rightMargin: 20
+
+        text: "D:/"
+        onEditingFinished: if(serverPath.text.length > 0 && localPath.text.length > 0) {
+                               upload.enabled = true
+                           } else {
+                               upload.enabled = false
+                           }
+
+        font.pointSize: 12
+    }
+
+    CustomButton {
+        id: upload
+        anchors.top: browseLocal.bottom
+        anchors.right: parent.right
+
+        anchors.topMargin: 20
+        anchors.rightMargin: 20
+
+        text: "Upload"
+        width: 100
+        height: 40
+
+        colorDefault: "#4632a8"
+        colorMouseOver: "#5643b5"
+        colorPressed: "#7963e6"
+
+        enabled: false
+
+        onClicked: if(serverPath.text.length > 0 && localPath.text.length > 0) {
+                       backend.fileTransfer(localPath.text, serverPath.text)
+                   } else {
+                       print("error")
+                   }
+    }
+
+    FileDialog {
+        id: fileDialog
+        title: "Please choose a file"
+        folder: shortcuts.home
+        onAccepted: localPath.text = fileDialog.fileUrl
+        visible: false
     }
 }
 
