@@ -23,11 +23,43 @@ Rectangle {
         font.family: "Segoe UI"
     }
 
+    CustomTextField {
+        id: textDeviceIp
+        
+        anchors.left: parent.left
+        anchors.top: labelEgse.bottom
+        anchors.leftMargin: 30
+        anchors.topMargin: 10
+        
+        height: 40
+        width: 170
+        
+        font.pointSize: 12
+        placeholderText: "Device IP"
+        text: "192.168.1.250"
+    }
+
+    CustomTextField {
+        id: textDeviceTcPort
+        
+        anchors.left: textDeviceIp.right
+        anchors.top: labelEgse.bottom
+        anchors.leftMargin: 10
+        anchors.topMargin: 10
+        
+        height: 40
+        width: 80
+        
+        font.pointSize: 12
+        placeholderText: "TC Port"
+        text: "5004"
+    }
+
     Label {
         id: labelStatus
-        anchors.top: labelEgse.bottom
+        anchors.top: textDeviceIp.bottom
         anchors.left: parent.left
-        anchors.topMargin: 60
+        anchors.topMargin: 40
         anchors.leftMargin: 30
 
         color: "#ffffff"
@@ -74,7 +106,7 @@ Rectangle {
         id: labelConfigurationSetup
         anchors.top: buttonLocal.bottom
         anchors.left: parent.left
-        anchors.topMargin: 60
+        anchors.topMargin: 30
         anchors.leftMargin: 30
 
         color: "#ffffff"
