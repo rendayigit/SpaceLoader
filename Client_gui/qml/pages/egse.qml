@@ -82,6 +82,8 @@ Rectangle {
         colorPressed: "#55aaff"
         colorMouseOver: "#50555f"
         colorDefault: "#40405f"
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -100,6 +102,8 @@ Rectangle {
         colorDefault: "#40405f"
 
         isOn: false
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     Label {
@@ -129,6 +133,8 @@ Rectangle {
         colorPressed: "#55aaff"
         colorMouseOver: "#50555f"
         colorDefault: "#40405f"
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -147,6 +153,8 @@ Rectangle {
         colorDefault: "#40405f"
 
         isOn: false
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     Rectangle {
@@ -178,6 +186,8 @@ Rectangle {
         colorDefault: "#40405f"
 
         isOn: false
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -194,6 +204,8 @@ Rectangle {
         colorPressed: "#55aaff"
         colorMouseOver: "#50555f"
         colorDefault: "#40405f"
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -212,6 +224,8 @@ Rectangle {
         colorDefault: "#40405f"
 
         isOn: false
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -228,6 +242,8 @@ Rectangle {
         colorPressed: "#55aaff"
         colorMouseOver: "#50555f"
         colorDefault: "#40405f"
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -246,6 +262,8 @@ Rectangle {
         colorDefault: "#40405f"
 
         isOn: false
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -262,6 +280,8 @@ Rectangle {
         colorPressed: "#55aaff"
         colorMouseOver: "#50555f"
         colorDefault: "#40405f"
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     Rectangle {
@@ -293,6 +313,8 @@ Rectangle {
         colorDefault: "#40405f"
 
         isOn: false
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -309,6 +331,8 @@ Rectangle {
         colorPressed: "#55aaff"
         colorMouseOver: "#50555f"
         colorDefault: "#40405f"
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -327,6 +351,8 @@ Rectangle {
         colorDefault: "#40405f"
 
         isOn: false
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -343,6 +369,8 @@ Rectangle {
         colorPressed: "#55aaff"
         colorMouseOver: "#50555f"
         colorDefault: "#40405f"
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -361,6 +389,8 @@ Rectangle {
         colorDefault: "#40405f"
 
         isOn: false
+
+        onClicked: functions.transmitEgseTc("TODO")
     }
 
     CustomToggleButton {
@@ -377,6 +407,15 @@ Rectangle {
         colorPressed: "#55aaff"
         colorMouseOver: "#50555f"
         colorDefault: "#40405f"
+
+        onClicked: functions.transmitEgseTc("TODO")
+    }
+
+    QtObject {
+        id: functions
+        function transmitEgseTc(tc) {
+            backend.transmitEgseTc(tc, textDeviceIp.text, textDeviceTcPort.text)
+        }
     }
 
     Connections {

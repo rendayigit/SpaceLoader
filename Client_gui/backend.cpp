@@ -3,16 +3,17 @@
 #include <QtCore/QFile>
 #include <QtCore/QThread>
 
+#include "../common.h"
 #include "../constants.h"
 #include "../lib/Logger/logger.h"
+#include "egse.h"
 #include "iostream"
 #include "listener.h"
-#include "../common.h"
 
 Listener* listener;
 
-Backend::Backend() { 
-    listener = new Listener(this); 
+Backend::Backend() {
+    listener = new Listener(this);
     localIp = GetLocalIp().last();
 }
 
@@ -23,6 +24,9 @@ void Backend::onReceived(QByteArray message) {
 
 void Backend::onDisconnected() { Log().Error("Disconnected From Server!"); }
 
+// TODO - implement
+void Backend::egseReply() {}
+
 void Backend::getTerminalData(QString text) {
     transmit(text.mid(text.lastIndexOf("\n> ") + 3, text.size()).toLocal8Bit());
 }
@@ -30,7 +34,7 @@ void Backend::getTerminalData(QString text) {
 void Backend::start() {
     attemptConnection(serverIp, 1234);
     QThread::msleep(100);
-    // TODO - This delay is importand. Consider adding same delay for console client
+    // TODO - This delay is important. Consider adding same delay for console client
 
     /* Transmit username */
     QByteArray username = getenv("USERNAME");
@@ -110,12 +114,20 @@ void Backend::listen(QString ipPort) {
 
 void Backend::stopListen() { listener->disconnect(); }
 
-void Backend::setServerIp(QString ip) {
-    serverIp = ip;
-}
+void Backend::setServerIp(QString ip) { serverIp = ip; }
 
-QString Backend::getLocalIp() {
-    return localIp;
+QString Backend::getLocalIp() { return localIp; }
+
+void Backend::transmitEgseTc(QString tc, QString deviceIp, QString devicePort) {
+    Egse* egse = new Egse(this);
+    if (egse->attemptConnection(deviceIp, devicePort.toInt())) {
+        egse->sendTc(tc.toLocal8Bit());
+    } else {
+        // TODO - print error to gui
+        std::cout << "Cannot connect to EGSE at: " << deviceIp.toStdString() << ":" << devicePort.toStdString() << std::endl;
+    }
+    QThread::sleep(1);
+    delete egse;
 }
 
 void Backend::parse(QString text) {
