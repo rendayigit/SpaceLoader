@@ -24,8 +24,9 @@ void Backend::onReceived(QByteArray message) {
 
 void Backend::onDisconnected() { Log().Error("Disconnected From Server!"); }
 
-// TODO - implement
-void Backend::egseReply() {}
+void Backend::egseReplier(QString message) {
+    emit egseReply(message);
+}
 
 void Backend::getTerminalData(QString text) {
     transmit(text.mid(text.lastIndexOf("\n> ") + 3, text.size()).toLocal8Bit());
@@ -121,13 +122,13 @@ QString Backend::getLocalIp() { return localIp; }
 void Backend::transmitEgseTc(QString tc, QString deviceIp, QString devicePort) {
     Egse* egse = new Egse(this);
     if (egse->attemptConnection(deviceIp, devicePort.toInt())) {
+        emit egseError(false, "Online, Connected");
         egse->sendTc(tc.toLocal8Bit());
     } else {
-        // TODO - print error to gui
-        std::cout << "Cannot connect to EGSE at: " << deviceIp.toStdString() << ":" << devicePort.toStdString() << std::endl;
+        QString errorMessage = "ERROR! Not Connected";
+        emit egseError(true, errorMessage);
+        Log().Error(errorMessage);
     }
-    QThread::sleep(1);
-    delete egse;
 }
 
 void Backend::parse(QString text) {

@@ -1,11 +1,10 @@
 import QtQuick 2.0
-import "../components"
 import QtQuick.Timeline 1.0
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import "../components"
 
 Rectangle {
-    property string buffer: ""
     anchors.fill: parent
     radius: 10
     color: "#27273a"
@@ -39,12 +38,25 @@ Rectangle {
         text: "192.168.1.250"
     }
 
+    Label {
+        id: colon
+        anchors.left: textDeviceIp.right
+        anchors.top: labelEgse.bottom
+        anchors.leftMargin: 5
+        anchors.topMargin: 10
+
+        color: "#ffffff"
+        text: ":"
+        font.pixelSize: 20
+        font.family: "Segoe UI"
+    }
+
     CustomTextField {
         id: textDeviceTcPort
         
-        anchors.left: textDeviceIp.right
+        anchors.left: colon.right
         anchors.top: labelEgse.bottom
-        anchors.leftMargin: 10
+        anchors.leftMargin: 5
         anchors.topMargin: 10
         
         height: 40
@@ -68,6 +80,19 @@ Rectangle {
         font.family: "Segoe UI"
     }
 
+    Label {
+        id: labelError
+        anchors.top: textDeviceIp.bottom
+        anchors.left: labelStatus.right
+        anchors.topMargin: 40
+        anchors.leftMargin: 10
+
+        color: "#ffffff"
+        text: ""
+        font.pixelSize: 20
+        font.family: "Segoe UI"
+    }
+
     CustomToggleButton {
         id: buttonRemote
         width: 140
@@ -80,8 +105,10 @@ Rectangle {
         anchors.topMargin: 20
         anchors.leftMargin: 30
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
+
+        isOn: false
 
         onClicked: functions.transmitEgseTc("TODO")
     }
@@ -98,7 +125,7 @@ Rectangle {
         anchors.topMargin: 20
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
 
         isOn: false
@@ -131,8 +158,10 @@ Rectangle {
         anchors.topMargin: 20
         anchors.leftMargin: 30
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
+
+        isOn: false
 
         onClicked: functions.transmitEgseTc("TODO")
     }
@@ -149,7 +178,7 @@ Rectangle {
         anchors.topMargin: 20
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
 
         isOn: false
@@ -182,7 +211,7 @@ Rectangle {
         anchors.topMargin: 135
         anchors.leftMargin: 30
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
 
         isOn: false
@@ -202,8 +231,10 @@ Rectangle {
         anchors.topMargin: 135
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
+
+        isOn: false
 
         onClicked: functions.transmitEgseTc("TODO")
     }
@@ -220,7 +251,7 @@ Rectangle {
         anchors.topMargin: 30
         anchors.leftMargin: 30
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
 
         isOn: false
@@ -240,8 +271,10 @@ Rectangle {
         anchors.topMargin: 30
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
+
+        isOn: false
 
         onClicked: functions.transmitEgseTc("TODO")
     }
@@ -258,7 +291,7 @@ Rectangle {
         anchors.topMargin: 30
         anchors.leftMargin: 30
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
 
         isOn: false
@@ -278,8 +311,10 @@ Rectangle {
         anchors.topMargin: 30
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
+
+        isOn: false
 
         onClicked: functions.transmitEgseTc("TODO")
     }
@@ -309,7 +344,7 @@ Rectangle {
         anchors.topMargin: 135
         anchors.leftMargin: 30
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
 
         isOn: false
@@ -329,8 +364,10 @@ Rectangle {
         anchors.topMargin: 135
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
+
+        isOn: false
 
         onClicked: functions.transmitEgseTc("TODO")
     }
@@ -347,7 +384,7 @@ Rectangle {
         anchors.topMargin: 30
         anchors.leftMargin: 30
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
 
         isOn: false
@@ -367,8 +404,10 @@ Rectangle {
         anchors.topMargin: 30
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
+
+        isOn: false
 
         onClicked: functions.transmitEgseTc("TODO")
     }
@@ -385,7 +424,7 @@ Rectangle {
         anchors.topMargin: 30
         anchors.leftMargin: 30
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
 
         isOn: false
@@ -405,8 +444,10 @@ Rectangle {
         anchors.topMargin: 30
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
-        colorMouseOver: "#50555f"
+        colorMouseOver: "#5a5a85"
         colorDefault: "#40405f"
+
+        isOn: false
 
         onClicked: functions.transmitEgseTc("TODO")
     }
@@ -416,9 +457,38 @@ Rectangle {
         function transmitEgseTc(tc) {
             backend.transmitEgseTc(tc, textDeviceIp.text, textDeviceTcPort.text)
         }
+
+        function setActiveness(id, isActive) {
+            id.isOn = isActive
+        }
     }
 
     Connections {
         target: backend
+
+        function onEgseError(isError, text) {
+            if (isError) {
+                labelError.color = "#ff0000"
+            } else {
+                labelError.color = "#00ff00"
+            }
+
+            labelError.text = text
+        }
+
+        function onEgseReply(message) {
+            var isAck = false
+
+            if(message.includes("ACK")) {
+                isAck = true
+            }
+
+            if(message.includes("remote")) {
+                functions.setActiveness(buttonRemote, isAck)
+                functions.setActiveness(buttonLocal, !isAck)
+            } else if("message substring2") {
+                functions.setActiveness(buttonA1, isAck)
+            }
+        }
     }
 }

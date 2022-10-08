@@ -7,7 +7,7 @@ CustomButton {
     font.pixelSize: 24
     font.family: "Segoe UI"
 
-    textColor: (isOn) ? "#FF0000" : "#50555f"
+    textColor: (isOn) ? "#FF0000" : "#888888"
 
     Rectangle {
         anchors.left: parent.left
@@ -29,7 +29,7 @@ CustomButton {
         color: "#00000000"
         radius: 15
         
-        border.color: "black"
+        border.color: "#5a5a85"
         border.width: borderSize
 
         anchors.left: parent.left

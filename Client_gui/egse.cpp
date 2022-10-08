@@ -2,16 +2,10 @@
 
 Egse::Egse(Backend* backend) { this->backend = backend; };
 
-// TODO - implement
 void Egse::onReceived(QByteArray message) {
-    if (message == "ACK") {
-        backend->egseReply();
-    } else {
-
-    }
+    backend->egseReplier(message);
+    delete this;
 }
 
 // TODO - implement
-void Egse::sendTc(QByteArray tc) {
-    transmit(tc);
-}
+void Egse::sendTc(QByteArray tc) { transmit(tc); }
