@@ -110,7 +110,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -130,7 +130,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     Label {
@@ -163,7 +163,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -183,7 +183,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     Rectangle {
@@ -216,7 +216,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -236,7 +236,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -256,7 +256,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -276,7 +276,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -296,7 +296,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -316,7 +316,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     Rectangle {
@@ -349,7 +349,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -369,7 +369,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -389,7 +389,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -409,7 +409,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -429,7 +429,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -449,7 +449,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc("TODO")
+        onClicked: functions.transmitEgseTc(text)
     }
 
     QtObject {

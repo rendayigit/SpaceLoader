@@ -8,10 +8,11 @@ class Egse : public TCPClient {
    public:
     explicit Egse(Backend* backend);
     void onReceived(QByteArray message) override;
-    void sendTc(QByteArray tc);
+    void buttonCallback(QString buttonId);
 
    private:
     Backend* backend;
+    void interpret(QString tc);
 };
 
 #endif  // EGSE_H

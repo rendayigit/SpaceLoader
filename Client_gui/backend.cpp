@@ -123,7 +123,7 @@ void Backend::transmitEgseTc(QString tc, QString deviceIp, QString devicePort) {
     Egse* egse = new Egse(this);
     if (egse->attemptConnection(deviceIp, devicePort.toInt())) {
         emit egseError(false, "Online, Connected");
-        egse->sendTc(tc.toLocal8Bit());
+        egse->buttonCallback(tc);
     } else {
         QString errorMessage = "ERROR! Not Connected";
         emit egseError(true, errorMessage);
