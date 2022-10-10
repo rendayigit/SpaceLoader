@@ -31,11 +31,11 @@ Rectangle {
         anchors.topMargin: 10
         
         height: 40
-        width: 170
+        width: 140
         
         font.pointSize: 12
         placeholderText: "Device IP"
-        text: "192.168.1.250"
+        text: "localhost"
     }
 
     Label {
@@ -60,11 +60,31 @@ Rectangle {
         anchors.topMargin: 10
         
         height: 40
-        width: 80
+        width: 60
         
         font.pointSize: 12
         placeholderText: "TC Port"
         text: "5004"
+    }
+
+    CustomButton {
+        id: buttonConnect
+
+        anchors.left: textDeviceTcPort.right
+        anchors.top: labelEgse.bottom
+        anchors.leftMargin: 10
+        anchors.topMargin: 10
+
+        width: 60
+        height: 30
+
+        colorMouseOver: "#40405f"
+        colorDefault: "#222222"
+        colorPressed: "#55aaff"
+
+        text: "Connect"
+
+        onClicked: backend.egseConnect(textDeviceIp.text, textDeviceTcPort.text)
     }
 
     Label {
@@ -110,7 +130,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -130,7 +150,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     Label {
@@ -163,7 +183,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -183,7 +203,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     Rectangle {
@@ -216,7 +236,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -236,7 +256,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -256,7 +276,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -264,7 +284,7 @@ Rectangle {
         width: 140
         height: 90
         opacity: 1
-        text: "TC CHAIN ON"
+        text: "TC CHAIN OFF"
 
         anchors.top: buttonToggleTmOn.bottom
         anchors.left: buttonToggleTcOn.right
@@ -276,7 +296,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -296,7 +316,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -316,7 +336,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     Rectangle {
@@ -349,7 +369,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -369,7 +389,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -389,7 +409,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -409,7 +429,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -429,7 +449,7 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     CustomToggleButton {
@@ -449,14 +469,11 @@ Rectangle {
 
         isOn: false
 
-        onClicked: functions.transmitEgseTc(text)
+        onClicked: backend.transmitEgseTc(text)
     }
 
     QtObject {
         id: functions
-        function transmitEgseTc(tc) {
-            backend.transmitEgseTc(tc, textDeviceIp.text, textDeviceTcPort.text)
-        }
 
         function setActiveness(id, isActive) {
             id.isOn = isActive
@@ -521,6 +538,18 @@ Rectangle {
             } else if(message.includes("IPUSETTMASOURCE,4")) {
                 functions.setActiveness(buttonTmSourceA, isAck)
                 functions.setActiveness(buttonTmSourceB, !isAck)
+            }
+
+            if(buttonTmSourceA.isOn && buttonTcDestA.isOn) {
+                buttonStarkit.isOn = true
+            } else {
+                buttonStarkit.isOn = false
+            }
+
+            if(buttonTmSourceB.isOn && buttonTcDestB.isOn) {
+                buttonMubV1.isOn = true
+            } else {
+                buttonMubV1.isOn = false
             }
         }
     }

@@ -19,8 +19,8 @@ bool TCPClient::attemptConnection(QString serverIP, qint32 serverPort) {
 void TCPClient::transmit(QByteArray data) {
     if (socket->state() == QAbstractSocket::ConnectedState) {
         socket->write(data);
-        socket->waitForBytesWritten();
         socket->flush();
+        socket->waitForBytesWritten();
     }
 }
 

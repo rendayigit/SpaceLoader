@@ -1,4 +1,5 @@
 #include "egse.h"
+#include <QtCore/QThread>
 
 Egse::Egse(Backend* backend) { this->backend = backend; };
 
@@ -56,6 +57,8 @@ void Egse::buttonCallback(QString buttonId) {
         interpret("77 0C C0 00 00 15 49 70 75 43 6D 64 20 74 63 67 2E 70 6C 6F 70 5F 6D 6F 64 65 20 32");  // IpuCmd tcg.plop_mode 2
     } else if (buttonId.contains("TM Mode 1")) {
         interpret("77 0C C0 00 00 0A 53 65 74 54 4D 6D 6F 64 65 20 31");  // SetTMmode 1
+    }  else if (buttonId.contains("TM Mode 2")) {
+        interpret("77 0C C0 00 00 0A 53 65 74 54 4D 6D 6F 64 65 20 32");  // SetTMmode 2
     }
 }
 
@@ -73,4 +76,9 @@ void Egse::transmitAscii(QByteArray message) {
     message.prepend("770cc00000");
 
     transmit(message);
+}
+
+void Egse::onDisconnected() {
+    connected = false;
+    backend->egseDisconnectedError();
 }

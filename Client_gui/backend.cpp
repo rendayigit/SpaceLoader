@@ -11,9 +11,11 @@
 #include "listener.h"
 
 Listener* listener;
+Egse* egse;
 
 Backend::Backend() {
     listener = new Listener(this);
+    egse = new Egse(this);
     localIp = GetLocalIp().last();
 }
 
@@ -24,9 +26,7 @@ void Backend::onReceived(QByteArray message) {
 
 void Backend::onDisconnected() { Log().Error("Disconnected From Server!"); }
 
-void Backend::egseReplier(QString message) {
-    emit egseReply(message);
-}
+void Backend::egseReplier(QString message) { emit egseReply(message); }
 
 void Backend::getTerminalData(QString text) {
     transmit(text.mid(text.lastIndexOf("\n> ") + 3, text.size()).toLocal8Bit());
@@ -119,16 +119,27 @@ void Backend::setServerIp(QString ip) { serverIp = ip; }
 
 QString Backend::getLocalIp() { return localIp; }
 
-void Backend::transmitEgseTc(QString tc, QString deviceIp, QString devicePort) {
-    Egse* egse = new Egse(this);
-    if (egse->attemptConnection(deviceIp, devicePort.toInt())) {
-        emit egseError(false, "Online, Connected");
+void Backend::transmitEgseTc(QString tc) {
+    if (egse->isConnected()) {
         egse->buttonCallback(tc);
     } else {
-        QString errorMessage = "ERROR! Not Connected";
-        emit egseError(true, errorMessage);
-        Log().Error(errorMessage);
+        egseDisconnectedError();
     }
+}
+
+void Backend::egseConnect(QString deviceIp, QString devicePort) {
+    if (egse->attemptConnection(deviceIp, devicePort.toInt())) {
+        emit egseError(false, "Online, Connected");
+    } else {
+        egseDisconnectedError();
+    }
+}
+
+void Backend::egseDisconnectedError() {
+    QString errorMessage = "ERROR! Not Connected";
+    egse->setConnected(false);
+    emit egseError(true, errorMessage);
+    Log().Error(errorMessage);
 }
 
 void Backend::parse(QString text) {
