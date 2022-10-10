@@ -9,6 +9,10 @@ void Egse::onReceived(QByteArray message) {
 }
 
 void Egse::buttonCallback(QString buttonId) {
+    if (not connected) {
+        return;
+    }
+
     if (buttonId.contains("STARKIT")) {
         interpret("77 0C C0 00 00 0E 54 52 41 4E 53 46 45 52 20 52 45 4D 4F 54 45");  // TRANSFER REMOTE
         interpret("77 0C C0 00 00 0C 53 54 41 52 54 20 2D 4F 6E 6C 69 6E 65");  // START -Online

@@ -76,11 +76,11 @@ Rectangle {
         anchors.topMargin: 10
 
         width: 60
-        height: 30
+        height: 40
 
-        colorMouseOver: "#40405f"
-        colorDefault: "#222222"
-        colorPressed: "#55aaff"
+        colorMouseOver: "#47bf7f"
+        colorDefault: "#167543"
+        colorPressed: "#25baab"
 
         text: "Connect"
 

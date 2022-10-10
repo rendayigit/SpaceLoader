@@ -130,6 +130,7 @@ void Backend::transmitEgseTc(QString tc) {
 void Backend::egseConnect(QString deviceIp, QString devicePort) {
     if (egse->attemptConnection(deviceIp, devicePort.toInt())) {
         emit egseError(false, "Online, Connected");
+        egse->setConnected(true);
     } else {
         egseDisconnectedError();
     }
