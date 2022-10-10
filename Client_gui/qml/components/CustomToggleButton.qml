@@ -4,7 +4,7 @@ import QtQuick.Controls 2.15
 CustomButton {
     property bool isOn: true
 
-    font.pixelSize: 24
+    font.pixelSize: 18
     font.family: "Segoe UI"
 
     textColor: (isOn) ? "#FF0000" : "#888888"

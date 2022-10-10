@@ -200,11 +200,11 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonBypassA
+        id: buttonToggleTmOn
         width: 140
         height: 90
         opacity: 1
-        text: "Bypass A"
+        text: "TM CHAIN ON"
 
         anchors.top: parent.top
         anchors.left: separator1.right
@@ -220,14 +220,14 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonBypassB
+        id: buttonToggleTmOff
         width: 140
         height: 90
         opacity: 1
-        text: "Bypass B"
+        text: "TM CHAIN OFF"
 
         anchors.top: parent.top
-        anchors.left: buttonBypassA.right
+        anchors.left: buttonToggleTmOn.right
         anchors.topMargin: 135
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
@@ -240,13 +240,13 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonA1
+        id: buttonToggleTcOn
         width: 140
         height: 90
         opacity: 1
-        text: "buttonA1"
+        text: "TC CHAIN ON"
 
-        anchors.top: buttonBypassA.bottom
+        anchors.top: buttonToggleTmOn.bottom
         anchors.left: separator1.right
         anchors.topMargin: 30
         anchors.leftMargin: 30
@@ -260,14 +260,14 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonB1
+        id: buttonToggleTcOff
         width: 140
         height: 90
         opacity: 1
-        text: "buttonB1"
+        text: "TC CHAIN ON"
 
-        anchors.top: buttonBypassA.bottom
-        anchors.left: buttonA1.right
+        anchors.top: buttonToggleTmOn.bottom
+        anchors.left: buttonToggleTcOn.right
         anchors.topMargin: 30
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
@@ -280,13 +280,13 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonA2
+        id: buttonTmMode1
         width: 140
         height: 90
         opacity: 1
-        text: "buttonA2"
+        text: "TM Mode 1"
 
-        anchors.top: buttonA1.bottom
+        anchors.top: buttonToggleTcOn.bottom
         anchors.left: separator1.right
         anchors.topMargin: 30
         anchors.leftMargin: 30
@@ -300,14 +300,14 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonB2
+        id: buttonTmMode2
         width: 140
         height: 90
         opacity: 1
-        text: "buttonB2"
+        text: "TM Mode 2"
 
-        anchors.top: buttonA1.bottom
-        anchors.left: buttonA2.right
+        anchors.top: buttonToggleTcOn.bottom
+        anchors.left: buttonTmMode1.right
         anchors.topMargin: 30
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
@@ -325,7 +325,7 @@ Rectangle {
         color: "#5a5a85"
 
         anchors.top: parent.top
-        anchors.left: buttonBypassB.right
+        anchors.left: buttonToggleTmOff.right
         anchors.bottom: parent.bottom
         anchors.topMargin: 100
         anchors.leftMargin: 30
@@ -333,11 +333,11 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonX1
+        id: buttonTmSourceA
         width: 140
         height: 90
         opacity: 1
-        text: "buttonX1"
+        text: "TM SOURCE A"
 
         anchors.top: parent.top
         anchors.left: separator2.right
@@ -353,14 +353,14 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonY1
+        id: buttonTmSourceB
         width: 140
         height: 90
         opacity: 1
-        text: "buttonY1"
+        text: "TM SOURCE B"
 
         anchors.top: parent.top
-        anchors.left: buttonX1.right
+        anchors.left: buttonTmSourceA.right
         anchors.topMargin: 135
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
@@ -373,13 +373,13 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonX2
+        id: buttonTcDestA
         width: 140
         height: 90
         opacity: 1
-        text: "buttonX2"
+        text: "TC DEST A"
 
-        anchors.top: buttonX1.bottom
+        anchors.top: buttonTmSourceA.bottom
         anchors.left: separator2.right
         anchors.topMargin: 30
         anchors.leftMargin: 30
@@ -393,14 +393,14 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonY2
+        id: buttonTcDestB
         width: 140
         height: 90
         opacity: 1
-        text: "buttonY2"
+        text: "TC DEST B"
 
-        anchors.top: buttonX1.bottom
-        anchors.left: buttonX2.right
+        anchors.top: buttonTmSourceA.bottom
+        anchors.left: buttonTcDestA.right
         anchors.topMargin: 30
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
@@ -413,13 +413,13 @@ Rectangle {
     }
 
     CustomToggleButton {
-        id: buttonX3
+        id: buttonAlwaysRf
         width: 140
         height: 90
         opacity: 1
-        text: "buttonX3"
+        text: "ALWAYS RF"
 
-        anchors.top: buttonX2.bottom
+        anchors.top: buttonTcDestA.bottom
         anchors.left: separator2.right
         anchors.topMargin: 30
         anchors.leftMargin: 30
@@ -437,10 +437,10 @@ Rectangle {
         width: 140
         height: 90
         opacity: 1
-        text: "buttonY3"
+        text: "-"
 
-        anchors.top: buttonX2.bottom
-        anchors.left: buttonX3.right
+        anchors.top: buttonTcDestA.bottom
+        anchors.left: buttonAlwaysRf.right
         anchors.topMargin: 30
         anchors.leftMargin: 15
         colorPressed: "#55aaff"
@@ -487,7 +487,7 @@ Rectangle {
                 functions.setActiveness(buttonRemote, isAck)
                 functions.setActiveness(buttonLocal, !isAck)
             } else if("message substring2") {
-                functions.setActiveness(buttonA1, isAck)
+                functions.setActiveness(buttonToggleTcOn, isAck)
             }
         }
     }
