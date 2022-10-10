@@ -12,7 +12,7 @@ class Egse : public TCPClient {
 
    private:
     Backend* backend;
-    void interpret(QString tc);
+    void interpret(QByteArray tc);
     void transmitAscii(QByteArray message);
 };
 

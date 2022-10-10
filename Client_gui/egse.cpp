@@ -4,7 +4,7 @@ Egse::Egse(Backend* backend) { this->backend = backend; };
 
 void Egse::onReceived(QByteArray message) {
     backend->egseReplier(message);
-    delete this; // TODO disconnect sometime
+    // delete this; // TODO disconnect sometime
 }
 
 void Egse::buttonCallback(QString buttonId) {
@@ -59,12 +59,11 @@ void Egse::buttonCallback(QString buttonId) {
     }
 }
 
-void Egse::interpret(QString tc) {
-    if (tc.at(0).isLetter()) {
-        transmitAscii(tc.toLocal8Bit());
+void Egse::interpret(QByteArray tc) {
+    if (tc.at(0) == '7') {
+        transmit(QByteArray::fromHex(tc));
     } else  {
-        tc = tc.replace(" ", "");
-        transmit(tc.toLocal8Bit().toHex());
+        transmitAscii(tc);
     }
 }
 

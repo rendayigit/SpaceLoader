@@ -483,11 +483,44 @@ Rectangle {
                 isAck = true
             }
 
-            if(message.includes("remote")) {
+            if(message.includes("REMOTE")) {
                 functions.setActiveness(buttonRemote, isAck)
                 functions.setActiveness(buttonLocal, !isAck)
-            } else if("message substring2") {
+            } else if(message.includes("LOCAL")) {
+                functions.setActiveness(buttonRemote, !isAck)
+                functions.setActiveness(buttonLocal, isAck)
+            } else if(message.includes("TOGGLETM,OFF")) {
+                functions.setActiveness(buttonToggleTmOff, isAck)
+                functions.setActiveness(buttonToggleTmOn, !isAck)
+            } else if(message.includes("TOGGLETM,ON")) {
+                functions.setActiveness(buttonToggleTmOff, !isAck)
+                functions.setActiveness(buttonToggleTmOn, isAck)
+            } else if(message.includes("TOGGLETC,OFF")) {
+                functions.setActiveness(buttonToggleTcOff, isAck)
+                functions.setActiveness(buttonToggleTcOn, !isAck)
+            } else if(message.includes("TOGGLETC,ON")) {
+                functions.setActiveness(buttonToggleTcOff, !isAck)
                 functions.setActiveness(buttonToggleTcOn, isAck)
+            } else if(message.includes("IPUCMD")) {
+                functions.setActiveness(buttonAlwaysRf, isAck)
+            } else if(message.includes("SETTMMODE,1")) {
+                functions.setActiveness(buttonTmMode1, isAck)
+                functions.setActiveness(buttonTmMode2, !isAck)
+            } else if(message.includes("SETTMMODE,2")) {
+                functions.setActiveness(buttonTmMode1, !isAck)
+                functions.setActiveness(buttonTmMode2, isAck)
+            } else if(message.includes("IPUSETTCGDEST,2")) {
+                functions.setActiveness(buttonTcDestB, isAck)
+                functions.setActiveness(buttonTcDestA, !isAck)
+            } else if(message.includes("IPUSETTCGDEST,4")) {
+                functions.setActiveness(buttonTcDestA, isAck)
+                functions.setActiveness(buttonTcDestB, !isAck)
+            } else if(message.includes("IPUSETTMASOURCE,2")) {
+                functions.setActiveness(buttonTmSourceB, isAck)
+                functions.setActiveness(buttonTmSourceA, !isAck)
+            } else if(message.includes("IPUSETTMASOURCE,4")) {
+                functions.setActiveness(buttonTmSourceA, isAck)
+                functions.setActiveness(buttonTmSourceB, !isAck)
             }
         }
     }
