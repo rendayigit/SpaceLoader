@@ -498,7 +498,7 @@ Rectangle {
 
             var isAck = false
 
-            if(message.includes("ACK")) {
+            if(message.includes("ACK") || message.includes("already")) {
                 isAck = true
             }
 

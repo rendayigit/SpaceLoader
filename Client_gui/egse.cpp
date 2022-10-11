@@ -1,4 +1,5 @@
 #include "egse.h"
+#include <QtCore/qthread.h>
 #include <QtCore/QThread>
 
 Egse::Egse(Backend* backend) { this->backend = backend; };
@@ -17,8 +18,10 @@ void Egse::buttonCallback(QString buttonId) {
         interpret("77 0C C0 00 00 0E 54 52 41 4E 53 46 45 52 20 52 45 4D 4F 54 45");  // TRANSFER REMOTE
         interpret("77 0C C0 00 00 0C 53 54 41 52 54 20 2D 4F 6E 6C 69 6E 65");  // START -Online
         interpret("77 0C C0 00 00 0B 54 6F 67 67 6C 65 54 4D 20 4F 66 66");     // ToggleTM Off
+        QThread::msleep(100);
         interpret("77 0C C0 00 00 0A 54 6F 67 67 6C 65 54 4D 20 4F 6E");        // ToggleTM On
         interpret("77 0C C0 00 00 0B 54 6F 67 67 6C 65 54 43 20 4F 66 66");     // ToggleTC Off
+        QThread::msleep(100);
         interpret("77 0C C0 00 00 0A 54 6F 67 67 6C 65 54 43 20 4F 6E");        // ToggleTC On
         interpret("77 0C C0 00 00 15 49 70 75 43 6D 64 20 74 63 67 2E 70 6C 6F 70 5F 6D 6F 64 65 20 32");  // IpuCmd tcg.plop_mode 2
         interpret("77 0C C0 00 00 0A 53 65 74 54 4D 6D 6F 64 65 20 31");  // SetTMmode 1
@@ -29,8 +32,10 @@ void Egse::buttonCallback(QString buttonId) {
         interpret("77 0C C0 00 00 0E 54 52 41 4E 53 46 45 52 20 52 45 4D 4F 54 45");  // TRANSFER REMOTE
         interpret("77 0C C0 00 00 0C 53 54 41 52 54 20 2D 4F 6E 6C 69 6E 65");  // START -Online
         interpret("77 0C C0 00 00 0B 54 6F 67 67 6C 65 54 4D 20 4F 66 66");     // ToggleTM Off
+        QThread::msleep(100);
         interpret("77 0C C0 00 00 0A 54 6F 67 67 6C 65 54 4D 20 4F 6E");        // ToggleTM On
         interpret("77 0C C0 00 00 0B 54 6F 67 67 6C 65 54 43 20 4F 66 66");     // ToggleTC Off
+        QThread::msleep(100);
         interpret("77 0C C0 00 00 0A 54 6F 67 67 6C 65 54 43 20 4F 6E");        // ToggleTC On
         interpret("77 0C C0 00 00 15 49 70 75 43 6D 64 20 74 63 67 2E 70 6C 6F 70 5F 6D 6F 64 65 20 32");  // IpuCmd tcg.plop_mode 2
         interpret("77 0C C0 00 00 0A 53 65 74 54 4D 6D 6F 64 65 20 31");  // SetTMmode 1
