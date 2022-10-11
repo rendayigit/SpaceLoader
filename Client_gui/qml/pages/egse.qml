@@ -494,6 +494,8 @@ Rectangle {
         }
 
         function onEgseReply(message) {
+            print(message)
+
             var isAck = false
 
             if(message.includes("ACK")) {
@@ -535,7 +537,7 @@ Rectangle {
             } else if(message.includes("IPUSETTMASOURCE,2")) {
                 functions.setActiveness(buttonTmSourceB, isAck)
                 functions.setActiveness(buttonTmSourceA, !isAck)
-            } else if(message.includes("IPUSETTMASOURCE,4")) {
+            } else if(message.includes("IPUSETTMASOURCE,3")) {
                 functions.setActiveness(buttonTmSourceA, isAck)
                 functions.setActiveness(buttonTmSourceB, !isAck)
             }
