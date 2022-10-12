@@ -44,13 +44,19 @@ void Backend::listLogs() { transmit("listLogs"); }
 void Backend::getUserList() { transmit("getUserList"); }
 
 void Backend::fileTransfer(QString localFile, QString serverPath) {
-    // localFile = localFile.replace('"', "");
-    // serverPath = serverPath.replace('"', "");
-
-    localFile = localFile.replace("file:///", "");
+    #ifdef Q_OS_WIN
+        QString bash = "cmd.exe /c";
+        localFile = localFile.replace("file:///", "");
+    #else
+        QString bash = "/bin/bash";
+        localFile = localFile.replace("file://", "");
+    #endif
 
     qDebug() << "1:" << localFile;
     qDebug() << "2:" << serverPath;
+
+    auto *process = new QProcess();
+    process->start(bash + "COPY ");
 
     transmit("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
 

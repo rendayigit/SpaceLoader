@@ -1,38 +1,25 @@
 import QtQuick 2.0
-import "../components"
 import QtQuick.Timeline 1.0
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.3
+import "../components"
 
 Item {
-    property var fullFileText: qsTr("")
+    property string fullFileText: ""
 
     Rectangle {
         anchors.fill: parent
         radius: 10
         color: "#27273a"
 
-        Label {
-            id: obswLabel
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.leftMargin: 20
-            anchors.topMargin: 20
-            color: "#ffffff"
-            text: qsTr("Local File:")
-            font.bold: false
-            font.family: "Segoe UI"
-            font.pointSize: 11
-        }
-
         Rectangle {
             id: uploadArea
             height: 150
-            anchors.top: obswLabel.bottom
+            anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.topMargin: 20
+            anchors.topMargin: 30
             anchors.leftMargin: 50
             anchors.rightMargin: 50
             radius: 10
@@ -40,17 +27,15 @@ Item {
 
             DropArea {
                 id: dropArea
-                height: 40
-
                 anchors.fill: parent
 
                 onDropped: (drop) => {
-                    fullFileText = drop.text.split("file:///").join("")
-                    uploadAreaLabel.text = ".../" + fullFileText.slice(-30)
-                    showArea.visible = true
-                    uploadIcon.source = "../../assets/images/transfer.png"
-                    // uploadIcon.destroy()
-                }
+                               fullFileText = drop.text.split("file:///").join("")
+                               labelUploadArea.text = ".../" + fullFileText.slice(-30)
+                               remoteArea.visible = true
+                               uploadIcon.source = "../../assets/images/transfer.png"
+                               // uploadIcon.destroy()
+                           }
             }
 
             GridLayout {
@@ -68,9 +53,9 @@ Item {
 
                 Row {
                     Label {
-                        id: uploadAreaLabel
+                        id: labelUploadArea
                         color: "#ffffff"
-                        text: qsTr("Upload image here or")
+                        text: "Upload image here or"
                         font.family: "Segoe UI"
                         font.pointSize: 13
                         wrapMode: Label.WordWrap
@@ -85,41 +70,45 @@ Item {
                         colorMouseOver: "#40405f"
                         colorDefault: "#33334c"
                         colorPressed: "#55aaff"
+
                         onClicked: fileDialog.visible = true
                     }
+
                     FileDialog {
                         id: fileDialog
-                        title: "Please choose a file"
+                        title: "Please choose a file to upload"
                         folder: shortcuts.home
-                        onAccepted: () => {
-                            uploadAreaLabel.text = ".../" + fileDialog.fileUrl.toString().split("file:///").join("").slice(-30)
-                            fullFileText = fileDialog.fileUrl.toString().split("file:///").join("")
-                            uploadIcon.source = "../../assets/images/transfer.png"
-                            showArea.visible = true
-                        }
                         visible: false
+
+                        onAccepted: () => {
+                                        labelUploadArea.text = ".../" + fileDialog.fileUrl.toString().split("file:///").join("").slice(-30)
+                                        fullFileText = fileDialog.fileUrl.toString().split("file:///").join("")
+                                        uploadIcon.source = "../../assets/images/transfer.png"
+                                        remoteArea.visible = true
+                                    }
                     }
                 }
             }
         }
 
         Rectangle {
-            id: showArea
+            id: remoteArea
             anchors.top: uploadArea.bottom
             anchors.horizontalCenter: parent.horizontalCenter
+
+            height: 80
             width: uploadArea.width - 40
+            radius: 10
 
             anchors.topMargin: 20
             visible: false
 
-            height: 80
-            radius: 10
             color: "#414159"
 
             Label {
                 id: serverPathLabel
                 color: "#ffffff"
-                text: qsTr("Remote Path: ")
+                text: "Remote Path: "
                 font.pointSize: 10
                 font.family: "Segoe UI"
                 font.weight: Font.Normal
@@ -137,24 +126,19 @@ Item {
 
                 anchors.top: parent.top
                 anchors.left: serverPathLabel.right
-                anchors.right: upload.left
+                anchors.right: buttonUpload.left
 
                 anchors.topMargin: 20
                 anchors.leftMargin: 10
                 anchors.rightMargin: 20
 
                 text: "D:/"
-                onEditingFinished: if(serverPath.text.length > 0 && fullFileText.text.length > 0) {
-                                    upload.enabled = true
-                                } else {
-                                    upload.enabled = false
-                                }
 
                 font.pointSize: 12
             }
 
             CustomButton {
-                id: upload
+                id: buttonUpload
                 anchors.top: parent.top
                 anchors.right: parent.right
 
@@ -169,20 +153,14 @@ Item {
                 colorMouseOver: "#5643b5"
                 colorPressed: "#7963e6"
 
-                enabled: false
-
-                onClicked: if(serverPath.text.length > 0 && fullFileText.text.length > 0) {
-                            backend.fileTransfer(localPath.text, serverPath.text)
-                        } else {
-                            print("error")
-                        }
+                onClicked: {
+                    if(serverPath.text.length > 0 && fullFileText.length > 0) {
+                        backend.fileTransfer(fullFileText, serverPath.text)
+                    } else {
+                        print("error")
+                    }
+                }
             }
         }
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}
-}
-##^##*/
