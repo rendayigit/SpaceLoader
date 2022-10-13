@@ -5,7 +5,7 @@
 Egse::Egse(Backend* backend) { this->backend = backend; };
 
 void Egse::onReceived(QByteArray message) {
-    backend->egseReplier(message.mid(10, message.size()));
+    backend->egseReplier(message.mid(6, message.size()));
     // delete this; // TODO disconnect sometime
 }
 
