@@ -35,7 +35,7 @@ Rectangle {
         
         font.pointSize: 12
         placeholderText: "Device IP"
-        text: "localhost"
+        text: "192.168.1.250"
     }
 
     Label {
