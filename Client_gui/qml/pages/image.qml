@@ -58,6 +58,7 @@ Item {
                         text: "Upload image here or"
                         font.family: "Segoe UI"
                         font.pointSize: 13
+                        anchors.verticalCenter: parent.verticalCenter
                         wrapMode: Label.WordWrap
                     }
                 }
@@ -155,6 +156,7 @@ Item {
 
                 onClicked: {
                     if(serverPath.text.length > 0 && fullFileText.length > 0) {
+                        backend.changeYamlFile("Config.FileTransfer.remotePath", serverPath.text)
                         backend.fileTransfer(fullFileText, serverPath.text)
                     } else {
                         print("error")

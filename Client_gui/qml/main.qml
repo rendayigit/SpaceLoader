@@ -241,20 +241,20 @@ Flickable {
         }
 
         CustomAppButton {
-            text: "Image"
-            setIcon: "../assets/images/binary.png"
+            text: "File Transfer"
+            setIcon: "../assets/images/transfer.png"
             font.pointSize: 9
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: loaderView.source = "pages/image.qml"
         }
 
-        CustomAppButton {
-            text: "File Transfer"
-            setIcon: "../assets/images/transfer.png"
-            font.pointSize: 9
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: loaderView.source = "pages/transfer.qml"
-        }
+        // CustomAppButton {
+        //     text: "File Transfer"
+        //     setIcon: "../assets/images/transfer.png"
+        //     font.pointSize: 9
+        //     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        //     onClicked: loaderView.source = "pages/transfer.qml"
+        // }
 
         CustomAppButton {
             text: "Command Line"
@@ -288,13 +288,13 @@ Flickable {
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             onClicked: loaderView.source = "pages/egse.qml"
         }
-        CustomAppButton {
-            text: "TRANSFER"
-            setIcon: "../assets/svg_images/user_icon.svg"
-            font.pointSize: 9
-            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: loaderView.source = "pages/transfer2.qml"
-        }
+        // CustomAppButton {
+        //     text: "TRANSFER"
+        //     setIcon: "../assets/svg_images/user_icon.svg"
+        //     font.pointSize: 9
+        //     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        //     onClicked: loaderView.source = "pages/transfer2.qml"
+        // }
     }
     ScrollBar.horizontal: ScrollBar {
         id: control
