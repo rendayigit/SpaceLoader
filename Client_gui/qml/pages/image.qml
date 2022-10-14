@@ -135,6 +135,10 @@ Item {
                 text: "D:/"
 
                 font.pointSize: 12
+
+                Component.onCompleted: {
+                    serverPath.text = backend.getConfigValue("remotePath")
+                }
             }
 
             CustomButton {
@@ -155,6 +159,7 @@ Item {
 
                 onClicked: {
                     if(serverPath.text.length > 0 && fullFileText.length > 0) {
+                        backend.updateYamlFile("Config.FileTransfer.remotePath", serverPath.text)
                         backend.fileTransfer(fullFileText, serverPath.text)
                     } else {
                         print("error")

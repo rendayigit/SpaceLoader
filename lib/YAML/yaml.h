@@ -110,6 +110,15 @@ class Yaml {
      * @return std::vector<YAML::Node>
      */
     static std::vector<YAML::Node> getSeconds(const YAML::Node &node, const std::string &key);
+    
+    /**
+     * @brief 
+     * 
+     * @param path                     The path to the desired node. Nodes must be separated by a '.'
+     *                               (...grandParentNode.parentNode.desiredNode)
+     * @param value                    The value to the key the change
+     */
+    static void setValueByPath(const std::string path, const std::string value);
 
    private:
     Yaml() = default;

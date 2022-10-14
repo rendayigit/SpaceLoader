@@ -5,6 +5,7 @@
 
 #include "../constants.h"
 #include "../lib/Logger/logger.h"
+#include "../lib/YAML/yaml.h"
 #include "iostream"
 #include "listener.h"
 #include "../common.h"
@@ -137,4 +138,12 @@ void Backend::parse(QString text) {
     } else if (text.contains("User #")) {
         emit getUsers(text);
     }
+}
+
+void Backend::updateYamlFile(QString path, QString value){
+    Yaml::setValueByPath(path.toStdString(), value.toStdString());
+}
+
+QString Backend::getConfigValue(QString key) {
+    return QString::fromStdString(Yaml::getValue("./Setup/Config.yaml", key.toStdString()));
 }

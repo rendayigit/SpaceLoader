@@ -1,3 +1,5 @@
+#include <iostream>
+#include <fstream>
 #include "yaml.h"
 
 using std::string;
@@ -172,4 +174,13 @@ vector<string> Yaml::splitPath(const string &path, char delimiter) {
     }
 
     return pathVector;
+}
+
+void Yaml::setValueByPath(const string path, const string value) {
+    YAML::Emitter out;
+    Node temp = LoadFile("./Setup/Config.yaml");
+    searchByNodePath(temp, splitPath(path, '.')).at(0) = value;
+    out << temp;
+    std::ofstream ofout("./Setup/Config.yaml");
+    ofout << out.c_str();
 }
