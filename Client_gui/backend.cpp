@@ -49,7 +49,7 @@ void Backend::fileTransfer(QString localFile, QString serverPath) {
         localFile = localFile.replace("file:///", "");
     #else
         QString bash = "/bin/bash";
-        localFile = localFile.replace("file://", "");
+        localFile = "/" + localFile.replace("file://", "") + "";
     #endif
 
     qDebug() << "1:" << localFile;
