@@ -9,10 +9,11 @@ TCPServer::TCPServer(QObject *parent) : QObject(parent) {
 }
 
 void TCPServer::startServer(qint32 portNumber) {
-    if (server->listen(QHostAddress::Any, portNumber))
+    if (server->listen(QHostAddress::Any, portNumber)) {
         qInfo() << "Server up, port: " << portNumber;
-    else
+    } else {
         qInfo() << server->errorString();
+    }
 }
 
 void TCPServer::broadcast(QByteArray message) {
@@ -21,30 +22,34 @@ void TCPServer::broadcast(QByteArray message) {
     }
 }
 
-void TCPServer::transmit(QTcpSocket *client, QByteArray message) {
+void TCPServer::transmit(QTcpSocket *client, QByteArray data) {
     if (client != nullptr) {
         if (client->state() != QAbstractSocket::SocketState::UnconnectedState) {
-            client->write(QDateTime::currentDateTime().toString().toLocal8Bit() + "\n" + message);
+            client->write(QDateTime::currentDateTime().toString().toLocal8Bit() + "\n" + data);
             client->waitForBytesWritten();
+            client->flush();
         }
     }
 }
 
 void TCPServer::onNewConnection() {
     while (server->hasPendingConnections()) {
-        socket = server->nextPendingConnection();
+        QTcpSocket *socket = server->nextPendingConnection();
 
         QHostAddress serverAddress(socket->localAddress().toIPv4Address());
         QHostAddress peerAddress(socket->peerAddress().toIPv4Address());
 
         socket->write("Connected to " + serverAddress.toString().toLocal8Bit());
         socket->waitForBytesWritten();
+        socket->flush();
 
         socketList.append(socket);
         qInfo().noquote() << peerAddress.toString() << " connected";
 
         connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
         connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+
+        onConnected(socket);
     }
 }
 
@@ -54,7 +59,7 @@ void TCPServer::onDisconnected() {
             QHostAddress ip4Address(socketList[i]->localAddress().toIPv4Address());
             QString clientAddress = ip4Address.toString();
             qInfo().noquote() << clientAddress << " disconnected";
-            clientDisconnected(socketList[i]);
+            onDisconnected(socketList[i]);
             socketList[i]->abort();
             socketList.removeAt(i);
         }
@@ -62,10 +67,10 @@ void TCPServer::onDisconnected() {
 }
 
 void TCPServer::onReadyRead() {
-    for (int i = 0; i < socketList.size(); i++) {
-        while (socketList[i]->bytesAvailable() > 0) {
-            QByteArray message = socketList[i]->readAll();
-            onReceived(socketList[i], message);
+    for (auto &i : socketList) {
+        while (i->bytesAvailable() > 0) {
+            QByteArray message = i->readAll();
+            onReceived(i, message);
         }
     }
 }

@@ -1,6 +1,8 @@
 #include "server.h"
 
-Server *Server::m_instance = Server::getInstance();
+#include "../Commands/cmd_plugin_interface.h"
+#include "User/userOperations.h"
+#include "logging.h"
 
 Server::Server() : Operations(Paths().getServerCmdsYaml()) {
     isFileTransferInProgress = false;
@@ -13,11 +15,6 @@ Server::Server() : Operations(Paths().getServerCmdsYaml()) {
         this, [=]() -> void { triggerCmdTimer->start(); }, Qt::QueuedConnection);
 
     Log().Info("Server Started");
-}
-
-Server *Server::getInstance() {
-    if (Server::m_instance == nullptr) Server::m_instance = new Server;
-    return Server::m_instance;
 }
 
 void Server::onReceived(QTcpSocket *sender, QByteArray message) {
@@ -33,8 +30,10 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
     if (not isFileTransferInProgress) {  // No file transfer operations, regular operations
         Log().Info("Received: '" + message + "' from " + ip4Address.toString());
 
-        if (getCmd(cmdName) != nullptr && getCmd(cmdName)->getIsAuthRequired() &&
-            not isAuthorized(sender, cmdName)) {
+        if (getCmd(cmdName) != nullptr and getCmd(cmdName)->getIsAuthRequired() and
+            not getCmd(GetParam(message))
+                    ->isAuthenticated(
+                        UserOperations::getInstance().getUser(sender)->getUserName())) {
             transmit(sender, "You are not authorized for this command. Try: getAuth " +
                                  cmdName.toLocal8Bit());
             return;
@@ -47,7 +46,7 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
         std::cout << message.toStdString() << std::endl;
     } else {  // File transfer operations
         if (sender == fileTransfererSocket) {
-            if (not cmp(message.data(), "#END")) {
+            if (not Cmp(message.data(), "#END")) {
                 transferredFileBuffer.append(message);
                 formerCurrTime = QDateTime::currentDateTime();
             } else {  // Finalize file transfer
@@ -74,114 +73,116 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
     }
 }
 
-void Server::clientDisconnected(QTcpSocket *clientSocket) {
-    if (getUser(clientSocket)->socketInstances.size() == 1) {
-        for (auto &auth : cmdList) {  // release user auths
-            if (auth->getAuthorizedUser() != nullptr) {
-                if (auth->getAuthorizedUser() == getUser(clientSocket)->getUserName()) {
-                    auth->setAuthorizedUser(nullptr);
-                }
-            }
-        }
+void Server::onDisconnected(QTcpSocket *clientSocket) {
+    User *user = UserOperations::getInstance().getUser(clientSocket);
 
-        userList.removeOne(getUser(clientSocket));
-        QHostAddress clientAddress(clientSocket->localAddress().toIPv4Address());
-        Log().Info(clientAddress.toString() + " disconnected");
-    }
+    clearUserAuths(clientSocket);
+
+    UserOperations::getInstance().removeUser(clientSocket);
 }
 
-void Server::fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message) {
+void Server::fileTransfer(QTcpSocket *sender, QString localFile, QString serverPath) {
     fileTransfererSocket = sender;
     isFileTransferInProgress = true;
 
-    message = message.replace('\\', '/');
-
-    int beginningOfFileName = message.lastIndexOf('/');
-    transferredFileName = message.mid(beginningOfFileName + 1, message.size());
-
-    transferredFileLocation = cmd->getDestinationDir();
-}
-
-// TODO move to /Commands
-bool Server::isAuthorized(QTcpSocket *sender, QString cmdName) {
-    if (getCmd(cmdName)->getAuthorizedUser() == nullptr ||
-        getCmd(cmdName)->getIsAuthRequired() == false)
-        return false;
-    else
-        for (auto &i : getUser(getCmd(cmdName)->getAuthorizedUser())->socketInstances) {
-            if (i == sender) {
-                return true;
-            }
-        }
-
-    return false;
+    transferredFileName = localFile.mid(localFile.lastIndexOf("/") + 1, localFile.length());
+    transferredFileLocation = serverPath;
 }
 
 BaseCmd *Server::getCmd(QString cmdName) {
     for (auto &i : cmdList) {
-        if (cmp(cmdName, i->getCmdCallString())) return i;
-    }
-
-    return nullptr;
-}
-
-User *Server::getUser(QString userName) {
-    for (auto &i : userList) {
-        if (i->getUserName() == userName) return i;
-    }
-
-    return nullptr;
-}
-
-User *Server::getUser(QTcpSocket *socket) {
-    for (auto &i : userList) {
-        for (auto &j : i->socketInstances) {
-            if (j == socket) return i;
+        if (Cmp(cmdName, i->getCmdCallString())) {
+            return i;
         }
     }
 
     return nullptr;
-}
-
-QList<QString> Server::getDlibs(QString path) {
-    QList<QString> libList;
-
-    QDirIterator iterator(path, QDirIterator::Subdirectories);
-
-    while (iterator.hasNext()) {
-        QFile file(iterator.next());
-        if (file.open(QIODevice::ReadOnly) and QLibrary::isLibrary(file.fileName())) {
-            libList.append(file.fileName());
-        }
-    }
-
-    return libList;
 }
 
 void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
-    QList<QString> commandLibs = getDlibs(Paths().getExecutablePath());
-    if (commandLibs.isEmpty()) {
-        Log().Error("no libs found at " + Paths().getExecutablePath());
-    } else {
-        for (auto &lib : commandLibs) {
-            if (lib.contains(message, Qt::CaseInsensitive)) {
-                QPluginLoader loader(lib);
-                if (auto *instance = loader.instance()) {
-                    if (auto *plugin = qobject_cast<PluginInterface *>(instance)) {
-                        plugin->run(sender, message);
-                    } else {
-                        Log().Error("qobject_cast<> returned nullptr");
-                    }
-                } else {
-                    Log().Error(loader.errorString());
-                }
+    if (Cmp(message, "addUser")) {
+        UserOperations::getInstance().addUser(sender, message);
+        broadcast(UserOperations::getInstance().getUserList(sender).toLocal8Bit());
+    } else if (Cmp(message, "getUserList")) {
+        Transmit(sender, UserOperations::getInstance().getUserList(sender).toLocal8Bit());
+    } else if (Cmp(message, "listLogs")) {
+        Transmit(sender, Logging::getLogFileNames().toLocal8Bit());
+    } else if (Cmp(message, "readLog")) {
+        Transmit(sender, Logging::getLogData(GetParam(message)).toLocal8Bit());
+    } else if (Cmp(message, "help")) {
+        Transmit(sender, (" - Server Commands - \n" + Operations::help()).toLocal8Bit());
+    } else if (Cmp(message, "sa")) {
+        Transmit(sender, "AS");
+    } else if (Cmp(message, "UpdateCmds")) {
+        populateCmdLists();
+        Transmit(sender, "Command list updated.");
+    } else if (Cmp(message, "getAuth")) {
+        Transmit(sender,
+                 getCmd(GetParam(message))
+                     ->authorizeUser(UserOperations::getInstance().getUser(sender)->getUserName())
+                     .toLocal8Bit());
+    } else if (Cmp(message, "clearAuth")) {
+        if (not message.simplified().contains(" ")) {
+            clearUserAuths(sender);
+        } else {
+            if (getCmd(GetParam(message))
+                    ->isAuthenticated(
+                        UserOperations::getInstance().getUser(sender)->getUserName())) {
+                Transmit(sender, getCmd(GetParam(message))->clearAuthorizedUser().toLocal8Bit());
+            } else {
+                Transmit(sender, "You are already not authorized for this command.");
             }
+        }
+    } else if (Cmp(message, "forceAuth")) {
+        Transmit(sender, getCmd(GetParam(message))
+                             ->forceAuthorizeUser(
+                                 UserOperations::getInstance().getUser(sender)->getUserName())
+                             .toLocal8Bit());
+    } else if (Cmp(message, "transmit")) {
+        message = message.simplified();
+
+        int sIndex = message.indexOf("-s", 0) + 3;
+        int dIndex = message.indexOf("-d") - 1;
+
+        QString localFileAndPath = message.mid(sIndex, dIndex - sIndex).simplified();
+        QString serverPath = message.mid(dIndex + 4, message.length()).simplified();
+
+        std::cout << "localFileAndPath: " << localFileAndPath.toStdString() << std::endl;
+        std::cout << "serverPath: " << serverPath.toStdString() << std::endl;
+
+        fileTransfer(sender, localFileAndPath, serverPath);
+    } else if (Cmp(message, "plugin")) {
+        QPluginLoader loader(Path::getInstance().getExecutablePath() + "cmds/lib" +
+                             GetParam(message).mid(0, GetParam(message).indexOf(" ")) + ".dll");
+        std::cout << (Path::getInstance().getExecutablePath() + "cmds/lib" +
+                      GetParam(message).mid(0, GetParam(message).indexOf(" ")) + ".dll")
+                         .toStdString()
+                  << std::endl;
+        if (auto *instance = loader.instance()) {
+            if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
+                plugin->run(sender, GetParam(message).toLocal8Bit());
+            } else {
+                Log().Error("qobject_cast<> returned nullptr");
+            }
+        } else {
+            Log().Error(loader.errorString());
         }
     }
 }
 
+void Server::clearUserAuths(QTcpSocket *sender) {
+    for (auto &cmd : cmdList) {
+        if (cmd->getAuthorizedUser() ==
+            UserOperations::getInstance().getUser(sender)->getUserName()) {
+            Transmit(sender, cmd->clearAuthorizedUser().toLocal8Bit());
+        }
+    }
+
+    Transmit(sender, "All authorizations cleared.");
+}
+
 void Server::connectProcess(QTcpSocket *sender, QProcess *process) {
-    transmit(sender, "Script execution successful. Forwarding output: ");
+    Transmit(sender, "Script execution successful. Forwarding output: ");
     connect(process, &QProcess::readyReadStandardOutput, this,
-            [=]() { transmit(sender, process->readLine()); });
+            [=]() { Transmit(sender, process->readLine()); });
 }

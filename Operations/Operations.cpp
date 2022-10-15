@@ -1,13 +1,15 @@
 #include "Operations.h"
 
+#include "../common.h"
+
 Operations::Operations(QString yamlFile) {
     cmdsYamlFile = yamlFile;
     Log().setFlushRate(0);
 }
 
-bool Operations::parseMessage(QTcpSocket *sender, QByteArray message, bool isExactMatch) {
+bool Operations::parseMessage(QTcpSocket *sender, QByteArray message) {
     for (auto &i : cmdList) {
-        if (cmp(message, i->getCmdCallString())) {
+        if (Cmp(message, i->getCmdCallString())) {
             switch (i->getCmdType()) {
             case CmdType::internal:
                 parseInternalCmd(sender, message);
@@ -15,42 +17,15 @@ bool Operations::parseMessage(QTcpSocket *sender, QByteArray message, bool isExa
             case CmdType::call:
                 runBatchScript(sender, dynamic_cast<CallCmd *>(i), message);
                 break;
-            case CmdType::fileTransfer:
-                fileTransfer(sender, dynamic_cast<FileTransferCmd *>(i), message);
-                break;
             case null:
             case trigger:
                 break;
-            }
-
-            // Check for triggers connected to command
-            for (auto &tcmd : cmdList) {
-                if (tcmd->getCmdType() == CmdType::trigger) {
-                    auto *trigger = dynamic_cast<TriggerCmd *>(tcmd);
-                    if (cmp(i->getCmdCallString(), trigger->getTriggererId())) {
-                        QString triggerCmd = trigger->getCallString();
-                        Log().Info("Detected a trigger connected to " + i->getCmdCallString());
-                        Log().Info("Triggering " + triggerCmd);
-                        parseMessage(sender, triggerCmd.toLocal8Bit());
-                        return true;
-                    }
-                }
             }
             return true;
         }
     }
 
     return false;
-}
-
-QString Operations::helpFormatter(QString message) {
-    for (int i = 80; i < message.size(); i += 81) {
-        message.insert(i, "\n");
-        for (int j = 0; j < 34; j++) {
-            message.insert(i + 1, " ");
-        }
-    }
-    return message;
 }
 
 bool Operations::checkTimerFlag(vector<YAML::Node> cmdsWithTheTimerFlagSetNodeList,
@@ -80,8 +55,7 @@ void Operations::populateCmdLists() {
         Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "timer", "true");
     auto cmdsWithTheAuthFlagSetNodeList =
         Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "auth", "true");
-    auto callCmdsNodeList =
-        Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "type", "call");
+    auto callCmdsNodeList = Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "type", "call");
     auto fileTransferCmdsNodeList =
         Yaml::getNodeListByKey(cmdsYamlFile.toStdString(), "type", "filetransfer");
     auto triggerCmdsNodeList =
@@ -96,14 +70,14 @@ void Operations::populateCmdLists() {
         callCmd->setCmdCallString(QString::fromStdString(Yaml::getValue(i, "CmdCallString")));
         callCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
         callCmd->setScriptDir(QString::fromStdString(Yaml::getValue(i, "ScriptDir")));
-        callCmd->setScriptFileName(QString::fromStdString(Yaml::getValue(i, "id")));
+        callCmd->setScriptFileName(QString::fromStdString(Yaml::getValue(i, "ScriptFileName")));
         callCmd->setIsTimerSet(
             checkTimerFlag(cmdsWithTheTimerFlagSetNodeList, callCmd->getCmdCallString()));
         callCmd->setIsAuthRequired(
             checkAuthFlag(cmdsWithTheAuthFlagSetNodeList, callCmd->getCmdCallString()));
 
         if (callCmd->getIsTimerSet()) {
-            callCmd->setTriggerTime(QString::fromStdString(Yaml::getValue(i, "type")));
+            callCmd->setTriggerTime(QString::fromStdString(Yaml::getValue(i, "TimerTime")));
         }
 
         cmdList.append(callCmd);
@@ -113,31 +87,18 @@ void Operations::populateCmdLists() {
         auto *fileTransferCmd = new FileTransferCmd();
         fileTransferCmd->setCmdId("");
         fileTransferCmd->setCmdType(CmdType::fileTransfer);
-        fileTransferCmd->setCmdCallString(QString::fromStdString(Yaml::getValue(i, "CmdCallString")));
-        fileTransferCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
-        fileTransferCmd->setDestinationDir(QString::fromStdString(Yaml::getValue(i, "DestinationDir")));
+        fileTransferCmd->setCmdCallString(
+            QString::fromStdString(Yaml::getValue(i, "CmdCallString")));
+        fileTransferCmd->setCmdDescription(
+            QString::fromStdString(Yaml::getValue(i, "Description")));
+        fileTransferCmd->setDestinationDir(
+            QString::fromStdString(Yaml::getValue(i, "DestinationDir")));
         fileTransferCmd->setIsTimerSet(false);
         fileTransferCmd->setIsAuthRequired(
             checkAuthFlag(cmdsWithTheAuthFlagSetNodeList, fileTransferCmd->getCmdCallString()));
         fileTransferCmd->setTriggerTime("00:00");
 
         cmdList.append(fileTransferCmd);
-    }
-
-    for (auto &i : triggerCmdsNodeList) {
-        auto *triggerCmd = new TriggerCmd();
-        triggerCmd->setCmdId("");
-        triggerCmd->setCmdType(CmdType::trigger);
-        triggerCmd->setCmdCallString(QString::fromStdString(Yaml::getValue(i, "CmdCallString")));
-        triggerCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
-        triggerCmd->setTriggererId(QString::fromStdString(Yaml::getValue(i, "id")));
-        triggerCmd->setCallString(QString::fromStdString(Yaml::getValue(i, "type")));
-        triggerCmd->setIsTimerSet(false);
-        triggerCmd->setIsAuthRequired(
-            checkAuthFlag(cmdsWithTheAuthFlagSetNodeList, triggerCmd->getCmdCallString()));
-        triggerCmd->setTriggerTime("00:00");
-
-        cmdList.append(triggerCmd);
     }
 
     for (auto &i : internalCmdsNodeList) {
@@ -152,7 +113,7 @@ void Operations::populateCmdLists() {
         internalCmd->setCmdDescription(QString::fromStdString(Yaml::getValue(i, "Description")));
 
         if (internalCmd->getIsTimerSet()) {
-            internalCmd->setTriggerTime(QString::fromStdString(Yaml::getValue(i, "id")));
+            internalCmd->setTriggerTime(QString::fromStdString(Yaml::getValue(i, "TimerTime")));
         }
 
         cmdList.append(internalCmd);
@@ -168,28 +129,20 @@ void Operations::runBatchScript(QTcpSocket *sender, CallCmd *cmd, QString messag
     QStringList args = message.split(" ");
     args.removeFirst();
     args.prepend(batchLocation + batchFile);
-    args.prepend("/c");
-    qDebug() << "running: " << args;
 
     auto *process = new QProcess();
-    process->start("cmd.exe", args);
+
+    #ifdef Q_OS_WIN
+        args.prepend("/c");
+        QString bash = "cmd.exe";
+    #else
+        QString bash = "/bin/bash";
+    #endif
+
+    qDebug() << "running: " << args;
+    process->start(bash, args);
 
     connectProcess(sender, process);
-}
-
-void Operations::transmitMsg(QTcpSocket *client, QByteArray message) {
-    if (client->state() != QAbstractSocket::SocketState::UnconnectedState) {
-        client->write(message);
-        client->waitForBytesWritten();
-    }
-}
-
-// TODO move to Commands/common
-bool Operations::cmp(const QString source, const QString command) {
-    QString simplifiedSource = source.simplified();
-    simplifiedSource = simplifiedSource.mid(0, simplifiedSource.indexOf(" ", 0));
-
-    return simplifiedSource.compare(command, Qt::CaseInsensitive) == 0;
 }
 
 void Operations::timerTrigger() {
@@ -202,4 +155,14 @@ void Operations::timerTrigger() {
             parseMessage(nullptr, cmd->getCmdCallString().toLocal8Bit());
         }
     }
+}
+
+QString Operations::help() {
+    QString helpString = "\n";
+
+    for (auto &cmd : cmdList) {
+        helpString += cmd->getCmdCallString() + ":\n" + cmd->getCmdDescription() + "\n\n";
+    }
+
+    return helpString;
 }

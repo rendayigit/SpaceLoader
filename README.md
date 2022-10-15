@@ -36,7 +36,7 @@ A project where a Client can call batch scripts located in the Server PC. These 
 | 2 | ```pacman -Ss <package>``` | search package |
 | 3 | ```pacman -S <package>``` | install package |
 | 4 | ```pacman -R <package>``` | uninstall package |
-| 5 | ```pacman -Qet``` | list installed packages |
+| 5 | ```pacman -Qe``` | list installed packages |
 | 6 | ```pacman -Syyu``` | update |
 | 7 | ```pacman -Syyu --disable-download-timeout``` | update (use this if ur network is slow) |
 

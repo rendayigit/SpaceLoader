@@ -11,6 +11,7 @@
 #include <QtNetwork/QNetworkInterface>
 #include <QtNetwork/QTcpSocket>
 
+#include "Commands/cmd_plugin_interface.h"
 #include "lib/Logger/logger.h"
 #include "path.h"
 
@@ -75,4 +76,26 @@ static QList<QString> getDlibs(QString path) {
     return libList;
 }
 
-#endif //COMMON_H
+static void runDynamicCmd(QTcpSocket *sender, QByteArray message) {
+    QList<QString> commandLibs = getDlibs(Paths().getCmdsDir());
+    if (commandLibs.isEmpty()) {
+        Log().Error("no libs found at " + Paths().getCmdsDir());
+    } else {
+        for (auto &lib : commandLibs) {
+            if (lib.contains(GetCmd(message), Qt::CaseInsensitive)) {
+                QPluginLoader loader(lib);
+                if (auto *instance = loader.instance()) {
+                    if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
+                        plugin->run(sender, message);
+                    } else {
+                        Log().Error("qobject_cast<> returned nullptr");
+                    }
+                } else {
+                    Log().Error(loader.errorString());
+                }
+            }
+        }
+    }
+}
+
+#endif  // COMMON_H

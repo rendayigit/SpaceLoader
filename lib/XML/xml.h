@@ -4,6 +4,9 @@
 #include <QtXml/QDomDocument>
 #include <QtXml/QtXml>
 
+/**
+ * A class for xml operations.
+ */
 class Xml {
    public:
     static Xml &getInstance() {
@@ -57,9 +60,14 @@ class Xml {
 
    private:
     Xml() = default;
-
     ~Xml() = default;
 
+    /**
+     * Returns a list of child nodes of the given parent node.
+     *
+     * @param parentNode The parent node.
+     * @returns A list of child nodes.
+     */
     static QList<QDomNode> GetChildNodes(const QDomNode &parentNode);
 };
 

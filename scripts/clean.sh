@@ -4,5 +4,8 @@ cd -
 
 rm -rf $SCRIPTDIR/../build
 rm -rf $SCRIPTDIR/../.cache
-rm -rf $SCRIPTDIR/../bin
 rm -rf $SCRIPTDIR/../Logs
+rm -rf $SCRIPTDIR/../bin/Logs
+rm -rf $SCRIPTDIR/../bin/SERVER
+rm -rf $SCRIPTDIR/../bin/CONSOLE
+rm -rf $SCRIPTDIR/../bin/GUI
