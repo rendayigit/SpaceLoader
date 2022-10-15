@@ -144,6 +144,6 @@ void Backend::updateYamlFile(QString path, QString value){
     Yaml::setValueByPath(path.toStdString(), value.toStdString());
 }
 
-QString Backend::getConfigValue(QString key) {
-    return QString::fromStdString(Yaml::getValue("./Setup/Config.yaml", key.toStdString()));
+QString Backend::getConfigValue(QString path, QString key) {
+    return QString::fromStdString(Yaml::getValue(Yaml::getNodeByPath("./Setup/Config.yaml", path.toStdString()), key.toStdString()));
 }

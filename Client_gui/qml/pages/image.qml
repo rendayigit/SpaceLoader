@@ -137,7 +137,7 @@ Item {
                 font.pointSize: 12
 
                 Component.onCompleted: {
-                    serverPath.text = backend.getConfigValue("remotePath")
+                    serverPath.text = backend.getConfigValue("Config.FileTransfer.remotePath", "remotePath")
                 }
             }
 

@@ -53,6 +53,7 @@ Window {
                 loginAnimationFrameMarginTop.running = true
                 timer.running = true
                 backend.setServerIp(textServerIp.text)
+                backend.updateYamlFile("Config.Ips.targetPc.ip", textServerIp.text)
             } else{
                 loginTextField.borderColor = "#55aaff"
                 labelPassword.visible = true
@@ -245,6 +246,10 @@ Window {
             text: "127.0.0.1"
 
             font.pointSize: 10
+
+            Component.onCompleted: {
+                textServerIp.text = backend.getConfigValue("Config.Ips.targetPc.ip", "ip");
+            }
         }
 
         Label {

@@ -23,7 +23,7 @@ class Backend : public TCPClient {
     Q_INVOKABLE void setServerIp(QString ip);
     Q_INVOKABLE QString getLocalIp();
     Q_INVOKABLE void updateYamlFile(QString path, QString value);
-    Q_INVOKABLE QString getConfigValue(QString key);
+    Q_INVOKABLE QString getConfigValue(QString path, QString key);
 
    signals:
     void getReceivedText(QString text);

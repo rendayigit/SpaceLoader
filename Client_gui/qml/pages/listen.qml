@@ -25,6 +25,10 @@ Item {
             text: "127.0.0.1:1235"
 
             font.pointSize: 12
+
+            Component.onCompleted: {
+                ip.text = backend.getConfigValue("Config.Ips.listenTo", "ip")
+            }
         }
 
         CustomButton {
@@ -47,7 +51,8 @@ Item {
                 enabled = false
                 stopListen.enabled = true
                 textArea.text = "Listening to " + ip.text + "\n"
-                backend.listen(ip.text)
+                // backend.listen(ip.text)
+                backend.updateYamlFile("Config.Ips.listenTo", ip.text);
             }
         }
 
