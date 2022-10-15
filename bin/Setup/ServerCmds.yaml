@@ -1,0 +1,125 @@
+Cmds:
+  Cmd:
+    - CmdCallString: help
+      Description: >-
+        Display the help menu. `help _cmd_` to display help to only _cmd_ or
+        `help` for full list.
+      id: help
+      type: internal
+    - CmdCallString: StarkitOn
+      Description: 'Turns on target: Starkit.'
+      ScriptDir: 'C:\Program Files'
+      ScriptFileName: StarkitOn.bat
+      id: starkiton
+      type: call
+    - CmdCallString: StarkitOff
+      Description: 'Turns off target: Starkit.'
+      ScriptDir: 'C:\Program Files'
+      ScriptFileName: StarkitOff.bat
+      id: starkitoff
+      type: call
+    - CmdCallString: TransmitImg
+      Description: Send provided .elf image file to debug pc.
+      DestinationDir: 'D:\t\'
+      id: transmitimg
+      type: filetransfer
+    - CmdCallString: SendConfig
+      Description: Sends provided ServerCmds.yaml to server.
+      DestinationDir: 'D:\'
+      id: sendconfig
+      type: filetransfer
+    - CmdCallString: SendFolder
+      Description: Sends provided folder to server.
+      DestinationDir: 'D:\'
+      id: sendFolder
+      type: filetransfer
+    - CmdCallString: transmit
+      Description: 'Transmit a file to server. Syntax: "transmit -s C:/myfile.elf -d D:/path/in/server/"'
+      id: transmit
+      type: internal
+    - CmdCallString: GetUserList
+      Description: Get the list of users connected to the server.
+      id: getuserlist
+      type: internal
+      auth: 'false'
+    - CmdCallString: addUser
+      Description: 'Sets username in server. Syntax: "addUser renda ip 127.0.0.1"'
+      id: addUser
+      type: internal
+    - CmdCallString: UpdateCmds
+      Description: Tells the server to reparse the ServerCmds.yaml.
+      id: updatecmds
+      type: internal
+    - CmdCallString: echo
+      Description: echo deneme.
+      ScriptDir: echo
+      ScriptFileName: ''
+      id: echo
+      type: call
+    - CmdCallString: run
+      Description: runs the provided bat
+      ScriptDir: custom
+      ScriptFileName: ''
+      TimerTime: '20:00'
+      id: run
+      type: call
+      timer: 'true'
+    - CmdCallString: linuxDeneme
+      Description: linuxDeneme
+      ScriptDir: '/home/pc/Desktop/'
+      ScriptFileName: 'echo.sh'
+      id: linuxDeneme
+      type: call
+    - CmdCallString: trigger1
+      Description: trigger1
+      ScriptDir: 'C:\Users\renda\Documents\Projects\SpaceLoader\scripts\'
+      ScriptFileName: hello.bat
+      id: trigger1
+      type: call
+      TimerTime: '18:57'
+      timer: 'true'
+    - CmdCallString: hello
+      Description: hello deneme.
+      ScriptDir: 'C:\Users\renda\Documents\Projects\SpaceLoader\scripts\'
+      ScriptFileName: hello.bat
+      id: hello
+      type: call
+      auth: 'true'
+    - CmdCallString: gdb
+      Description: debugger
+      ScriptDir: 'C:\Users\renda\Documents\Projects\SpaceLoader\scripts\'
+      ScriptFileName: gdb.bat
+      id: gdb
+      type: call
+    - CmdCallString: SA
+      Description: >-
+        Server replies `AS` to this message. Can be used to check if server is
+        up.
+      id: sa
+      type: internal
+    - CmdCallString: clearAuth
+      Description: Server clears the clients authorization.
+      id: clearAuth
+      type: internal
+    - CmdCallString: getAuth
+      Description: Sends authorization request to server.
+      id: getAuth
+      type: internal
+    - CmdCallString: forceAuth
+      Description: Gets the given command's authorization by force.
+      id: forceAuth
+      type: internal
+    - CmdCallString: ReadLog
+      Description: >-
+        Returns the provided log file line by line. Can use `ListLog` to view
+        available log files.
+      id: readlog
+      type: internal
+    - CmdCallString: ListLogs
+      Description: View available log files in the server.
+      id: listlogs
+      type: internal
+    - CmdCallString: plugin
+      Description: Run provided plugin
+      id: plugin
+      type: internal

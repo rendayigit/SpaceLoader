@@ -5,21 +5,18 @@
 #include <QtCore/QDir>
 #include <QtCore/QSharedMemory>
 #include <QtCore/QStandardPaths>
-#include <filesystem>
 #include <mutex>
 
-using std::filesystem::current_path;
+#include "../../path.h"
 
 std::mutex fileMutex;
 std::mutex bufferMutex;
 
-Logger *Logger::m_instance = Logger::getInstance();
-
-void exit() { Log()->Flush(); }
+void exit() { /*Log().Flush();*/ }  // TODO - logDir value gone at program exit
 
 Logger::Logger()
     : isLoggingEnabled(true),
-      logDir(QDir::currentPath() + QDir::separator() + "Logs" + QDir::separator()),
+      logDir(Path::getInstance().getExecutablePath() + "Logs" + QDir::separator()),
       logFileName(""),
       flushRate(100000),
       buffer({}),
@@ -27,13 +24,6 @@ Logger::Logger()
     createLogsDirectory();
     buffer.reserve(flushRate + 1000);
     atexit(exit);
-}
-
-Logger *Logger::getInstance() {
-    if (m_instance == nullptr) {
-        m_instance = new Logger;
-    }
-    return m_instance;
 }
 
 /// Create /Logs directory if it does not already exist
@@ -48,7 +38,7 @@ bool Logger::createLogsDirectory() {
         return true;
     }
 
-    qWarning() << "Could not create '/Logs' path!";
+    qWarning() << "Could not create " << logDir;
     return false;
 }
 
@@ -70,6 +60,7 @@ void Logger::Flush() {
     std::unique_lock<std::mutex> lock(fileMutex);
 
     updateLogFilePath();
+
     QFile file(logDir + logFileName);
 
     if (file.open(QIODevice::WriteOnly | QIODevice::Append) and not buffer.isNull()) {
