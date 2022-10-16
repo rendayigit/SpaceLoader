@@ -21,6 +21,7 @@ set(PROJECT_SOURCES
         ../lib/TCP/client/tcpClient.cpp
         ../lib/YAML/yaml.cpp
         listener.cpp
+        egse.cpp
         backend.cpp
         main.cpp
         qml.qrc

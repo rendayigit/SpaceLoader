@@ -10,6 +10,8 @@ class Backend : public TCPClient {
     Backend();
     void onReceived(QByteArray message);
     void onDisconnected();
+    void egseReplier(QString message);
+    void egseDisconnectedError();
 
    public slots:
     Q_INVOKABLE void getTerminalData(QString text);
@@ -24,6 +26,8 @@ class Backend : public TCPClient {
     Q_INVOKABLE QString getLocalIp();
     Q_INVOKABLE void updateYamlFile(QString path, QString value);
     Q_INVOKABLE QString getConfigValue(QString path, QString key);
+    Q_INVOKABLE void transmitEgseTc(QString tc);
+    Q_INVOKABLE void egseConnect(QString deviceIp, QString devicePort);
 
    signals:
     void getReceivedText(QString text);
@@ -32,6 +36,8 @@ class Backend : public TCPClient {
     void clearLogs();
     void getUsers(QString text);
     void getListenerText(QString text);
+    void egseError(bool isError, QString text);
+    void egseReply(QString message);
 
    private:
     void parse(QString text);
