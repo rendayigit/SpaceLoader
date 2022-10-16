@@ -36,6 +36,10 @@ Rectangle {
         font.pointSize: 12
         placeholderText: "Device IP"
         text: "192.168.1.250"
+
+        Component.onCompleted: {
+            textDeviceIp.text = backend.getConfigValue("Config.Ips.egse.ip", "ip")
+        }
     }
 
     Label {
@@ -65,6 +69,10 @@ Rectangle {
         font.pointSize: 12
         placeholderText: "TC Port"
         text: "5004"
+
+        Component.onCompleted: {
+            textDeviceTcPort.text = backend.getConfigValue("Config.Ips.egse.port", "port")
+        }
     }
 
     CustomButton {
@@ -84,7 +92,11 @@ Rectangle {
 
         text: "Connect"
 
-        onClicked: backend.egseConnect(textDeviceIp.text, textDeviceTcPort.text)
+        onClicked: {
+            backend.updateYamlFile("Config.Ips.egse.ip", textDeviceIp.text)
+            backend.updateYamlFile("Config.Ips.egse.port", textDeviceTcPort.text)
+            backend.egseConnect(textDeviceIp.text, textDeviceTcPort.text)
+        }
     }
 
     Label {
