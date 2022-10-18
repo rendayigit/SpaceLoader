@@ -17,9 +17,9 @@ jobs:
           var2=${var1#*.}
           var3=${var2#*.}
           var4=$((var3+1))
-          var5=1.0.
+          var5=0.
           var5+=$var4
-          echo $var6 | tee foo.txt
+          echo $var5 | tee foo.txt
           git add .
           git commit -m "version update"
           git push
