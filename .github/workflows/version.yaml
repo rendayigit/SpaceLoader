@@ -19,7 +19,8 @@ jobs:
           var4=$((var3+1))
           var5=0.
           var5+=$var4
-          echo $var5 | tee foo.txt
+          echo $var5 | tee VERSION
           git add .
           git commit -m "version update"
           git push
+          
