@@ -1,0 +1,27 @@
+name: Actions Workflow 
+
+on:
+  push:
+
+jobs: 
+  run-github-actions: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: patchVersioning
+        run: | 
+          cd /home/runner/work
+          git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/rendayigit/SpaceLoader.git
+          git config --global user.name ${{ secrets.USERNAME }}
+          git config --global user.email ${{ secrets.EMAIL }}
+          cd SpaceLoader
+          cd bin
+          var1=$(cat VERSION)
+          var2=${var1#*.}
+          var3=${var2#*.}
+          var4=$((var3+1))
+          var5=1.0.
+          var5+=$var4
+          echo $var6 | tee foo.txt
+          git add .
+          git commit -m "version update"
+          git push
