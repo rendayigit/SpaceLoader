@@ -9,12 +9,10 @@ jobs:
     steps:
       - name: patchVersioning
         run: | 
-          cd /home/runner/work
           git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/rendayigit/SpaceLoader.git
           git config --global user.name ${{ secrets.USERNAME }}
           git config --global user.email ${{ secrets.EMAIL }}
-          cd SpaceLoader
-          cd bin
+          cd SpaceLoader/bin
           var1=$(cat VERSION)
           var2=${var1#*.}
           var3=${var2#*.}
