@@ -67,16 +67,13 @@ jobs:
             mingw-w64-x86_64-gtest
             mingw-w64-x86_64-yaml-cpp
             mingw-w64-x86_64-ninja   
-            mingw-w64-x86_64-gcc  
-            mingw-w64-x86_64-g++
-            mingw-w64-gdb
 
       - name: Checkout
         uses: actions/checkout@v2
 
       - shell: cmd
         run: |
-          cd D:/a/_temp/setup-msys2/mingw64
+          cd D:/a/_temp/setup-msys2/mingw64/+
           dir -s
 
       - name: Build All
