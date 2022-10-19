@@ -41,7 +41,7 @@
 #           ./tests.exe
 
 
-name: WINDOWS_CI_2
+name: WINDOWS_CI
 
 on: push
 
@@ -66,7 +66,8 @@ jobs:
             mingw-w64-x86_64-make
             mingw-w64-x86_64-gtest
             mingw-w64-x86_64-yaml-cpp
-            mingw-w64-x86_64-ninja     
+            mingw-w64-x86_64-ninja   
+            mingw-w64-x86_64-gcc  
 
       - name: Checkout
         uses: actions/checkout@v2
