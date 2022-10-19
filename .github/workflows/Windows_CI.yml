@@ -55,7 +55,7 @@ jobs:
       - name: Install MSYS2
         uses: msys2/setup-msys2@v2
         with:
-          location: D:\
+          location: C:\
           msystem: MINGW64
           update: true
           install: |
@@ -73,7 +73,11 @@ jobs:
 
       - shell: cmd
         run: |
-          cd D:/a/_temp/setup-msys2/mingw64/+
+          cd C:/
+          dir -s
+          cd C:/a
+          dir -s 
+          cd C:/a/mingw64
           dir -s
 
       - name: Build All
