@@ -15,11 +15,11 @@
 
 class Server : public TCPServer, public Operations {
    public:
-    // Server(const Server &) = delete;
-    // Server &operator=(const Server &) = delete;
-    // Server(Server &&) = delete;
-    // Server &operator=(Server &&) = delete;
-    // ~Server() = default;
+    Server(const Server &) = delete;
+    Server &operator=(const Server &) = delete;
+    Server(Server &&) = delete;
+    Server &operator=(Server &&) = delete;
+    ~Server() = default;
 
     static auto &getInstance() {
         static Server instance;

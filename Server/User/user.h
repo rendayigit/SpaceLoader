@@ -9,6 +9,14 @@
 
 class User {
    public:
+    User() = default;
+    ~User() = default;
+
+    User(const User &) = delete;
+    User &operator=(User const &) = delete;
+    User(User &&) = delete;
+    User &operator=(User &&) = delete;
+
     User(QString userName, QTcpSocket *socket)
         : userName(userName), socketInstances(new QList<QTcpSocket *>()) {
         socketInstances->append(socket);

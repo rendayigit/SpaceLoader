@@ -5,6 +5,12 @@
 
 class CallCmd : public BaseCmd {
    public:
+    CallCmd(const CallCmd &) = delete;
+    ~CallCmd() override = default;
+
+    CallCmd &operator=(CallCmd const &) = delete;
+    CallCmd(CallCmd &&) = delete;
+    CallCmd &operator=(CallCmd &&) = delete;
     CallCmd() = default;
 
     QString getScriptDir() const { return ScriptDir; }

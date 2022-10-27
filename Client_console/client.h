@@ -14,6 +14,12 @@
 class Client : public TCPClient, public Operations {
     Q_OBJECT
    public:
+    Client(const Client &) = delete;
+    Client &operator=(const Client &) = delete;
+    Client(Client &&) = delete;
+    Client &operator=(Client &&) = delete;
+    ~Client() = default;
+
     static auto &getInstance() {
         static Client instance;
         return instance;

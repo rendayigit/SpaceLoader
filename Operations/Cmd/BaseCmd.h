@@ -9,6 +9,11 @@ class BaseCmd {
    public:
     BaseCmd() = default;
     virtual ~BaseCmd() = default;
+    
+    BaseCmd(const BaseCmd &) = delete;
+    BaseCmd &operator=(BaseCmd const &) = delete;
+    BaseCmd(BaseCmd &&) = delete;
+    BaseCmd &operator=(BaseCmd &&) = delete;
 
     QString getCmdCallString() const { return CmdCallString; }
     void setCmdCallString(const QString &cmdCallString) { CmdCallString = cmdCallString; }
@@ -47,7 +52,7 @@ class BaseCmd {
         if (authorizedUser == authorizedUser_) {
             return "You are already authorized for " + CmdCallString;
         }
-        
+
         return "Unable to acquire authorization";
     }
 

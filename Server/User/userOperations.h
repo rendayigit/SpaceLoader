@@ -10,6 +10,12 @@
 
 class UserOperations {
    public:
+    UserOperations(const UserOperations &) = delete;
+    UserOperations &operator=(UserOperations const &) = delete;
+    UserOperations(UserOperations &&) = delete;
+    UserOperations &operator=(UserOperations &&) = delete;
+    ~UserOperations() = default;
+
     static auto &getInstance() {
         static UserOperations instance;
         return instance;

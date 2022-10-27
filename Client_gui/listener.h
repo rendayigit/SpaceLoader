@@ -6,13 +6,20 @@
 
 class Listener : public TCPClient {
    public:
-    explicit Listener(Backend* backend) { this->backend = backend; };
+    explicit Listener(Backend *backend) { this->backend = backend; };
+    ~Listener() override = default;
+
+    Listener(const Listener &) = delete;
+    Listener &operator=(Listener const &) = delete;
+    Listener(Listener &&) = delete;
+    Listener &operator=(Listener &&) = delete;
+
     void onReceived(QByteArray message) override;
     void disconnect();
     void setConnected() { connected = true; }
 
    private:
-    Backend* backend;
+    Backend *backend;
     bool connected = false;
 };
 

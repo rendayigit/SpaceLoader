@@ -7,7 +7,18 @@ class Backend : public TCPClient {
     Q_OBJECT
 
    public:
-    Backend();
+    ~Backend() override = default;
+
+    Backend(const Backend &) = delete;
+    Backend &operator=(Backend const &) = delete;
+    Backend(Backend &&) = delete;
+    Backend &operator=(Backend &&) = delete;
+
+    static auto &getInstance() {
+        static Backend instance;
+        return instance;
+    }
+
     void onReceived(QByteArray message);
     void onDisconnected();
     void egseReplier(QString message);
@@ -38,6 +49,7 @@ class Backend : public TCPClient {
     void egseReply(QString message);
 
    private:
+    Backend();
     void parse(QString text);
     QString serverIp = "";
     QString localIp = "";
