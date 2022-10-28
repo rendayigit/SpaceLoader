@@ -58,7 +58,7 @@ void Backend::fileTransfer(QString localFile, QString serverPath) {
         localFile = localFile.replace("file:///", "");
     #else
         QString bash = "/bin/bash";
-        TODO - args.append("unix copy command here");
+        //TODO - args.append("unix copy command here");
         localFile = localFile.replace("file://", "");
     #endif
 
