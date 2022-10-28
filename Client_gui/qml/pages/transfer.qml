@@ -76,7 +76,7 @@ Item {
                 colorPressed: "#7963e6"
 
                 onClicked: {
-                    if(serverPath.text.length > 0 && fullFileText.length > 0) {
+                    if (serverPath.text.length > 0 && fullFileText.length > 0) {
                         backend.changeYamlFile("Config.FileTransfer.remotePath", serverPath.text)
                         backend.fileTransfer(fullFileText, serverPath.text)
                     } else {
@@ -89,7 +89,7 @@ Item {
                 id: remoteAreaAnimation
                 target: remoteArea
                 property: "anchors.topMargin"
-                to: if(remoteArea.anchors.topMargin === - 80) return 20; else return - 80
+                to: if (remoteArea.anchors.topMargin === - 80) return 20; else return - 80
                 duration: 5000
                 easing.type: Easing.OutQuint
             }
