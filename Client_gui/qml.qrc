@@ -37,7 +37,6 @@
         <file>assets/svg_images/user_icon.svg</file>
         <file>assets/sfx/starkit_ready.mp3</file>
         <file>assets/sfx/server_connection_lost.mp3</file>
-        <file>qml/pages/image.qml</file>
         <file>qml/pages/logs.qml</file>
         <file>qml/pages/egse.qml</file>
         <file>assets/images/upload.png</file>
@@ -58,7 +57,6 @@
         <file>assets/images/settings.png</file>
         <file>qml/components/LogButton.qml</file>
         <file>qml/pages/users.qml</file>
-        <file>qml/pages/transfer2.qml</file>
         <file>assets/svg_images/connect.svg</file>
         <file>qml/pages/listen.qml</file>
         <file>qml/pages/debug.qml</file>

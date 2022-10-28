@@ -1,128 +1,168 @@
-import QtQuick 2.15
+import QtQuick 2.0
+import QtQuick.Timeline 1.0
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.3
 import "../components"
 
 Item {
-    Label {
-        id: localPathLabel
-        color: "#ffffff"
-        text: qsTr("Path to local file: ")
-        font.pointSize: 10
-        font.family: "Segoe UI"
-        font.weight: Font.Normal
+    property string fullFileText: ""
 
-        anchors.top: parent.top
-        anchors.left: parent.left
+    Rectangle {
+        anchors.fill: parent
+        radius: 10
+        color: "#27273a"
 
-        anchors.topMargin: 25
-        anchors.leftMargin: 20
-    }
+        Rectangle {
+            id: uploadArea
+            height: 150
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.topMargin: 30
+            anchors.leftMargin: 50
+            anchors.rightMargin: 50
+            radius: 10
+            color: "#49496b"
 
-    CustomTextField {
-        id: localPath
-        height: 40
+            DropArea {
+                id: dropArea
+                anchors.fill: parent
 
-        anchors.top: parent.top
-        anchors.left: localPathLabel.right
-        anchors.right: browseLocal.left
-
-        anchors.topMargin: 20
-        anchors.leftMargin: 10
-        anchors.rightMargin: 20
-
-        placeholderText: ""
-        onEditingFinished: if(serverPath.text.length > 0 && localPath.text.length > 0) {
-                               upload.enabled = true
-                           } else {
-                               upload.enabled = false
+                onDropped: (drop) => {
+                               fullFileText = drop.text.split("file:///").join("")
+                               labelUploadArea.text = ".../" + fullFileText.slice(-30)
+                               remoteArea.visible = true
+                               uploadIcon.source = "../../assets/images/transfer.png"
+                               // uploadIcon.destroy()
                            }
+            }
 
-        font.pointSize: 12
-    }
+            GridLayout {
+                id: gridLayout
+                columns: 3
+                anchors.centerIn: parent
+                columnSpacing: 20
 
-    CustomButton {
-        id: browseLocal
-        anchors.top: parent.top
-        anchors.right: parent.right
+                Row {
+                    Image {
+                        id: uploadIcon
+                        source: "../../assets/images/upload.png"
+                    }
+                }
 
-        anchors.topMargin: 20
-        anchors.rightMargin: 20
+                Row {
+                    Label {
+                        id: labelUploadArea
+                        color: "#ffffff"
+                        text: "Upload image here or"
+                        font.family: "Segoe UI"
+                        font.pointSize: 13
+                        anchors.verticalCenter: parent.verticalCenter
+                        wrapMode: Label.WordWrap
+                    }
+                }
 
-        text: "Browse"
-        width: 100
-        height: 40
+                Row {
+                    CustomButton {
+                        width: 108
+                        height: 30
+                        text: "Browse"
+                        colorMouseOver: "#40405f"
+                        colorDefault: "#33334c"
+                        colorPressed: "#55aaff"
 
-        onClicked: fileDialog.visible = true
-    }
+                        onClicked: fileDialog.visible = true
+                    }
 
-    Label {
-        id: serverPathLabel
-        color: "#ffffff"
-        text: qsTr("Path to copy file: ")
-        font.pointSize: 10
-        font.family: "Segoe UI"
-        font.weight: Font.Normal
+                    FileDialog {
+                        id: fileDialog
+                        title: "Please choose a file to upload"
+                        folder: shortcuts.home
+                        visible: false
 
-        anchors.top: localPathLabel.bottom
-        anchors.left: parent.left
+                        onAccepted: () => {
+                                        labelUploadArea.text = ".../" + fileDialog.fileUrl.toString().split("file:///").join("").slice(-30)
+                                        fullFileText = fileDialog.fileUrl.toString().split("file:///").join("")
+                                        uploadIcon.source = "../../assets/images/transfer.png"
+                                        remoteArea.visible = true
+                                    }
+                    }
+                }
+            }
+        }
 
-        anchors.topMargin: 40
-        anchors.leftMargin: 20
-    }
+        Rectangle {
+            id: remoteArea
+            anchors.top: uploadArea.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
 
-    CustomTextField {
-        id: serverPath
-        height: 40
+            height: 80
+            width: uploadArea.width - 40
+            radius: 10
 
-        anchors.top: localPath.bottom
-        anchors.left: serverPathLabel.right
-        anchors.right: upload.left
+            anchors.topMargin: 20
+            visible: false
 
-        anchors.topMargin: 20
-        anchors.leftMargin: 10
-        anchors.rightMargin: 20
+            color: "#414159"
 
-        text: "D:/"
-        onEditingFinished: if(serverPath.text.length > 0 && localPath.text.length > 0) {
-                               upload.enabled = true
-                           } else {
-                               upload.enabled = false
-                           }
+            Label {
+                id: serverPathLabel
+                color: "#ffffff"
+                text: "Remote Path: "
+                font.pointSize: 10
+                font.family: "Segoe UI"
+                font.weight: Font.Normal
 
-        font.pointSize: 12
-    }
+                anchors.top: parent.top
+                anchors.left: parent.left
 
-    CustomButton {
-        id: upload
-        anchors.top: browseLocal.bottom
-        anchors.right: parent.right
+                anchors.topMargin: 30
+                anchors.leftMargin: 20
+            }
 
-        anchors.topMargin: 20
-        anchors.rightMargin: 20
+            CustomTextField {
+                id: serverPath
+                height: 40
 
-        text: "Upload"
-        width: 100
-        height: 40
+                anchors.top: parent.top
+                anchors.left: serverPathLabel.right
+                anchors.right: buttonUpload.left
 
-        colorDefault: "#4632a8"
-        colorMouseOver: "#5643b5"
-        colorPressed: "#7963e6"
+                anchors.topMargin: 20
+                anchors.leftMargin: 10
+                anchors.rightMargin: 20
 
-        enabled: false
+                text: "D:/"
 
-        onClicked: if(serverPath.text.length > 0 && localPath.text.length > 0) {
-                       backend.fileTransfer(localPath.text, serverPath.text)
-                   } else {
-                       print("error")
-                   }
-    }
+                font.pointSize: 12
+            }
 
-    FileDialog {
-        id: fileDialog
-        title: "Please choose a file"
-        folder: shortcuts.home
-        onAccepted: localPath.text = fileDialog.fileUrl
-        visible: false
+            CustomButton {
+                id: buttonUpload
+                anchors.top: parent.top
+                anchors.right: parent.right
+
+                anchors.topMargin: 20
+                anchors.rightMargin: 20
+
+                text: "Upload"
+                width: 100
+                height: 40
+
+                colorDefault: "#4632a8"
+                colorMouseOver: "#5643b5"
+                colorPressed: "#7963e6"
+
+                onClicked: {
+                    if(serverPath.text.length > 0 && fullFileText.length > 0) {
+                        backend.changeYamlFile("Config.FileTransfer.remotePath", serverPath.text)
+                        backend.fileTransfer(fullFileText, serverPath.text)
+                    } else {
+                        print("error")
+                    }
+                }
+            }
+        }
     }
 }

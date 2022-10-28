@@ -245,16 +245,8 @@ Flickable {
             setIcon: "../assets/images/transfer.png"
             font.pointSize: 9
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            onClicked: loaderView.source = "pages/image.qml"
+            onClicked: loaderView.source = "pages/transfer.qml"
         }
-
-        // CustomAppButton {
-        //     text: "File Transfer"
-        //     setIcon: "../assets/images/transfer.png"
-        //     font.pointSize: 9
-        //     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-        //     onClicked: loaderView.source = "pages/transfer.qml"
-        // }
 
         CustomAppButton {
             text: "Command Line"
