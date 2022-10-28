@@ -22,7 +22,7 @@ Window {
     modality: Qt.ApplicationModal
 
     // Text Edit Properties
-    //    property alias actualPage: loaderView.currentItem
+    // property alias actualPage: loaderView.currentItem
     property bool isValueVisible: true
     property int windowStatus: 0
     property int windowMargin: 10
@@ -253,14 +253,14 @@ Window {
                     onClicked: loaderView.source = "pages/cli.qml"
                 }
 
-                //TODO add later
-                //                CustomAppButton {
-                //                    text: "Listeners"
-                //                    setIcon: "../assets/images/connect.png"
-                //                    font.pointSize: 9
-                //                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-                //                    onClicked: loaderView.source = "pages/listeners.qml")
-                //                }
+                // TODO - add later
+                // CustomAppButton {
+                //     text: "Listeners"
+                //     setIcon: "../assets/images/connect.png"
+                //     font.pointSize: 9
+                //     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                //     onClicked: loaderView.source = "pages/listeners.qml")
+                // }
 
                 CustomAppButton {
                     text: "Users"
@@ -317,7 +317,7 @@ Window {
                 btnIconSource: "../assets/svg_images/home_icon.svg"
                 onClicked: {
                     loaderView.source = Qt.resolvedUrl("pages/homePage.qml")
-                    //                    actualPage.showValue = isValueVisible
+                    // actualPage.showValue = isValueVisible
                 }
             }
 
@@ -329,10 +329,12 @@ Window {
                 CustomToolTip {
                     text: "Listen To"
                 }
-                //                btnIconSource: "../assets/svg_images/conenct.svg" // FIXME
+                
+                // btnIconSource: "../assets/svg_images/conenct.svg" // FIXME
+                
                 onClicked: {
                     loaderView.source = Qt.resolvedUrl("pages/listen.qml")
-                    //                    actualPage.showValue = isValueVisible
+                    // actualPage.showValue = isValueVisible
                 }
             }
 
