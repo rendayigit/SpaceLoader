@@ -14,85 +14,6 @@ Item {
         color: "#27273a"
 
         Rectangle {
-            id: uploadArea
-            height: 150
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.topMargin: 30
-            anchors.leftMargin: 50
-            anchors.rightMargin: 50
-            radius: 10
-            color: "#49496b"
-
-            DropArea {
-                id: dropArea
-                anchors.fill: parent
-
-                onDropped: (drop) => {
-                               fullFileText = drop.text.split("file:///").join("")
-                               labelUploadArea.text = ".../" + fullFileText.slice(-30)
-                               remoteArea.visible = true
-                               uploadIcon.source = "../../assets/images/transfer.png"
-                               // uploadIcon.destroy()
-                           }
-            }
-
-            GridLayout {
-                id: gridLayout
-                columns: 3
-                anchors.centerIn: parent
-                columnSpacing: 20
-
-                Row {
-                    Image {
-                        id: uploadIcon
-                        source: "../../assets/images/upload.png"
-                    }
-                }
-
-                Row {
-                    Label {
-                        id: labelUploadArea
-                        color: "#ffffff"
-                        text: "Upload image here or"
-                        font.family: "Segoe UI"
-                        font.pointSize: 13
-                        anchors.verticalCenter: parent.verticalCenter
-                        wrapMode: Label.WordWrap
-                    }
-                }
-
-                Row {
-                    CustomButton {
-                        width: 108
-                        height: 30
-                        text: "Browse"
-                        colorMouseOver: "#40405f"
-                        colorDefault: "#33334c"
-                        colorPressed: "#55aaff"
-
-                        onClicked: fileDialog.visible = true
-                    }
-
-                    FileDialog {
-                        id: fileDialog
-                        title: "Please choose a file to upload"
-                        folder: shortcuts.home
-                        visible: false
-
-                        onAccepted: () => {
-                                        labelUploadArea.text = ".../" + fileDialog.fileUrl.toString().split("file:///").join("").slice(-30)
-                                        fullFileText = fileDialog.fileUrl.toString().split("file:///").join("")
-                                        uploadIcon.source = "../../assets/images/transfer.png"
-                                        remoteArea.visible = true
-                                    }
-                    }
-                }
-            }
-        }
-
-        Rectangle {
             id: remoteArea
             anchors.top: uploadArea.bottom
             anchors.horizontalCenter: parent.horizontalCenter
@@ -101,7 +22,7 @@ Item {
             width: uploadArea.width - 40
             radius: 10
 
-            anchors.topMargin: 20
+            anchors.topMargin: - 80
             visible: false
 
             color: "#414159"
@@ -160,6 +81,96 @@ Item {
                         backend.fileTransfer(fullFileText, serverPath.text)
                     } else {
                         print("error")
+                    }
+                }
+            }
+
+            PropertyAnimation {
+                id: remoteAreaAnimation
+                target: remoteArea
+                property: "anchors.topMargin"
+                to: if(remoteArea.anchors.topMargin === - 80) return 20; else return - 80
+                duration: 5000
+                easing.type: Easing.OutQuint
+            }
+        }
+
+        Rectangle {
+            id: uploadArea
+            height: 150
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.topMargin: 30
+            anchors.leftMargin: 50
+            anchors.rightMargin: 50
+            radius: 10
+            color: "#49496b"
+
+            DropArea {
+                id: dropArea
+                anchors.fill: parent
+
+                onDropped: (drop) => {
+                               fullFileText = drop.text.split("file:///").join("")
+                               labelUploadArea.text = ".../" + fullFileText.slice(-30)
+                               remoteArea.visible = true
+                               remoteAreaAnimation.running = true;
+                               uploadIcon.source = "../../assets/images/transfer.png"
+                               // uploadIcon.destroy()
+                           }
+            }
+
+            GridLayout {
+                id: gridLayout
+                columns: 3
+                anchors.centerIn: parent
+                columnSpacing: 20
+
+                Row {
+                    Image {
+                        id: uploadIcon
+                        source: "../../assets/images/upload.png"
+                    }
+                }
+
+                Row {
+                    Label {
+                        id: labelUploadArea
+                        color: "#ffffff"
+                        text: "Upload image here or"
+                        font.family: "Segoe UI"
+                        font.pointSize: 13
+                        anchors.verticalCenter: parent.verticalCenter
+                        wrapMode: Label.WordWrap
+                    }
+                }
+
+                Row {
+                    CustomButton {
+                        width: 108
+                        height: 30
+                        text: "Browse"
+                        colorMouseOver: "#40405f"
+                        colorDefault: "#33334c"
+                        colorPressed: "#55aaff"
+
+                        onClicked: fileDialog.visible = true
+                    }
+
+                    FileDialog {
+                        id: fileDialog
+                        title: "Please choose a file to upload"
+                        folder: shortcuts.home
+                        visible: false
+
+                        onAccepted: () => {
+                                        labelUploadArea.text = ".../" + fileDialog.fileUrl.toString().split("file:///").join("").slice(-30)
+                                        fullFileText = fileDialog.fileUrl.toString().split("file:///").join("")
+                                        uploadIcon.source = "../../assets/images/transfer.png"
+                                        remoteArea.visible = true
+                                        remoteAreaAnimation.running = true;
+                                    }
                     }
                 }
             }

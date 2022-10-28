@@ -281,6 +281,7 @@ Window {
                 duration: 5000
                 easing.type: Easing.InOutQuint
             }
+            
             PropertyAnimation {
                 id: imageAnimationOpacity
                 target: imageFingerPrint
