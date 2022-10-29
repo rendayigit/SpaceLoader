@@ -5,6 +5,7 @@
         <file>qml/pages/homePage.qml</file>
         <file>qml/pages/404.qml</file>
         <file>qml/components/CircularProgressBar.qml</file>
+        <file>qml/components/CustomProgressBar.qml</file>
         <file>qml/components/CustomAppButton.qml</file>
         <file>qml/components/CustomButton.qml</file>
         <file>qml/components/CustomToggleButton.qml</file>

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 import QtQuick.Timeline 1.0
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
@@ -80,6 +80,7 @@ Rectangle {
                 print("server path: " + serverPath.text)
 
                 if (serverPath.text.length > 0 && fileToUploadPath.length > 0) {
+                    progressBar.visible = true
                     // TODO - implement
                     // backend.changeYamlFile("Config.FileTransfer.remotePath", serverPath.text)
                     // backend.fileTransfer(fileToUploadPath, serverPath.text)
@@ -95,9 +96,22 @@ Rectangle {
             target: remoteArea
             property: "anchors.topMargin"
             to: 20;
-            duration: 5000
+            duration: 1000
             easing.type: Easing.OutQuint
         }
+    }
+
+    CustomProgressBar {
+        id: progressBar
+
+        anchors.bottom: remoteArea.bottom
+        anchors.left: remoteArea.left
+        anchors.right: remoteArea.right
+        anchors.bottomMargin: 5
+        anchors.rightMargin: 10
+        anchors.leftMargin: 10
+
+        visible: false
     }
 
     Rectangle {
@@ -189,5 +203,7 @@ Rectangle {
 
     Connections {
         target: backend
+
+        // TODO - implement onTransferComplete()
     }
 }
