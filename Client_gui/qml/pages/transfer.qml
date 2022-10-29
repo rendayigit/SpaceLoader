@@ -5,175 +5,189 @@ import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.3
 import "../components"
 
-Item {
-    property string fullFileText: ""
+Rectangle {
+    id: root
+
+    property string fileToUploadPath: ""
+
+    radius: 10
+    color: "#27273a"
 
     Rectangle {
-        anchors.fill: parent
+        id: remoteArea
+        
+        anchors.top: uploadArea.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.topMargin: - 80
+
+        height: 80
+        width: uploadArea.width - 40
+        
         radius: 10
-        color: "#27273a"
+        color: "#414159"
 
-        Rectangle {
-            id: remoteArea
-            anchors.top: uploadArea.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-
-            height: 80
-            width: uploadArea.width - 40
-            radius: 10
-
-            anchors.topMargin: - 80
-            visible: false
-
-            color: "#414159"
-
-            Label {
-                id: serverPathLabel
-                color: "#ffffff"
-                text: "Remote Path: "
-                font.pointSize: 10
-                font.family: "Segoe UI"
-                font.weight: Font.Normal
-
-                anchors.top: parent.top
-                anchors.left: parent.left
-
-                anchors.topMargin: 30
-                anchors.leftMargin: 20
-            }
-
-            CustomTextField {
-                id: serverPath
-                height: 40
-
-                anchors.top: parent.top
-                anchors.left: serverPathLabel.right
-                anchors.right: buttonUpload.left
-
-                anchors.topMargin: 20
-                anchors.leftMargin: 10
-                anchors.rightMargin: 20
-
-                text: "D:/"
-
-                font.pointSize: 12
-            }
-
-            CustomButton {
-                id: buttonUpload
-                anchors.top: parent.top
-                anchors.right: parent.right
-
-                anchors.topMargin: 20
-                anchors.rightMargin: 20
-
-                text: "Upload"
-                width: 100
-                height: 40
-
-                colorDefault: "#4632a8"
-                colorMouseOver: "#5643b5"
-                colorPressed: "#7963e6"
-
-                onClicked: {
-                    if (serverPath.text.length > 0 && fullFileText.length > 0) {
-                        backend.changeYamlFile("Config.FileTransfer.remotePath", serverPath.text)
-                        backend.fileTransfer(fullFileText, serverPath.text)
-                    } else {
-                        print("error")
-                    }
-                }
-            }
-
-            PropertyAnimation {
-                id: remoteAreaAnimation
-                target: remoteArea
-                property: "anchors.topMargin"
-                to: if (remoteArea.anchors.topMargin === - 80) return 20; else return - 80
-                duration: 5000
-                easing.type: Easing.OutQuint
-            }
-        }
-
-        Rectangle {
-            id: uploadArea
-            height: 150
+        Label {
+            id: serverPathLabel
+            
             anchors.top: parent.top
             anchors.left: parent.left
-            anchors.right: parent.right
             anchors.topMargin: 30
-            anchors.leftMargin: 50
-            anchors.rightMargin: 50
-            radius: 10
-            color: "#49496b"
+            anchors.leftMargin: 20
+            
+            color: "#ffffff"
+            font.pointSize: 10
+            font.family: "Segoe UI"
+            font.weight: Font.Normal
 
-            DropArea {
-                id: dropArea
-                anchors.fill: parent
+            text: "Remote Path: "
+        }
 
-                onDropped: (drop) => {
-                               fullFileText = drop.text.split("file:///").join("")
-                               labelUploadArea.text = ".../" + fullFileText.slice(-30)
-                               remoteArea.visible = true
-                               remoteAreaAnimation.running = true;
-                               uploadIcon.source = "../../assets/images/transfer.png"
-                               // uploadIcon.destroy()
-                           }
-            }
+        CustomTextField {
+            id: serverPath
 
-            GridLayout {
-                id: gridLayout
-                columns: 3
-                anchors.centerIn: parent
-                columnSpacing: 20
+            anchors.top: parent.top
+            anchors.left: serverPathLabel.right
+            anchors.right: buttonUpload.left
+            anchors.topMargin: 20
+            anchors.leftMargin: 10
+            anchors.rightMargin: 20
 
-                Row {
-                    Image {
-                        id: uploadIcon
-                        source: "../../assets/images/upload.png"
-                    }
-                }
+            height: 40
+            font.pointSize: 12
 
-                Row {
-                    Label {
-                        id: labelUploadArea
-                        color: "#ffffff"
-                        text: "Upload image here or"
-                        font.family: "Segoe UI"
-                        font.pointSize: 13
-                        anchors.verticalCenter: parent.verticalCenter
-                        wrapMode: Label.WordWrap
-                    }
-                }
+            text: "D:/"
+        }
 
-                Row {
-                    CustomButton {
-                        width: 108
-                        height: 30
-                        text: "Browse"
-                        colorMouseOver: "#40405f"
-                        colorDefault: "#33334c"
-                        colorPressed: "#55aaff"
+        CustomButton {
+            id: buttonUpload
+            
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.topMargin: 20
+            anchors.rightMargin: 20
 
-                        onClicked: fileDialog.visible = true
-                    }
+            width: 100
+            height: 40
 
-                    FileDialog {
-                        id: fileDialog
-                        title: "Please choose a file to upload"
-                        folder: shortcuts.home
-                        visible: false
+            colorDefault: "#4632a8"
+            colorMouseOver: "#5643b5"
+            colorPressed: "#7963e6"
+            
+            text: "Upload"
 
-                        onAccepted: () => {
-                                        labelUploadArea.text = ".../" + fileDialog.fileUrl.toString().split("file:///").join("").slice(-30)
-                                        fullFileText = fileDialog.fileUrl.toString().split("file:///").join("")
-                                        uploadIcon.source = "../../assets/images/transfer.png"
-                                        remoteArea.visible = true
-                                        remoteAreaAnimation.running = true;
-                                    }
-                    }
+            onClicked: {
+                print("file to upload: " + fileToUploadPath)
+                print("server path: " + serverPath.text)
+
+                if (serverPath.text.length > 0 && fileToUploadPath.length > 0) {
+                    // TODO - implement
+                    // backend.changeYamlFile("Config.FileTransfer.remotePath", serverPath.text)
+                    // backend.fileTransfer(fileToUploadPath, serverPath.text)
+                } else {
+                    print("Upload Error, Set server path and select a file to upload first.")
                 }
             }
         }
+
+        PropertyAnimation {
+            id: remoteAreaAnimation
+
+            target: remoteArea
+            property: "anchors.topMargin"
+            to: 20;
+            duration: 5000
+            easing.type: Easing.OutQuint
+        }
+    }
+
+    Rectangle {
+        id: uploadArea
+
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.topMargin: 30
+        anchors.leftMargin: 50
+        anchors.rightMargin: 50
+        
+        height: 150
+        radius: 10
+        color: "#49496b"
+
+        DropArea {
+            id: dropArea
+
+            anchors.fill: parent
+
+            onDropped: root.setReadyForUpload(drop.text)
+        }
+
+        GridLayout {
+            id: gridLayout
+            
+            anchors.centerIn: parent
+            
+            columns: 3
+            columnSpacing: 20
+
+            Row {
+                Image {
+                    id: uploadIcon
+
+                    source: "../../assets/images/upload.png"
+                }
+            }
+
+            Row {
+                Label {
+                    id: labelUploadArea
+                    
+                    anchors.verticalCenter: parent.verticalCenter
+                    
+                    color: "#ffffff"
+                    font.family: "Segoe UI"
+                    font.pointSize: 13
+                    wrapMode: Label.WordWrap
+                    
+                    text: "Upload image here or"
+                }
+            }
+
+            Row {
+                CustomButton {
+                    width: 108
+                    height: 30
+                    
+                    colorMouseOver: "#40405f"
+                    colorDefault: "#33334c"
+                    colorPressed: "#55aaff"
+                    
+                    text: "Browse"
+
+                    onClicked: fileDialog.visible = true
+                }
+
+                FileDialog {
+                    id: fileDialog
+                    
+                    title: "Select a file to upload"
+                    folder: shortcuts.home
+                    visible: false
+
+                    onAccepted: root.setReadyForUpload(fileDialog.fileUrl.toString())
+                }
+            }
+        }
+    }
+
+    function setReadyForUpload(path) {
+        fileToUploadPath = path.split("file:///").join("")
+        labelUploadArea.text = ".../" + fileToUploadPath.slice(-30)
+        uploadIcon.source = "../../assets/images/transfer.png"
+        remoteAreaAnimation.running = true;
+    }
+
+    Connections {
+        target: backend
     }
 }
