@@ -4,7 +4,7 @@ on:
   push:
     branches:
       -main
-      
+
 jobs: 
   run-github-actions: 
     runs-on: ubuntu-latest
@@ -15,15 +15,12 @@ jobs:
           git config --global user.name ${{ secrets.USERNAME }}
           git config --global user.email ${{ secrets.EMAIL }}
           cd SpaceLoader/bin
-          fullversion=$(cat VERSION)
-          minorversion=${fullversion#*.}
-          majorversion=$(echo $fullversion | cut -d'.' -f1)
-          updatedminorversion=$((minorversion+1))
+          fullVersion=$(cat VERSION)
+          minorVersion=${fullVersion#*.}
+          majorVersion=$(echo $fullVersion | cut -d'.' -f1)
+          updatedMinorVersion=$((minorVersion+1))
           dot="."
-          majorversion+=$dot
-          majorversion+=$updatedminorversion
-          versionmessage="Updated Version File. New Version is $majorversion"
-          echo $majorversion | tee VERSION
-          git add .
-          git commit -m "$versionmessage"
-          git push
+          updatedFullVersion=$majorVersion$dot$updatedMinorVersion
+          versionmessage="Updated Version File. New Version is $updatedFullVersion"
+          echo $updatedFullVersion | tee VERSION
+          git status
