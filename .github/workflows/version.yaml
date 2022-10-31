@@ -2,8 +2,6 @@ name: Actions Workflow
 
 on:
   push:
-    branches:
-      - main
 
 jobs: 
   run-github-actions: 
@@ -15,13 +13,15 @@ jobs:
           git config --global user.name ${{ secrets.USERNAME }}
           git config --global user.email ${{ secrets.EMAIL }}
           cd SpaceLoader/bin
-          var1=$(cat VERSION)
-          var2=${var1#*.}
-          var3=${var2#*.}
-          var4=$((var3+1))
-          var5=0.
-          var5+=$var4
-          echo $var5 | tee VERSION
-          git add .
-          git commit -m "version update"
+          fullVersion=$(cat VERSION)
+          minorVersion=${fullVersion#*.}
+          majorVersion=$(cut -d'.' -f1 <<<"$fullVersion")
+          updatedMinorVersion=$((minorVersion+1))
+          majorVersion+=minorVersion
+          versionMessage="Updated Version File. New Version is "
+          updatedVersion+=$versionMessage
+          updatedVersion+=majorVersion
+          echo $majorVersion | tee VERSION
+          git add VERSION
+          git commit -m $updatedVersion
           git push
