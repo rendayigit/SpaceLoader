@@ -22,6 +22,6 @@ jobs:
           updatedVersion+=$versionMessage
           updatedVersion+=majorVersion
           echo $majorVersion | tee VERSION
-          git add VERSION
+          git add .
           git commit -m $updatedVersion
           git push
