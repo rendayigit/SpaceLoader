@@ -21,6 +21,6 @@ jobs:
           updatedFullVersion=$majorVersion$dot$updatedMinorVersion
           versionMessage="Updated Version File. New Version is $updatedFullVersion"
           echo $updatedFullVersion | tee VERSION
-          git add bin/VERSION
+          git add ./VERSION
           git commit -m "$versionMessage"
           git push
