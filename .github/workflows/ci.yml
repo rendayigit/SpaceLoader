@@ -53,10 +53,3 @@ jobs:
       run: |       
         cd ${{ github.workspace }}/build/tests/
         sudo ./tests
-
-    - name: Increase Version
-      run: |
-        pwd
-        ls
-        cd bin
-        echo "Some text here." > VERSION
