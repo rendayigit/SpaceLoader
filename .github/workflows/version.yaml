@@ -2,8 +2,6 @@ name: Actions Workflow
 
 on:
   push:
-    branches:
-      -main
 
 jobs: 
   run-github-actions: 
