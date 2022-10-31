@@ -15,13 +15,13 @@ jobs:
           cd SpaceLoader/bin
           fullversion=$(cat VERSION)
           minorversion=${fullversion#*.}
-          majorversion=$(cut -d'.' -f1 <<<"$fullVersion")
+          majorversion=$(echo $fullversion | cut -d'.' -f1)
           updatedminorversion=$((minorversion+1))
+          dot="."
+          majorversion+=$dot
           majorversion+=$updatedminorversion
-          versionmessage="Updated Version File. New Version is "
-          updatedversion+=$versionmessage
-          updatedversion+=$majorversion
+          versionmessage="Updated Version File. New Version is $majorversion"
           echo $majorversion | tee VERSION
           git add .
-          git commit -m $updatedversion
+          git commit -m "$versionmessage"
           git push
