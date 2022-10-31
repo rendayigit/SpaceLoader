@@ -19,6 +19,8 @@ jobs:
           updatedMinorVersion=$((minorVersion+1))
           dot="."
           updatedFullVersion=$majorVersion$dot$updatedMinorVersion
-          versionmessage="Updated Version File. New Version is $updatedFullVersion"
+          versionMessage="Updated Version File. New Version is $updatedFullVersion"
           echo $updatedFullVersion | tee VERSION
-          git status
+          git add bin/VERSION
+          git commit -m "$versionMessage"
+          git push
