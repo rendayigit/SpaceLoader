@@ -19,8 +19,7 @@ jobs:
           minorVersion=${fullVersion#*.}
           majorVersion=$(echo $fullVersion | cut -d'.' -f1)
           updatedMinorVersion=$((minorVersion+1))
-          dot="."
-          updatedFullVersion=$majorVersion$dot$updatedMinorVersion
+          updatedFullVersion=$majorVersion"."$updatedMinorVersion
           versionMessage="Updated Version File. New Version is $updatedFullVersion"
           echo $updatedFullVersion | tee VERSION
           git add ./VERSION
