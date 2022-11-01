@@ -20,18 +20,18 @@ jobs:
         with:
           python-version: '3.x'
       
-      # - uses: jannekem/run-python-script-action@v1
-      #   with:
-      #     script: |
-      #       versionFile = open('${{ GITHUB.WORKSPACE }}/SpaceLoader/version.h', 'r')
-      #       lines = versionFile.readlines()
-      #       updatedFullVersion = lines[1].split(" ")[2].split(".")[0] + "."  + str(int(lines[1].split(" ")[2].split(".")[1]) + 1)
-      #       lines[1] = " ".join([updatedFullVersion if i == lines[1].split(" ")[2] else i for i in lines[1].split(" ")]) + "\n"
-      #       versionFile = open('${{ github.workspace }}/SpaceLoader/version.h', 'w')
-      #       versionFile.writelines(lines)
+      - uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            versionFile = open('/home/runner/work/SpaceLoader/SpaceLoader/SpaceLoader/version.h', 'r')
+            lines = versionFile.readlines()
+            updatedFullVersion = lines[1].split(" ")[2].split(".")[0] + "."  + str(int(lines[1].split(" ")[2].split(".")[1]) + 1)
+            lines[1] = " ".join([updatedFullVersion if i == lines[1].split(" ")[2] else i for i in lines[1].split(" ")]) + "\n"
+            versionFile = open('/home/runner/work/SpaceLoader/SpaceLoader/SpaceLoader/version.h', 'w')
+            versionFile.writelines(lines)
           
-      # - name: pushGithub
-      #   run: |
-      #     git add ./VERSION
-      #     git commit -m "$versionMessage"
-      #     git push
+      - name: pushGithub
+        run: |
+          git add ./VERSION
+          git commit -m "$versionMessage"
+          git push
