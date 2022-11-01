@@ -27,6 +27,7 @@ jobs:
 
       - name: List
         run: |
+          cd D:/
           dir
 
       # - name: Build All
