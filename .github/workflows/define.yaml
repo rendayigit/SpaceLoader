@@ -19,16 +19,20 @@ jobs:
       - uses: jannekem/run-python-script-action@v1
         with:
           script: |
+            import os
+            env_file = os.getenv('GITHUB_ENV')
             versionFile = open('${{ GITHUB.WORKSPACE }}/SpaceLoader/version.h', 'r')
             lines = versionFile.readlines()
             updatedFullVersion = lines[1].split(" ")[2].split(".")[0] + "."  + str(int(lines[1].split(" ")[2].split(".")[1]) + 1)
             lines[1] = " ".join([updatedFullVersion if i == lines[1].split(" ")[2] else i for i in lines[1].split(" ")]) + "\n"
             versionFile = open('${{ GITHUB.WORKSPACE }}/SpaceLoader/version.h', 'w')
             versionFile.writelines(lines)
+            with open(env_file, "a") as myfile:
+                myfile.write("VERSION=updatedFullVersion")
           
       - name: pushGithub
         run: |
           cd /home/runner/work/SpaceLoader/SpaceLoader/SpaceLoader/
           git add ./version.h
-          git commit -m "Version Update"
+          git commit -m "Updated Version File. New Version is $VERSION"
           git push
