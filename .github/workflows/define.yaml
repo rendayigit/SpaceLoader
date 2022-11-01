@@ -12,9 +12,6 @@ jobs:
           git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/rendayigit/SpaceLoader.git
           git config --global user.name ${{ secrets.USERNAME }}
           git config --global user.email ${{ secrets.EMAIL }}
-          cd SpaceLoader
-          ls 
-          pwd
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
@@ -22,14 +19,11 @@ jobs:
       - uses: jannekem/run-python-script-action@v1
         with:
           script: |
-            import os
-            print(os.getcwd())
-            print(os.listdir())
-            versionFile = open('/home/runner/work/SpaceLoader/SpaceLoader/SpaceLoader/version.h', 'r')
+            versionFile = open('${{ GITHUB.WORKSPACE }}/SpaceLoader/version.h', 'r')
             lines = versionFile.readlines()
             updatedFullVersion = lines[1].split(" ")[2].split(".")[0] + "."  + str(int(lines[1].split(" ")[2].split(".")[1]) + 1)
             lines[1] = " ".join([updatedFullVersion if i == lines[1].split(" ")[2] else i for i in lines[1].split(" ")]) + "\n"
-            versionFile = open('/home/runner/work/SpaceLoader/SpaceLoader/SpaceLoader/version.h', 'w')
+            versionFile = open('${{ GITHUB.WORKSPACE }}SpaceLoader/version.h', 'w')
             versionFile.writelines(lines)
           
       - name: pushGithub
