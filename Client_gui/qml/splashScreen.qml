@@ -45,21 +45,22 @@ Window {
         id: internal
 
         // Verify Login
-        function checkLogin(){
-            // TODO: This is the password
-            if(loginTextField.text == "1"){
+        function checkLogin() {
+            // TODO - This is the password
+            if (loginTextField.text == "1") {
                 loginTextField.borderColor = "#00ff7f"
                 labelPassword.visible = false
                 loginAnimationFrameMarginTop.running = true
                 timer.running = true
                 backend.setServerIp(textServerIp.text)
-            } else{
+            } else {
                 loginTextField.borderColor = "#55aaff"
                 labelPassword.visible = true
             }
         }
-        // Reset Text Erro
-        function resetTextLogin(){
+
+        // Reset Text Error
+        function resetTextLogin() {
             labelPassword.visible = false
             loginTextField.borderColor = "#55aaff"
         }
@@ -82,7 +83,7 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
         z: 3
 
-        DragHandler { onActiveChanged: if(active){ splashScreen.startSystemMove() } }
+        DragHandler { onActiveChanged: if(active) { splashScreen.startSystemMove() } }
 
         CircularProgressBar {
             id: circularProgressBar;
@@ -129,6 +130,7 @@ Window {
             anchors.topMargin: 8
             anchors.rightMargin: 8
             onClicked: splashScreen.close()
+            
             CustomToolTip {
                 text: "Close"
             }
@@ -149,7 +151,7 @@ Window {
         }
 
         // CustomButton {
-        //     id: btnChangeuSER
+        //     id: btnChangeUser
         //     x: 350
         //     y: 270
         //     width: 140
@@ -281,6 +283,7 @@ Window {
                 duration: 5000
                 easing.type: Easing.InOutQuint
             }
+
             PropertyAnimation {
                 id: imageAnimationOpacity
                 target: imageFingerPrint
@@ -325,15 +328,16 @@ Window {
                 id: textFieldAnimationRightMargin
                 target: loginTextField
                 property: "anchors.rightMargin"
-                to: if(loginTextField.anchors.rightMargin == 110) return 30; else return 110
+                to: if(loginTextField.anchors.rightMargin === 110) return 30; else return 110
                 duration: 5000
                 easing.type: Easing.InOutQuint
             }
+
             PropertyAnimation {
                 id: textFieldOpacity
                 target: loginTextField
                 property: "opacity"
-                to: if(loginTextField.opacity == 0) return 1; else return 0
+                to: if(loginTextField.opacity === 0) return 1; else return 0
                 duration: 5000
                 easing.type: Easing.InOutQuint
             }
@@ -394,6 +398,7 @@ Window {
                 from: 0
             }
         ]
+
         endFrame: 3000
         enabled: true
         startFrame: 0
@@ -401,6 +406,7 @@ Window {
         KeyframeGroup {
             target: circularProgressBar
             property: "value"
+            
             Keyframe {
                 frame: 0
                 value: 0
@@ -415,6 +421,7 @@ Window {
         KeyframeGroup {
             target: circularProgressBar
             property: "opacity"
+
             Keyframe {
                 frame: 1505
                 value: 1
@@ -439,6 +446,7 @@ Window {
         KeyframeGroup {
             target: btnClose
             property: "opacity"
+
             Keyframe {
                 frame: 1501
                 value: 0
@@ -458,6 +466,7 @@ Window {
         KeyframeGroup {
             target: logoImage
             property: "opacity"
+
             Keyframe {
                 frame: 1750
                 value: 0
@@ -477,13 +486,14 @@ Window {
         KeyframeGroup {
             target: bg
             property: "anchors.verticalCenterOffset"
+
             Keyframe {
                 frame: 1998
                 value: 0
             }
 
             Keyframe {
-                easing.bezierCurve: [0.254,0.00129,0.235,0.999,1,1]
+                easing.bezierCurve: [0.254, 0.00129, 0.235, 0.999, 1, 1]
                 frame: 2697
                 value: -80
             }
@@ -497,8 +507,9 @@ Window {
         KeyframeGroup {
             target: loginFrame
             property: "anchors.topMargin"
+
             Keyframe {
-                easing.bezierCurve: [0.254,0.00129,0.235,0.999,1,1]
+                easing.bezierCurve: [0.254, 0.00129, 0.235, 0.999, 1, 1]
                 frame: 2700
                 value: -20
             }
@@ -517,6 +528,7 @@ Window {
         KeyframeGroup {
             target: labelUnlockInfo1
             property: "opacity"
+
             Keyframe {
                 frame: 2000
                 value: 1
@@ -534,8 +546,9 @@ Window {
         }
 
         // KeyframeGroup {
-        //     target: btnChangeuSER
+        //     target: btnChangeUser
         //     property: "opacity"
+
         //     Keyframe {
         //         frame: 1900
         //         value: 0
@@ -555,6 +568,7 @@ Window {
         KeyframeGroup {
             target: bg
             property: "opacity"
+
             Keyframe {
                 frame: 250
                 value: 1
@@ -569,6 +583,7 @@ Window {
         KeyframeGroup {
             target: dropShadowBG
             property: "opacity"
+
             Keyframe {
                 frame: 250
                 value: 1
@@ -583,6 +598,7 @@ Window {
         KeyframeGroup {
             target: dropShadowLogin
             property: "visible"
+
             Keyframe {
                 frame: 497
                 value: false
@@ -602,6 +618,7 @@ Window {
         KeyframeGroup {
             target: loginFrame
             property: "visible"
+
             Keyframe {
                 frame: 497
                 value: false
@@ -621,6 +638,7 @@ Window {
         KeyframeGroup {
             target: imageFingerPrint
             property: "opacity"
+
             Keyframe {
                 frame: 2500
                 value: 0
@@ -640,6 +658,7 @@ Window {
         // KeyframeGroup {
         //     target: image1
         //     property: "opacity"
+
         //     Keyframe {
         //         frame: 1450
         //         value: 1
@@ -664,8 +683,9 @@ Window {
         KeyframeGroup {
             target: labelName
             property: "anchors.bottomMargin"
+            
             Keyframe {
-                easing.bezierCurve: [0.254,0.00129,0.235,0.999,1,1]
+                easing.bezierCurve: [0.254, 0.00129, 0.235, 0.999, 1, 1]
                 value: 22
                 frame: 2350
             }

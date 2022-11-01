@@ -3,16 +3,19 @@
 #include <QtCore/QFile>
 #include <QtCore/QThread>
 
+#include "../common.h"
 #include "../constants.h"
 #include "../lib/Logger/logger.h"
+#include "egse.h"
 #include "iostream"
 #include "listener.h"
-#include "../common.h"
 
 Listener* listener;
+Egse* egse;
 
-Backend::Backend() { 
-    listener = new Listener(this); 
+Backend::Backend() {
+    listener = new Listener(this);
+    egse = new Egse(this);
     localIp = GetLocalIp().last();
 }
 
@@ -23,6 +26,8 @@ void Backend::onReceived(QByteArray message) {
 
 void Backend::onDisconnected() { Log().Error("Disconnected From Server!"); }
 
+void Backend::egseReplier(QString message) { emit egseReply(message); }
+
 void Backend::getTerminalData(QString text) {
     transmit(text.mid(text.lastIndexOf("\n> ") + 3, text.size()).toLocal8Bit());
 }
@@ -30,7 +35,7 @@ void Backend::getTerminalData(QString text) {
 void Backend::start() {
     attemptConnection(serverIp, 1234);
     QThread::msleep(100);
-    // TODO - This delay is importand. Consider adding same delay for console client
+    // TODO - This delay is important. Consider adding same delay for console client
 
     /* Transmit username */
     QByteArray username = getenv("USERNAME");
@@ -44,13 +49,26 @@ void Backend::listLogs() { transmit("listLogs"); }
 void Backend::getUserList() { transmit("getUserList"); }
 
 void Backend::fileTransfer(QString localFile, QString serverPath) {
-    // localFile = localFile.replace('"', "");
-    // serverPath = serverPath.replace('"', "");
-
-    localFile = localFile.replace("file:///", "");
+    QStringList args;
+    
+    #ifdef Q_OS_WIN
+        QString bash = "cmd.exe";
+        args.append("/c");
+        args.append("ROBOCOPY");
+        localFile = localFile.replace("file:///", "");
+    #else
+        QString bash = "/bin/bash";
+        //TODO - args.append("unix copy command here");
+        localFile = localFile.replace("file://", "");
+    #endif
 
     qDebug() << "1:" << localFile;
     qDebug() << "2:" << serverPath;
+
+    args.append(localFile);
+    args.append(serverPath);
+
+    (new QProcess())->start(bash, args);
 
     transmit("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
 
@@ -110,12 +128,32 @@ void Backend::listen(QString ipPort) {
 
 void Backend::stopListen() { listener->disconnect(); }
 
-void Backend::setServerIp(QString ip) {
-    serverIp = ip;
+void Backend::setServerIp(QString ip) { serverIp = ip; }
+
+QString Backend::getLocalIp() { return localIp; }
+
+void Backend::transmitEgseTc(QString tc) {
+    if (egse->isConnected()) {
+        egse->buttonCallback(tc);
+    } else {
+        egseDisconnectedError();
+    }
 }
 
-QString Backend::getLocalIp() {
-    return localIp;
+void Backend::egseConnect(QString deviceIp, QString devicePort) {
+    if (egse->attemptConnection(deviceIp, devicePort.toInt())) {
+        emit egseError(false, "Online, Connected");
+        egse->setConnected(true);
+    } else {
+        egseDisconnectedError();
+    }
+}
+
+void Backend::egseDisconnectedError() {
+    QString errorMessage = "ERROR! Not Connected";
+    egse->setConnected(false);
+    emit egseError(true, errorMessage);
+    Log().Error(errorMessage);
 }
 
 void Backend::parse(QString text) {
