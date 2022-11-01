@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: patchVersioning
+      - name: setup
         run: | 
           git clone https://${{ secrets.ACCESS_TOKEN }}@github.com/rendayigit/SpaceLoader.git
           git config --global user.name ${{ secrets.USERNAME }}
@@ -24,15 +24,15 @@ jobs:
             versionFile = open('${{ GITHUB.WORKSPACE }}/SpaceLoader/version.h', 'r')
             lines = versionFile.readlines()
             updatedFullVersion = lines[1].split(" ")[2].split(".")[0] + "."  + str(int(lines[1].split(" ")[2].split(".")[1]) + 1)
-            lines[1] = " ".join([updatedFullVersion if i == lines[1].split(" ")[2] else i for i in lines[1].split(" ")]) + "\n"
+            lines[1] = " ".join([lines[1].split(" ")[0], lines[1].split(" ")[1], updatedFullVersion, '\n'])
             versionFile = open('${{ GITHUB.WORKSPACE }}/SpaceLoader/version.h', 'w')
             versionFile.writelines(lines)
             with open(env_file, "a") as myfile:
                 myfile.write("VERSION={}".format(updatedFullVersion))
           
-      - name: pushGithub
+      - name: push-new-version
         run: |
-          cd /home/runner/work/SpaceLoader/SpaceLoader/SpaceLoader/
+          cd ${{ GITHUB.WORKSPACE }}/SpaceLoader/
           git add ./version.h
           git commit -m "Updated Version File. New Version is $VERSION"
           git push
