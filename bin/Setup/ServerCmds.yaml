@@ -6,6 +6,11 @@ Cmds:
         `help` for full list.
       id: help
       type: internal
+    - CmdCallString: version
+      Description: >-
+        Display version information.
+      id: version
+      type: internal
     - CmdCallString: StarkitOn
       Description: 'Turns on target: Starkit.'
       ScriptDir: 'C:\Program Files'
