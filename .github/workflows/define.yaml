@@ -28,7 +28,7 @@ jobs:
             versionFile = open('${{ GITHUB.WORKSPACE }}/SpaceLoader/version.h', 'w')
             versionFile.writelines(lines)
             with open(env_file, "a") as myfile:
-                myfile.write("VERSION=updatedFullVersion")
+                myfile.write("VERSION={}".format(updatedFullVersion))
           
       - name: pushGithub
         run: |
