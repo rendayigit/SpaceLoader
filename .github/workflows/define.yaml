@@ -35,6 +35,6 @@ jobs:
       - name: pushGithub
         run: |
           cd /home/runner/work/SpaceLoader/SpaceLoader/SpaceLoader/
-          git add ./VERSION
-          git commit -m "$versionMessage"
+          git add ./version.h
+          git commit -m "Version Update"
           git push
