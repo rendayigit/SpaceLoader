@@ -25,6 +25,7 @@ jobs:
           script: |
             import os
             print(os.getcwd())
+            print(os.listdir())
             # versionFile = open('/home/runner/work/SpaceLoader/SpaceLoader/SpaceLoader/version.h', 'r')
             # lines = versionFile.readlines()
             # updatedFullVersion = lines[1].split(" ")[2].split(".")[0] + "."  + str(int(lines[1].split(" ")[2].split(".")[1]) + 1)
@@ -32,8 +33,8 @@ jobs:
             # versionFile = open('/home/runner/work/SpaceLoader/SpaceLoader/SpaceLoader/version.h', 'w')
             # versionFile.writelines(lines)
           
-      - name: pushGithub
-        run: |
-          git add ./VERSION
-          git commit -m "$versionMessage"
-          git push
+      # - name: pushGithub
+      #   run: |
+      #     git add ./VERSION
+      #     git commit -m "$versionMessage"
+      #     git push
