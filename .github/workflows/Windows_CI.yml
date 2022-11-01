@@ -68,21 +68,8 @@ jobs:
             mingw-w64-x86_64-yaml-cpp
             mingw-w64-x86_64-ninja   
 
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - shell: cmd
-        run: |
-          cd C:/
-          dir -s
-          cd C:/a
-          dir -s 
-          cd C:/a/mingw64
-          dir -s
-
       - name: Build All
         run: |
-            # TODO - find the correct path to the msys installation
             mkdir D:/a/SpaceLoader/SpaceLoader/build/
             cmake -DCMAKE_PREFIX_PATH:STRING=D:/a/_temp/setup-msys2/mingw64/lib/cmake/ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=D:/a/_temp/setup-msys2/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=D:/a/_temp/setup-msys2/mingw64/bin/g++.exe -S D:/a/SpaceLoader/SpaceLoader/ -B D:/a/SpaceLoader/SpaceLoader/build/ -G "MinGW Makefiles"
             set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
