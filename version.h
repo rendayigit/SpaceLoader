@@ -1,5 +1,5 @@
 #ifndef VERSION 
 #define VERSION
 #include <string>
-inline const std::string Version = "0.14";
+inline const std::string Version = "0.15";
 #endif
