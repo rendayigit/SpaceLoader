@@ -19,7 +19,7 @@ jobs:
       - uses: jannekem/run-python-script-action@v1
         with:
           script: |
-            versionFile = open('${{ github.workspace }}/../version.h', 'r')
+            versionFile = open('${{ GITHUB.WORKSPACE }}/../version.h', 'r')
             lines = versionFile.readlines()
             updatedFullVersion = lines[1].split(" ")[2].split(".")[0] + "."  + str(int(lines[1].split(" ")[2].split(".")[1]) + 1)
             lines[1] = " ".join([updatedFullVersion if i == lines[1].split(" ")[2] else i for i in lines[1].split(" ")]) + "\n"
