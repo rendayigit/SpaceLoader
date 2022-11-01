@@ -23,7 +23,7 @@ jobs:
             lines = versionFile.readlines()
             updatedFullVersion = lines[1].split(" ")[2].split(".")[0] + "."  + str(int(lines[1].split(" ")[2].split(".")[1]) + 1)
             lines[1] = " ".join([updatedFullVersion if i == lines[1].split(" ")[2] else i for i in lines[1].split(" ")]) + "\n"
-            versionFile = open('${{ GITHUB.WORKSPACE }}SpaceLoader/version.h', 'w')
+            versionFile = open('${{ GITHUB.WORKSPACE }}/SpaceLoader/version.h', 'w')
             versionFile.writelines(lines)
           
       - name: pushGithub
