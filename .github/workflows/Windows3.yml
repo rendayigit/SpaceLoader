@@ -44,9 +44,7 @@ jobs:
       name: Build project
       working-directory: ${{github.workspace}}/build
       run: |
-        set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
-        cmake --build ${{github.workspace}}/build/ --config Release --target all -j %coreCount% --
-        # mingw32-make.exe
+        cmake --build ${{github.workspace}}/build/ --config Release --target all
     - name: Run Tests
       working-directory: ${{github.workspace}}/build
       run: |
