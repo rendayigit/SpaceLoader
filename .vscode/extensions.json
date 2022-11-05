@@ -2,7 +2,6 @@
     "recommendations": [
         "ms-vscode.cpptools",
         "llvm-vs-code-extensions.vscode-clangd",
-        "twxs.cmake",
         "ms-vscode.cmake-tools",
         "christian-kohler.path-intellisense",
         "hbenl.vscode-test-explorer",
