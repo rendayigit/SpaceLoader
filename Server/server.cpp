@@ -3,6 +3,7 @@
 #include "../Commands/cmd_plugin_interface.h"
 #include "User/userOperations.h"
 #include "logging.h"
+#include "../version.h"
 
 Server::Server() : Operations(Paths().getServerCmdsYaml()) {
     isFileTransferInProgress = false;
@@ -111,6 +112,8 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
         Transmit(sender, Logging::getLogData(GetParam(message)).toLocal8Bit());
     } else if (Cmp(message, "help")) {
         Transmit(sender, (" - Server Commands - \n" + Operations::help()).toLocal8Bit());
+    } else if (Cmp(message, "version")) {
+        Transmit(sender, QString::fromStdString(Version).toLocal8Bit());
     } else if (Cmp(message, "sa")) {
         Transmit(sender, "AS");
     } else if (Cmp(message, "UpdateCmds")) {

@@ -50,19 +50,26 @@ void Backend::listLogs() { transmit("listLogs"); }
 void Backend::getUserList() { transmit("getUserList"); }
 
 void Backend::fileTransfer(QString localFile, QString serverPath) {
+    QStringList args;
+    
     #ifdef Q_OS_WIN
-        QString bash = "cmd.exe /c";
+        QString bash = "cmd.exe";
+        args.append("/c");
+        args.append("ROBOCOPY");
         localFile = localFile.replace("file:///", "");
     #else
         QString bash = "/bin/bash";
-        localFile = "/" + localFile.replace("file://", "") + "";
+        //TODO - args.append("unix copy command here");
+        localFile = localFile.replace("file://", "");
     #endif
 
     qDebug() << "1:" << localFile;
     qDebug() << "2:" << serverPath;
 
-    auto *process = new QProcess();
-    process->start(bash + "COPY ");
+    args.append(localFile);
+    args.append(serverPath);
+
+    (new QProcess())->start(bash, args);
 
     transmit("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
 
