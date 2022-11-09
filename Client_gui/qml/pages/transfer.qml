@@ -56,6 +56,10 @@ Rectangle {
             font.pointSize: 12
 
             text: "D:/"
+
+            Component.onCompleted: {
+                serverPath.text = backend.getConfigValue("Config.FileTransfer.remotePath", "remotePath")
+            }
         }
 
         CustomButton {
@@ -81,9 +85,7 @@ Rectangle {
 
                 if (serverPath.text.length > 0 && fileToUploadPath.length > 0) {
                     progressBar.visible = true
-                    // TODO - implement
-                    // backend.changeYamlFile("Config.FileTransfer.remotePath", serverPath.text)
-                    // backend.fileTransfer(fileToUploadPath, serverPath.text)
+                    backend.updateYamlFile("Config.FileTransfer.remotePath", serverPath.text)
                 } else {
                     print("Upload Error, Set server path and select a file to upload first.")
                 }
