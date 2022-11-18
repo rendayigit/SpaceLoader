@@ -1,20 +1,20 @@
-import QtQuick 2.0
 import "../components"
-import QtQuick.Timeline 1.0
+import QtQuick 2.0
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Timeline 1.0
 
 Item {
     Rectangle {
+        id: rectangle
+
         anchors.fill: parent
         radius: 10
         color: "#27273a"
 
-        Component.onCompleted: {
-            backend.getUserList()
-        }
-
         Rectangle {
+            id: userListRectangle
+
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: parent.left
@@ -23,54 +23,42 @@ Item {
             anchors.bottomMargin: 10
             anchors.leftMargin: 10
             anchors.rightMargin: 10
-
             radius: 10
             color: "#000000"
 
-            Label {
-                id: label
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 10
-
-                color: "#ffffff"
-                text: qsTr("Logged In Users")
-                font.family: "Segoe UI"
-                font.pointSize: 11
-            }
-
             ScrollView {
-                anchors.top: label.bottom
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 50
+                id: scrollView
 
-                TextArea {
-                    id: textArea
-                    anchors.centerIn: parent
-                    anchors.fill: parent
-                    color: "#ffffff"
-                    font.family: "Segoe UI"
-                    font.pointSize: 20
-                    textFormat: TextEdit.PlainText
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+                anchors.top: parent.top
+                anchors.leftMargin: 4
+                anchors.bottomMargin: 4
+                anchors.topMargin: 4
+                clip: true
+
+                Column {
+                    id: logsColumn
+
+                    Component.onCompleted: () => {
+                        for (var i = 0; i < 2; i++) {
+                            var item = Qt.createComponent("../components/CustomUserListItem.qml").createObject(logsColumn, {
+                                "width": userListRectangle.width,
+                                "userIp": "User Ip: 127.0.0.1",
+                                "username": "Username: mrtkr"
+                            });
+                        }
+                    }
                 }
+
             }
+
         }
+
     }
 
     Connections {
         target: backend
-
-        function onGetUsers(text) {
-            textArea.text = text
-        }
     }
-}
 
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}
 }
-##^##*/
