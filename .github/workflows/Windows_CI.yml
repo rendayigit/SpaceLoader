@@ -32,7 +32,7 @@ jobs:
       
       - name: List2
         run: |
-          cd D:/a/SpaceLoader/SpaceLoader/
+          cd ${{GITHUB.WORKSPACE}}
           dir
 
       # - name: Build All
