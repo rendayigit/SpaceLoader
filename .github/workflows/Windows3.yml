@@ -1,51 +1,51 @@
-# name: Compile and Release Qt6 Proyect
+name: Compile and Release Qt6 Proyect
 
-# on: push
+on: push
 
-# env:
-#   QT_VERSION:     "5.15.0"
-#   MINGW_VERSION:  "win64_mingw81"
-#   MINGW_PATH:     "mingw81_64"
-#   BUILD_TYPE:      Release
+env:
+  QT_VERSION:     "5.15.0"
+  MINGW_VERSION:  "win64_mingw81"
+  MINGW_PATH:     "mingw81_64"
+  BUILD_TYPE:      Release
 
-# jobs:
-#   build:
-#     runs-on: windows-latest
-#     steps:
-#     -
-#       uses: actions/checkout@v2
-#     -
-#       name: Install correct version of mingw
-#       uses: crazy-max/ghaction-chocolatey@v1
-#       with:
-#         args: install mingw --version=8.1.0  -y --force
-#     -
-#       name: Install Qt
-#       uses: jurplel/install-qt-action@v2
-#       with:
-#         host: windows
-#         target: "desktop"
-#         version: ${{ env.QT_VERSION }}
-#         arch: ${{ env.MINGW_VERSION }}
-#         dir: "${{github.workspace}}/qt"
-#         install-deps: "true"
-#     -
-#       name: Set Qt path and refresh
-#       run: |
-#         echo "${{github.workspace}}/qt/Qt/${{ env.QT_VERSION }}/${{ env.MINGW_PATH }}/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-#         refreshenv
-#     -
-#       name: Configure CMake Proyect
-#       working-directory: ${{github.workspace}}
-#       env:
-#         CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
-#       run: cmake -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -G "CodeBlocks - MinGW Makefiles" -B ${{github.workspace}}/build
-#     -
-#       name: Build project
-#       working-directory: ${{github.workspace}}/build
-#       run: |
-#         mingw32-make.exe
-#     - name: Run Tests
-#       working-directory: ${{github.workspace}}/build
-#       run: |
-#         ./tests.exe
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    -
+      uses: actions/checkout@v2
+    -
+      name: Install correct version of mingw
+      uses: crazy-max/ghaction-chocolatey@v1
+      with:
+        args: install mingw --version=8.1.0  -y --force
+    -
+      name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        host: windows
+        target: "desktop"
+        version: ${{ env.QT_VERSION }}
+        arch: ${{ env.MINGW_VERSION }}
+        dir: "${{github.workspace}}/qt"
+        install-deps: "true"
+    -
+      name: Set Qt path and refresh
+      run: |
+        echo "${{github.workspace}}/qt/Qt/${{ env.QT_VERSION }}/${{ env.MINGW_PATH }}/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        refreshenv
+    -
+      name: Configure CMake Project
+      working-directory: ${{github.workspace}}
+      env:
+        CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
+      run: cmake -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -G "MinGW Makefiles" -B ${{github.workspace}}/build
+    -
+      name: Build project
+      working-directory: ${{github.workspace}}
+      run: |
+        cmake --build ${{github.workspace}}/build/ --config Release --target all
+    - name: Run Tests
+      working-directory: ${{github.workspace}}/build
+      run: |
+        ./tests.exe
