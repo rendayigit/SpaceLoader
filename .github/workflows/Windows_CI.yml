@@ -29,13 +29,17 @@ jobs:
         run: |
           cd D:\a\_temp\setup-msys2
           dir
-
-      - name: Build All
+      
+      - name: List2
         run: |
-            mkdir D:/a/SpaceLoader/SpaceLoader/build/
-            cmake -DCMAKE_PREFIX_PATH:STRING=D:/a/_temp/setup-msys2/mingw64/lib/cmake/ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=D:/a/_temp/setup-msys2/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=D:/a/_temp/setup-msys2/mingw64/bin/g++.exe -S D:/a/SpaceLoader/SpaceLoader/ -B D:/a/SpaceLoader/SpaceLoader/build/ -G "MinGW Makefiles"
-            set /a coreCount=%NUMBER_OF_PROCESSORS% + 2
-            cmake --build D:/a/SpaceLoader/SpaceLoader/build --config Debug --target all -j %coreCount% --
+          cd D:/a/SpaceLoader/SpaceLoader/
+          dir
+
+      # - name: Build All
+      #   run: |
+      #       mkdir D:/a/SpaceLoader/SpaceLoader/build/
+      #       cmake -DCMAKE_PREFIX_PATH:STRING=D:/a/_temp/setup-msys2/mingw64/lib/cmake/ -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_CC_COMPILER:FILEPATH=D:/a/_temp/setup-msys2/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=D:/a/_temp/setup-msys2/mingw64/bin/g++.exe -S D:/a/SpaceLoader/SpaceLoader/ -B D:/a/SpaceLoader/SpaceLoader/build/ -G "MinGW Makefiles"
+      #       cmake --build D:/a/SpaceLoader/SpaceLoader/build
       # - name: Build All
       #   run: |
       #       mkdir D:/a/SpaceLoader/SpaceLoader/build/
