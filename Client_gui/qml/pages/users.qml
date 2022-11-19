@@ -39,11 +39,13 @@ Item {
 
                 Column {
                     id: logsColumn
+                    spacing: 20
 
                     Component.onCompleted: () => {
-                        for (var i = 0; i < 2; i++) {
+                        // var userList = backend.getUserList();
+                        for (var i = 0; i < 1; i++) {
                             var item = Qt.createComponent("../components/CustomUserListItem.qml").createObject(logsColumn, {
-                                "width": userListRectangle.width,
+                                "width": userListRectangle.width - 20,
                                 "userIp": "User Ip: 127.0.0.1",
                                 "username": "Username: mrtkr"
                             });
