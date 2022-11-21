@@ -1,7 +1,14 @@
 #include "backend.h"
 
+#include <fcntl.h>
+#include <libssh/libssh.h>
+#include <libssh/sftp.h>
+#include <unistd.h>
+
 #include <QtCore/QFile>
 #include <QtCore/QThread>
+#include <fstream>
+#include <sstream>
 
 #include "../common.h"
 #include "../constants.h"
@@ -50,17 +57,17 @@ void Backend::getUserList() { transmit("getUserList"); }
 
 void Backend::fileTransfer(QString localFile, QString serverPath) {
     QStringList args;
-    
-    #ifdef Q_OS_WIN
-        QString bash = "cmd.exe";
-        args.append("/c");
-        args.append("ROBOCOPY");
-        localFile = localFile.replace("file:///", "");
-    #else
-        QString bash = "/bin/bash";
-        //TODO - args.append("unix copy command here");
-        localFile = localFile.replace("file://", "");
-    #endif
+
+#ifdef Q_OS_WIN
+    QString bash = "cmd.exe";
+    args.append("/c");
+    args.append("ROBOCOPY");
+    localFile = localFile.replace("file:///", "");
+#else
+    QString bash = "/bin/bash";
+    // TODO - args.append("unix copy command here");
+    localFile = localFile.replace("file://", "");
+#endif
 
     qDebug() << "1:" << localFile;
     qDebug() << "2:" << serverPath;
@@ -169,4 +176,52 @@ void Backend::parse(QString text) {
     } else if (text.contains("User #")) {
         emit getUsers(text);
     }
+}
+
+void Backend::fileTransfer() {
+    ssh_session my_ssh_session;
+    int verbosity = SSH_LOG_PROTOCOL;
+    int port = 22;
+    int access_type = O_WRONLY | O_CREAT | O_TRUNC;
+
+    my_ssh_session = ssh_new();
+    if (my_ssh_session == NULL) exit(-1);
+
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, "192.168.1.2");
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_USER, "Administrator");
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_PORT, &port);
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_SSH_DIR, "C:/Workspace/TARGET_TOOLS/TargetConnect");
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_PASSWORD_AUTH, "uyssw");
+    ssh_options_set(my_ssh_session, SSH_OPTIONS_LOG_VERBOSITY, &verbosity);
+
+    sftp_session sftp = sftp_new(my_ssh_session);
+    if (sftp == NULL) {
+        // TODO text or something that shows us no sftp connection
+    }
+
+    int rc = sftp_init(sftp);
+    {
+        // TODO text or sometthing that shows us sftp init failed
+        sftp_free(sftp);
+    }
+
+    sftp_file file = sftp_open(sftp, "/home/helloworld.txt", access_type, 1);
+    if (file == NULL) {
+        //TODO text or something that shows us file open failed
+    }
+
+    std::ifstream fin("file.txt", std::ios::binary);
+
+    if (fin) {
+        fin.seekg(0, std::ios::end);
+        std::ios::pos_type bufsize = fin.tellg();
+        fin.seekg(0);                             
+
+        std::vector<char> buf(bufsize);
+        fin.read(buf.data(), bufsize);
+
+        sftp_write(file, buf.data(), bufsize);
+    }
+
+    ssh_free(my_ssh_session);
 }
