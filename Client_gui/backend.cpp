@@ -6,8 +6,8 @@
 #include "../common.h"
 #include "../constants.h"
 #include "../lib/Logger/logger.h"
-#include "egse.h"
 #include "../lib/YAML/yaml.h"
+#include "egse.h"
 #include "iostream"
 #include "listener.h"
 
@@ -51,17 +51,17 @@ void Backend::getUserList() { transmit("getUserList"); }
 
 void Backend::fileTransfer(QString localFile, QString serverPath) {
     QStringList args;
-    
-    #ifdef Q_OS_WIN
-        QString bash = "cmd.exe";
-        args.append("/c");
-        args.append("ROBOCOPY");
-        localFile = localFile.replace("file:///", "");
-    #else
-        QString bash = "/bin/bash";
-        //TODO - args.append("unix copy command here");
-        localFile = localFile.replace("file://", "");
-    #endif
+
+#ifdef Q_OS_WIN
+    QString bash = "cmd.exe";
+    args.append("/c");
+    args.append("ROBOCOPY");
+    localFile = localFile.replace("file:///", "");
+#else
+    QString bash = "/bin/bash";
+    // TODO - args.append("unix copy command here");
+    localFile = localFile.replace("file://", "");
+#endif
 
     qDebug() << "1:" << localFile;
     qDebug() << "2:" << serverPath;
@@ -172,10 +172,12 @@ void Backend::parse(QString text) {
     }
 }
 
-void Backend::updateYamlFile(QString path, QString value){
+void Backend::updateYamlFile(QString path, QString value) {
     Yaml::setValueByPath(path.toStdString(), value.toStdString());
 }
 
 QString Backend::getConfigValue(QString path, QString key) {
-    return QString::fromStdString(Yaml::getValue(Yaml::getNodeByPath("./Setup/Config.yaml", path.toStdString()), key.toStdString()));
+    return QString::fromStdString(Yaml::getValue(
+        Yaml::getNodeByPath(Path::getInstance().getConfigYaml().toStdString(), path.toStdString()),
+        key.toStdString()));
 }
