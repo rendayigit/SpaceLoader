@@ -88,6 +88,15 @@ vector<Node> Yaml::getSeconds(const Node &node, const string &key) {
     return resultNodes;
 }
 
+void Yaml::setValueByPath(const std::string &yamlFilePath, const string path, const string value) {
+    YAML::Emitter out;
+    Node temp = LoadFile(yamlFilePath);
+    searchByNodePath(temp, splitPath(path, '.')).at(0) = value;
+    out << temp;
+    std::ofstream ofout(yamlFilePath);
+    ofout << out.c_str();
+}
+
 vector<Node> Yaml::searchByNodePath(const Node node, vector<string> pathOrder) {
     if (pathOrder.size() == 1) {
         vector<Node> temp = Yaml::searchNodeByKey(node, pathOrder.at(0));
@@ -174,13 +183,4 @@ vector<string> Yaml::splitPath(const string &path, char delimiter) {
     }
 
     return pathVector;
-}
-
-void Yaml::setValueByPath(const string path, const string value) {
-    YAML::Emitter out;
-    Node temp = LoadFile("./Setup/Config.yaml");
-    searchByNodePath(temp, splitPath(path, '.')).at(0) = value;
-    out << temp;
-    std::ofstream ofout("./Setup/Config.yaml");
-    ofout << out.c_str();
 }

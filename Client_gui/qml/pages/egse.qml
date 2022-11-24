@@ -9,6 +9,11 @@ Rectangle {
     radius: 10
     color: "#27273a"
 
+    Component.onCompleted: {
+        textDeviceIp.text = backend.getConfigValue("Config.Ips.egse.ip", "ip")
+        textDeviceTcPort.text = backend.getConfigValue("Config.Ips.egse.port", "port")
+    }
+
     Label {
         id: labelEgse
         anchors.top: parent.top
@@ -36,10 +41,6 @@ Rectangle {
         font.pointSize: 12
         placeholderText: "Device IP"
         text: "192.168.1.250"
-
-        Component.onCompleted: {
-            textDeviceIp.text = backend.getConfigValue("Config.Ips.egse.ip", "ip")
-        }
     }
 
     Label {
@@ -69,10 +70,6 @@ Rectangle {
         font.pointSize: 12
         placeholderText: "TC Port"
         text: "5004"
-
-        Component.onCompleted: {
-            textDeviceTcPort.text = backend.getConfigValue("Config.Ips.egse.port", "port")
-        }
     }
 
     CustomButton {

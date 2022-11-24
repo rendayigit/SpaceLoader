@@ -5,7 +5,10 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 Item {
-    Component.onCompleted: backend.stopListen()
+    Component.onCompleted: {
+        ip.text = backend.getConfigValue("Config.Ips.listenTo", "ip")
+        backend.stopListen()
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -25,10 +28,6 @@ Item {
             text: "127.0.0.1:1235"
 
             font.pointSize: 12
-
-            Component.onCompleted: {
-                ip.text = backend.getConfigValue("Config.Ips.listenTo", "ip")
-            }
         }
 
         CustomButton {
@@ -51,7 +50,7 @@ Item {
                 enabled = false
                 stopListen.enabled = true
                 textArea.text = "Listening to " + ip.text + "\n"
-                // backend.listen(ip.text)
+                backend.listen(ip.text)
                 backend.updateYamlFile("Config.Ips.listenTo", ip.text);
             }
         }

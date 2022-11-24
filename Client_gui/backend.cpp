@@ -173,7 +173,8 @@ void Backend::parse(QString text) {
 }
 
 void Backend::updateYamlFile(QString path, QString value) {
-    Yaml::setValueByPath(path.toStdString(), value.toStdString());
+    Yaml::setValueByPath(Path::getInstance().getConfigYaml().toStdString(), path.toStdString(),
+                         value.toStdString());
 }
 
 QString Backend::getConfigValue(QString path, QString key) {

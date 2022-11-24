@@ -25,6 +25,7 @@ Window {
 
     Component.onCompleted: {
         labelLocalIp.text += backend.getLocalIp()
+        textServerIp.text = backend.getConfigValue("Config.Ips.targetPc.ip", "ip");
     }
 
     Timer {
@@ -248,10 +249,6 @@ Window {
             text: "127.0.0.1"
 
             font.pointSize: 10
-
-            Component.onCompleted: {
-                textServerIp.text = backend.getConfigValue("Config.Ips.targetPc.ip", "ip");
-            }
         }
 
         Label {

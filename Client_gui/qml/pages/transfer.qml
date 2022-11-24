@@ -13,6 +13,10 @@ Rectangle {
     radius: 10
     color: "#27273a"
 
+    Component.onCompleted: {
+        serverPath.text = backend.getConfigValue("Config.FileTransfer.remotePath", "remotePath")
+    }
+
     Rectangle {
         id: remoteArea
         
@@ -56,10 +60,6 @@ Rectangle {
             font.pointSize: 12
 
             text: "D:/"
-
-            Component.onCompleted: {
-                serverPath.text = backend.getConfigValue("Config.FileTransfer.remotePath", "remotePath")
-            }
         }
 
         CustomButton {
