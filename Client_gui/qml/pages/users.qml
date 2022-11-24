@@ -5,23 +5,17 @@ import QtQuick.Layouts 1.15
 import QtQuick.Timeline 1.0
 
 Item {
+
+    property string userInfo;
+
+    Component.onCompleted: {
+        backend.getUserList();
+    }
+
     Rectangle {
         anchors.fill: parent
         radius: 10
         color: "#27273a"
-
-        Component.onCompleted: {
-            backend.getUserList()
-
-            var userList = 
-            for (var i = 0; i < userList.length; i++) {
-                var item = Qt.createComponent("../components/CustomUserListItem.qml").createObject(logsColumn, {
-                    "width": userListRectangle.width - 20,
-                    "userIp": "User Ip: 127.0.0.1",
-                    "username": "Username: mrtkr"
-                });
-            }
-        }
 
         Rectangle {
             id: userListRectangle
@@ -58,7 +52,18 @@ Item {
         target: backend
 
         function onGetUsers(text) {
-            console.log(text)
+            var userList = text.split("\n");
+
+            for (var i = 0; i < userList.length; i++) {
+                console.log(userList[i])
+                var userIp = "User Ip: " + userList[i].split(": ")[1].split(" ")[1].replace("(", "").replace(")", "");
+                var username = "Username: " + userList[i].split(": ")[1].split(" ")[0];
+                var item = Qt.createComponent("../components/CustomUserListItem.qml").createObject(logsColumn, {
+                    "width": userListRectangle.width - 20,
+                    "userIp": userIp,
+                    "username": username
+                });
+            }
         }
     }
 }

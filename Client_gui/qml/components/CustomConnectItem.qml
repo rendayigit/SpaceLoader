@@ -4,7 +4,7 @@ import QtQuick.Controls 2.15
 Rectangle {
     id: rectangle
 
-    property string connectPc: "Null"
+    property string connectPc: "Connected to Starkit"
 
     width: 350
     height: 50
