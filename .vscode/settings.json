@@ -41,8 +41,5 @@
     "--compile-commands-dir=${workspaceFolder}/build/compile_commands.json"
   ],
   "docwriter.style": "Doxygen",
-  "testMate.cpp.test.executables": "{build}/**/*{tests}*",
-  "files.associations": {
-    "iostream": "cpp"
-  }
+  "testMate.cpp.test.executables": "{build}/**/*{tests}*"
 }
