@@ -6,11 +6,22 @@ import QtQuick.Timeline 1.0
 
 Item {
     Rectangle {
-        id: rectangle
-
         anchors.fill: parent
         radius: 10
         color: "#27273a"
+
+        Component.onCompleted: {
+            backend.getUserList()
+
+            var userList = 
+            for (var i = 0; i < userList.length; i++) {
+                var item = Qt.createComponent("../components/CustomUserListItem.qml").createObject(logsColumn, {
+                    "width": userListRectangle.width - 20,
+                    "userIp": "User Ip: 127.0.0.1",
+                    "username": "Username: mrtkr"
+                });
+            }
+        }
 
         Rectangle {
             id: userListRectangle
@@ -27,8 +38,6 @@ Item {
             color: "#000000"
 
             ScrollView {
-                id: scrollView
-
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
                 anchors.top: parent.top
@@ -40,27 +49,16 @@ Item {
                 Column {
                     id: logsColumn
                     spacing: 20
-
-                    Component.onCompleted: () => {
-                        // var userList = backend.getUserList();
-                        for (var i = 0; i < 1; i++) {
-                            var item = Qt.createComponent("../components/CustomUserListItem.qml").createObject(logsColumn, {
-                                "width": userListRectangle.width - 20,
-                                "userIp": "User Ip: 127.0.0.1",
-                                "username": "Username: mrtkr"
-                            });
-                        }
-                    }
                 }
-
             }
-
         }
-
     }
 
     Connections {
         target: backend
-    }
 
+        function onGetUsers(text) {
+            console.log(text)
+        }
+    }
 }
