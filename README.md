@@ -1,5 +1,7 @@
 # [SpaceLoader](https://github.com/rendayigit/SpaceLoader)
 
+![sl](https://user-images.githubusercontent.com/26045359/204103152-a5e0e2e3-ff24-4157-aa15-8c2d4f51f523.PNG)
+
 A project where a Client can call batch scripts located in the Server PC. These commands including the batch script locations are located in an xml file therefore configuration doesn't require recompilation. Written using the Qt framework.
 
 ## Environment Setup
