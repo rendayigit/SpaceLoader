@@ -6,8 +6,14 @@
 using namespace std;
 
 Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
+std::string serverVersion;
 
-void Client::onReceived(QByteArray message) { std::cout << message.toStdString() << std::endl; }
+void Client::onReceived(QByteArray message) {
+    if (message.toStdString().find("Version =") != std::string::npos) {
+        serverVersion = message.toStdString();
+    }
+    std::cout << message.toStdString() << std::endl;
+}
 
 void Client::onDisconnected() { std::cout << "Disconnected From Server!"; }
 
@@ -78,6 +84,9 @@ void Client::start(QList<QString> commandArguments) {
     if (noloop) {
         exit(0);
     }
+
+    transmit("getuserlist");
+    transmit("version");
 
     QtConcurrent::run(this, &Client::loopForCommands);
 }
@@ -211,6 +220,30 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
         std::cout << "serverPath: " << serverPath.toStdString() << std::endl;
 
         fileTransfer(localFileAndPath, serverPath);
+    } else if (Cmp(message, "version")) {
+        string clientVersion = Operations::spaceloaderVersion().toStdString();
+
+        std::cout << "Client " << clientVersion << std::endl;
+        std::cout << "Server " << serverVersion << std::endl;
+        // transmit("version");
+
+        // vector<string> temp;
+        // stringstream ss(clientVersion);
+        // string item; // item is a string which contains a part of the string
+
+        // while (std::getline(ss, item, '=')) {
+        //     temp.push_back(item);
+        // }
+
+        // float serverVersionFloat = std::stof(temp.back().erase(0.1));
+        // std::cout << temp.back().erase(0.1);
+        // float clientVersionFloat = std::stof(clientVersion);
+
+        // if (serverVersionFloat < clientVersionFloat) {
+        //     std::cout << "WARNING Client Version is older than the Server Version !!!" << std::endl;
+        // } else {
+        //     std::cout << "WARNING Server Version is older than the Client Version !!!" << std::endl;
+        // }
     }
 }
 

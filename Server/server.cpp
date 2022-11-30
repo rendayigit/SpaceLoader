@@ -113,7 +113,7 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
     } else if (Cmp(message, "help")) {
         Transmit(sender, (" - Server Commands - \n" + Operations::help()).toLocal8Bit());
     } else if (Cmp(message, "version")) {
-        Transmit(sender, QString::fromStdString(Version).toLocal8Bit());
+        Transmit(sender, ("Version = " + QString::fromStdString(Version)).toLocal8Bit());
     } else if (Cmp(message, "sa")) {
         Transmit(sender, "AS");
     } else if (Cmp(message, "UpdateCmds")) {

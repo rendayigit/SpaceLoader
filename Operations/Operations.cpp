@@ -1,6 +1,7 @@
 #include "Operations.h"
 
 #include "../common.h"
+#include "../version.h"
 
 Operations::Operations(QString yamlFile) {
     cmdsYamlFile = yamlFile;
@@ -165,4 +166,10 @@ QString Operations::help() {
     }
 
     return helpString;
+}
+
+QString Operations::spaceloaderVersion() {
+    QString versionString = "Version = ";
+    versionString += QString::fromStdString(VERSION::Version);
+    return versionString;
 }
