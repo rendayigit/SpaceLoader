@@ -1,4 +1,5 @@
 #include "client.h"
+#include <QtCore/qthread.h>
 
 #include "../common.h"
 #include "../path.h"
@@ -6,10 +7,9 @@
 using namespace std;
 
 Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
-std::string serverVersion;
 
 void Client::onReceived(QByteArray message) {
-    if (message.toStdString().find("Version =") != std::string::npos) {
+    if (message.contains("Version =")) {
         serverVersion = message.toStdString();
     }
     std::cout << message.toStdString() << std::endl;
@@ -86,6 +86,7 @@ void Client::start(QList<QString> commandArguments) {
     }
 
     transmit("getuserlist");
+    QThread::msleep(300);
     transmit("version");
 
     QtConcurrent::run(this, &Client::loopForCommands);
@@ -222,10 +223,9 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
         fileTransfer(localFileAndPath, serverPath);
     } else if (Cmp(message, "version")) {
         string clientVersion = Operations::spaceloaderVersion().toStdString();
-
-        std::cout << "Client " << clientVersion << std::endl;
-        std::cout << "Server " << serverVersion << std::endl;
-        // transmit("version");
+        std::cout << "Client " << Operations::spaceloaderVersion().toStdString() << std::endl;
+        std::cout << "Server ";
+        transmit("version");
 
         // vector<string> temp;
         // stringstream ss(clientVersion);

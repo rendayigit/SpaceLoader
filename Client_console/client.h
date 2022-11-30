@@ -49,6 +49,7 @@ class Client : public TCPClient, public Operations {
 
    private:
     Client();
+    std::string serverVersion;
     QList<Client *> listeners;
     bool noloop = false;
 };
