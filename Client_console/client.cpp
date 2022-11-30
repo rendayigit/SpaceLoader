@@ -8,6 +8,8 @@ using namespace std;
 
 Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
 
+std::string serverVersion;
+
 void Client::onReceived(QByteArray message) {
     if (message.contains("Version =")) {
         serverVersion = message.toStdString();
@@ -227,23 +229,15 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
         std::cout << "Server ";
         transmit("version");
 
-        // vector<string> temp;
-        // stringstream ss(clientVersion);
-        // string item; // item is a string which contains a part of the string
+        float serverVersionNumeric = Operations::spaceloaderVersion().split(" = ").at(1).toFloat();
+        float clientVersionNumeric = QString::fromStdString(serverVersion).split(" = ").at(1).toFloat();
 
-        // while (std::getline(ss, item, '=')) {
-        //     temp.push_back(item);
-        // }
+        if(serverVersionNumeric < clientVersionNumeric) {
+            std::cout << "WARNING Server version is older than the Client version !!!";
+        }else {
+            std::cout << "WARNING Client version is older than the Server version !!!";
+        }
 
-        // float serverVersionFloat = std::stof(temp.back().erase(0.1));
-        // std::cout << temp.back().erase(0.1);
-        // float clientVersionFloat = std::stof(clientVersion);
-
-        // if (serverVersionFloat < clientVersionFloat) {
-        //     std::cout << "WARNING Client Version is older than the Server Version !!!" << std::endl;
-        // } else {
-        //     std::cout << "WARNING Server Version is older than the Client Version !!!" << std::endl;
-        // }
     }
 }
 
