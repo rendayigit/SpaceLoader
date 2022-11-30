@@ -169,7 +169,5 @@ QString Operations::help() {
 }
 
 QString Operations::spaceloaderVersion() {
-    QString versionString = "Version = ";
-    versionString += QString::fromStdString(VERSION::Version);
-    return versionString;
+    return "Version = " + QString::fromStdString(VERSION::Version);
 }
