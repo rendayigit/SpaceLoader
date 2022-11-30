@@ -8,6 +8,11 @@ Cmds:
       type: internal
     - CmdCallString: version
       Description: >-
+        Display application version.
+      id: version
+      type: internal
+    - CmdCallString: version
+      Description: >-
         Display version information.
       id: version
       type: internal

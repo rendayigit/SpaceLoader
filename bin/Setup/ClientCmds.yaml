@@ -19,6 +19,11 @@ Cmds:
         `help` for full list.
       id: help
       type: internal
+    - CmdCallString: version
+      Description: >-
+        Display application version.
+      id: version
+      type: internal
     - CmdCallString: exit
       Description: Exits program.
       id: exit
