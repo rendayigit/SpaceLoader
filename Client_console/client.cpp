@@ -1,4 +1,5 @@
 #include "client.h"
+
 #include <QtCore/qthread.h>
 
 #include "../common.h"
@@ -11,10 +12,21 @@ Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
 std::string serverVersion;
 
 void Client::onReceived(QByteArray message) {
+    std::cout << message.toStdString() << std::endl;
+
     if (message.contains("Version =")) {
         serverVersion = message.toStdString();
+
+        float serverVersionNumeric = Operations::spaceloaderVersion().split(" = ").at(1).toFloat();
+        float clientVersionNumeric =
+            QString::fromStdString(serverVersion).split(" = ").at(1).toFloat();
+
+        if (serverVersionNumeric < clientVersionNumeric) {
+            std::cout << "WARNING Server version is older than the Client version !!!\n";
+        } else if(serverVersionNumeric > clientVersionNumeric) {
+            std::cout << "WARNING Client version is older than the Server version !!!\n";
+        }
     }
-    std::cout << message.toStdString() << std::endl;
 }
 
 void Client::onDisconnected() { std::cout << "Disconnected From Server!"; }
@@ -228,16 +240,6 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
         std::cout << "Client " << Operations::spaceloaderVersion().toStdString() << std::endl;
         std::cout << "Server ";
         transmit("version");
-
-        float serverVersionNumeric = Operations::spaceloaderVersion().split(" = ").at(1).toFloat();
-        float clientVersionNumeric = QString::fromStdString(serverVersion).split(" = ").at(1).toFloat();
-
-        if(serverVersionNumeric < clientVersionNumeric) {
-            std::cout << "WARNING Server version is older than the Client version !!!";
-        }else {
-            std::cout << "WARNING Client version is older than the Server version !!!";
-        }
-
     }
 }
 
