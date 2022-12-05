@@ -37,4 +37,4 @@ jobs:
           run: |
             mkdir ${{github.workspace}}/build
             cmake -B ${{github.workspace}}/build -G "MinGW Makefiles"
-            cmake --build D:/a/SpaceLoader/SpaceLoader/build
+            cmake --build ${{github.workspace}}/build
