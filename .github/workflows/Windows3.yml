@@ -1,51 +1,40 @@
-# name: Compile and Release Qt6 Proyect
+name: MSYS2
+on: push
 
-# on: push
+jobs:
+  msys2-ucrt64:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: |
+            mingw-w64-x86_64-qt5
+            mingw-w64-x86_64-qt5-base
+            mingw-w64-x86_64-qt5-declarative
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-make
+            mingw-w64-x86_64-gtest
+            mingw-w64-x86_64-yaml-cpp
+            mingw-w64-x86_64-ninja  
+      - name: CI-Build
+        run: |
+          echo 'Running in MSYS2!'
+          ./ci-build.sh
 
-# env:
-#   QT_VERSION:     "5.15.0"
-#   MINGW_VERSION:  "win64_mingw81"
-#   MINGW_PATH:     "mingw81_64"
-#   BUILD_TYPE:      Release
-
-# jobs:
-#   build:
-#     runs-on: windows-latest
-#     steps:
-#     -
-#       uses: actions/checkout@v2
-#     -
-#       name: Install correct version of mingw
-#       uses: crazy-max/ghaction-chocolatey@v1
-#       with:
-#         args: install mingw --version=8.1.0  -y --force
-#     -
-#       name: Install Qt
-#       uses: jurplel/install-qt-action@v2
-#       with:
-#         host: windows
-#         target: "desktop"
-#         version: ${{ env.QT_VERSION }}
-#         arch: ${{ env.MINGW_VERSION }}
-#         dir: "${{github.workspace}}/qt"
-#         install-deps: "true"
-#     -
-#       name: Set Qt path and refresh
-#       run: |
-#         echo "${{github.workspace}}/qt/Qt/${{ env.QT_VERSION }}/${{ env.MINGW_PATH }}/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-#         refreshenv
-#     -
-#       name: Configure CMake Project
-#       working-directory: ${{github.workspace}}
-#       env:
-#         CMAKE_PREFIX_PATH: ${{env.Qt5_Dir}}
-#       run: cmake -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -G "MinGW Makefiles" -B ${{github.workspace}}/build
-#     -
-#       name: Build project
-#       working-directory: ${{github.workspace}}
-#       run: |
-#         cmake --build ${{github.workspace}}/build/ --config Release --target all
-#     - name: Run Tests
-#       working-directory: ${{github.workspace}}/build
-#       run: |
-#         ./tests.exe
+  buildQt:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - build:
+          run: |
+            mkdir ${{github.workspace}}/build
+            cmake -B ${{github.workspace}}/build -G "MinGW Makefiles"
+            cmake --build D:/a/SpaceLoader/SpaceLoader/build
