@@ -22,7 +22,7 @@ jobs:
           key: msys2-cache
 
       - name: Install MSYS2
-        if: cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           mkdir ${{github.workspace}}/msys2/
           cd ${{github.workspace}}/msys2/
