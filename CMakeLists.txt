@@ -13,6 +13,6 @@ add_subdirectory(Server)
 add_subdirectory(Client_console)
 add_subdirectory(Client_gui)
 
-# add_subdirectory(Commands) # Dynamic libraries for all commands
+add_subdirectory(Commands) # Dynamic libraries for all commands
 
 add_subdirectory(tests/) # unit tests
