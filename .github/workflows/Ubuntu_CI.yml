@@ -1,4 +1,4 @@
-name: LINUX_CI
+name: UBUNTU_CI
 
 on: push
 

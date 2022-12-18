@@ -2,39 +2,41 @@ name: WINDOWS_CI
 
 on: push
 
+defaults:
+  run:
+    shell: cmd
+
 jobs:
-  build:
+  CI:
     runs-on: windows-latest
-    defaults:
-        run:
-          shell: cmd
+    
     steps:
       - name: Install MSYS2
         run: |
-            mkdir ${{github.workspace}}/msys2/
-            cd ${{github.workspace}}/msys2/
-            curl -LO http://github.com/msys2/msys2-installer/releases/download/2022-12-16/msys2-x86_64-20221216.exe --ssl-no-revoke
-            msys2-x86_64-20221216.exe install --root ${{github.workspace}}/msys2/ --confirm-command
-            set PATH=%PATH%;${{github.workspace}}/msys2/usr/bin/
-            set PATH=%PATH%;${{github.workspace}}/msys2/mingw64/bin/
+          mkdir ${{github.workspace}}/msys2/
+          cd ${{github.workspace}}/msys2/
+          curl -LO http://github.com/msys2/msys2-installer/releases/download/2022-12-16/msys2-x86_64-20221216.exe --ssl-no-revoke
+          msys2-x86_64-20221216.exe install --root ${{github.workspace}}/msys2/ --confirm-command
+          set PATH=%PATH%;${{github.workspace}}/msys2/usr/bin/
+          set PATH=%PATH%;${{github.workspace}}/msys2/mingw64/bin/
 
       - name: Install MSYS2 Packages
         run: |
-            cd ${{github.workspace}}/msys2/usr/bin/
-            pacman.exe -S mingw-w64-x86_64-qt5 --noconfirm
-            pacman.exe -S mingw-w64-x86_64-qt5-base --noconfirm
-            pacman.exe -S mingw-w64-x86_64-qt5-declarative --noconfirm
-            pacman.exe -S mingw-w64-x86_64-cmake --noconfirm
-            pacman.exe -S mingw-w64-x86_64-make --noconfirm
-            pacman.exe -S mingw-w64-x86_64-gtest --noconfirm
-            pacman.exe -S mingw-w64-x86_64-yaml-cpp --noconfirm
-            pacman.exe -S mingw-w64-x86_64-ninja --noconfirm
+          cd ${{github.workspace}}/msys2/usr/bin/
+          pacman.exe -S mingw-w64-x86_64-qt5 --noconfirm
+          pacman.exe -S mingw-w64-x86_64-qt5-base --noconfirm
+          pacman.exe -S mingw-w64-x86_64-qt5-declarative --noconfirm
+          pacman.exe -S mingw-w64-x86_64-cmake --noconfirm
+          pacman.exe -S mingw-w64-x86_64-make --noconfirm
+          pacman.exe -S mingw-w64-x86_64-gtest --noconfirm
+          pacman.exe -S mingw-w64-x86_64-yaml-cpp --noconfirm
+          pacman.exe -S mingw-w64-x86_64-ninja --noconfirm
 
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Build All
         run: |
-            mkdir ${{github.workspace}}/build
-            ${{github.workspace}}/msys2/mingw64/bin/cmake.exe -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_CC_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/g++.exe -S ${{github.workspace}}/msys2/mingw64 -B ${{github.workspace}}/build/ -G "MinGW Makefiles"
-            ${{github.workspace}}/msys2/mingw64/bin/cmake.exe --build ${{github.workspace}}/build/ --config Release --target all
+          mkdir ${{github.workspace}}/build
+          ${{github.workspace}}/msys2/mingw32/bin/cmake.exe -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_CC_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/g++.exe -S ${{github.workspace}}/msys2/mingw64 -B ${{github.workspace}}/build/ -G "MinGW Makefiles"
+          ${{github.workspace}}/msys2/mingw32/bin/cmake.exe --build ${{github.workspace}}/build/ --config Release --target all
