@@ -14,7 +14,7 @@ jobs:
             mkdir ${{github.workspace}}/msys2
             cd ${{github.workspace}}/msys2
             wget https://github.com/msys2/msys2-installer/releases/download/2022-12-16/msys2-x86_64-20221216.exe
-            msys2-x86_64-2022XXXX.exe install --root ${{github.workspace}}/msys2 --confirm-command
+            msys2-x86_64-20221216.exe install --root ${{github.workspace}}/msys2 --confirm-command
 
       - name: Install MSYS2 Packages
         run: |
