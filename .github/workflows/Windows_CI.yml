@@ -34,7 +34,7 @@ jobs:
           set PATH=%PATH%;${{github.workspace}}/msys2/mingw64/bin/
 
           cd ${{github.workspace}}/msys2/usr/bin/
-          # pacman.exe -S mingw-w64-x86_64-gcc --noconfirm
+          REM pacman.exe -S mingw-w64-x86_64-gcc --noconfirm
           pacman.exe -S mingw-w64-x86_64-qt5 --noconfirm
           pacman.exe -S mingw-w64-x86_64-qt5-base --noconfirm
           pacman.exe -S mingw-w64-x86_64-qt5-declarative --noconfirm
@@ -49,6 +49,6 @@ jobs:
           cd ${{github.workspace}}/msys2/mingw64/bin/
           dir
           mkdir ${{github.workspace}}/build
-          # ${{github.workspace}}/msys2/mingw64/bin/cmake.exe -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_CC_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/g++.exe -S ${{github.workspace}} -B ${{github.workspace}}/build/ -G "MinGW Makefiles"
+          REM ${{github.workspace}}/msys2/mingw64/bin/cmake.exe -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_CC_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/g++.exe -S ${{github.workspace}} -B ${{github.workspace}}/build/ -G "MinGW Makefiles"
           ${{github.workspace}}/msys2/mingw64/bin/cmake.exe -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -DCMAKE_BUILD_TYPE:STRING=Release -S ${{github.workspace}} -B ${{github.workspace}}/build/ -G "MinGW Makefiles"
           ${{github.workspace}}/msys2/mingw64/bin/cmake.exe --build ${{github.workspace}}/build/ --config Release --target all
