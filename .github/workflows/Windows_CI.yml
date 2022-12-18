@@ -9,7 +9,7 @@ defaults:
 jobs:
   CI:
     runs-on: windows-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,7 +23,7 @@ jobs:
           path: ${{github.workspace}}/msys2/
           key: msys2-cache
 
-      - name: Install MSYS2
+      - name: Install MSYS2 and Build All
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           mkdir ${{github.workspace}}/msys2/
@@ -47,8 +47,6 @@ jobs:
           set PATH=%PATH%;${{github.workspace}}/msys2/usr/bin/
           set PATH=%PATH%;${{github.workspace}}/msys2/mingw64/bin/
 
-      - name: Build All
-        run: |
           mkdir ${{github.workspace}}/build
           ${{github.workspace}}/msys2/mingw64/bin/cmake.exe -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_CC_COMPILER:FILEPATH=${{github.workspace}}/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=${{github.workspace}}/mingw64/bin/g++.exe -S ${{github.workspace}} -B ${{github.workspace}}/build/ -G "MinGW Makefiles"
           ${{github.workspace}}/msys2/mingw64/bin/cmake.exe --build ${{github.workspace}}/build/ --config Release --target all
