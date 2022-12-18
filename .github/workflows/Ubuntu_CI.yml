@@ -1,4 +1,4 @@
-name: CI
+name: UBUNTU_CI
 
 on:
   pull_request:
@@ -13,10 +13,10 @@ defaults:
 jobs:
   CI:
     runs-on: ubuntu-latest
-      
+
     steps:
-    - name: Install gtest 
-      run:  |
+    - name: Install gtest
+      run: |
         cd /tmp/
         git clone https://github.com/google/googletest.git -b release-1.10.0
         cd googletest        # Main directory of the cloned repository.
@@ -26,10 +26,10 @@ jobs:
         make
         sudo make install    # Install in /usr/local/ by default
 
-    - name: Install yaml-cpp 
-      run:  |
+    - name: Install yaml-cpp
+      run: |
         sudo apt install libyaml-cpp-dev
-          
+
     - name: Checkout
       uses: actions/checkout@v2
 
@@ -53,6 +53,6 @@ jobs:
         make
 
     - name: Run Unit Tests
-      run: |       
+      run: |
         cd ${{ github.workspace }}/build/tests/
         sudo ./tests
