@@ -1,4 +1,4 @@
-name: WINDOWS_CI4
+name: WINDOWS_CI
 
 on: push
 
@@ -21,17 +21,15 @@ jobs:
       - name: Install MSYS2 Packages
         run: |
             cd ${{github.workspace}}/msys2/usr/bin/
-            pacman.exe ^
-            -S mingw-w64-x86_64-qt5 ^
-            -S mingw-w64-x86_64-qt5-base ^
-            -S mingw-w64-x86_64-qt5-declarative ^
-            -S mingw-w64-x86_64-cmake ^
-            -S mingw-w64-x86_64-make ^
-            -S mingw-w64-x86_64-gtest ^
-            -S mingw-w64-x86_64-yaml-cpp ^
-            -S mingw-w64-x86_64-ninja ^
-            --noconfirm
-
+            pacman.exe -S mingw-w64-x86_64-qt5 --noconfirm
+            pacman.exe -S mingw-w64-x86_64-qt5-base --noconfirm
+            pacman.exe -S mingw-w64-x86_64-qt5-declarative --noconfirm
+            pacman.exe -S mingw-w64-x86_64-cmake --noconfirm
+            pacman.exe -S mingw-w64-x86_64-make --noconfirm
+            pacman.exe -S mingw-w64-x86_64-gtest --noconfirm
+            pacman.exe -S mingw-w64-x86_64-yaml-cpp --noconfirm
+            pacman.exe -S mingw-w64-x86_64-ninja --noconfirm
+            
       - name: Build All
         run: |
             mkdir ${{github.workspace}}/build
