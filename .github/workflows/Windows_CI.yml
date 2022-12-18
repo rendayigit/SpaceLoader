@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Install MSYS2
         run: |
+            dir
+            cd ${{github.workspace}}
+            dir 
             mkdir ${{github.workspace}}/msys2
             cd ${{github.workspace}}/msys2
             curl -LO http://github.com/msys2/msys2-installer/releases/download/2022-12-16/msys2-x86_64-20221216.exe --ssl-no-revoke
@@ -32,7 +35,9 @@ jobs:
             
       - name: Build All
         run: |
+            dir
             cd ${{github.workspace}}
+            dir
             mkdir build
             cmake -B ${{github.workspace}}/build -G "MinGW Makefiles"
             cmake --build ${{github.workspace}}/build --config Release --target all
