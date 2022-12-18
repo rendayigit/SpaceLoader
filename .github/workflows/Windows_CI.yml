@@ -34,6 +34,7 @@ jobs:
           set PATH=%PATH%;${{github.workspace}}/msys2/mingw64/bin/
 
           cd ${{github.workspace}}/msys2/usr/bin/
+          pacman.exe -S mingw-w64-x86_64-gcc --noconfirm
           pacman.exe -S mingw-w64-x86_64-qt5 --noconfirm
           pacman.exe -S mingw-w64-x86_64-qt5-base --noconfirm
           pacman.exe -S mingw-w64-x86_64-qt5-declarative --noconfirm
