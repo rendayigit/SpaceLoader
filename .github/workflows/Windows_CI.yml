@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          clean: false
 
       - name: Cache
         id: cache
@@ -43,6 +45,8 @@ jobs:
 
       - name: Build All
         run: |
+          cd ${{github.workspace}}/msys2/mingw64/bin/
+          dir
           mkdir ${{github.workspace}}/build
           ${{github.workspace}}/msys2/mingw64/bin/cmake.exe -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_CC_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/g++.exe -S ${{github.workspace}} -B ${{github.workspace}}/build/ -G "MinGW Makefiles"
           ${{github.workspace}}/msys2/mingw64/bin/cmake.exe --build ${{github.workspace}}/build/ --config Release --target all
