@@ -15,6 +15,8 @@ jobs:
             cd ${{github.workspace}}/msys2
             curl -LO http://github.com/msys2/msys2-installer/releases/download/2022-12-16/msys2-x86_64-20221216.exe --ssl-no-revoke
             msys2-x86_64-20221216.exe install --root ${{github.workspace}}/msys2 --confirm-command
+            set PATH=%PATH%;${{github.workspace}}/msys2/msys64/usr/bin
+            set PATH=%PATH%;${{github.workspace}}/msys2/msys64/mingw64/bin
 
       - name: Install MSYS2 Packages
         run: |
