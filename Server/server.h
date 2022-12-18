@@ -7,32 +7,37 @@
 #include <QtNetwork/QTcpSocket>
 
 #include "../Client_console/client.h"
-#include "../Commands/Server/common/user.h"
 #include "../Operations/Operations.h"
 #include "../constants.h"
 #include "../lib/TCP/server/tcpServer.h"
 #include "../lib/YAML/yaml.h"
-#include "../Commands/PluginInterface.h"
+#include "../path.h"
 
 class Server : public TCPServer, public Operations {
    public:
-    static Server *getInstance();
-    void onReceived(QTcpSocket *sender, QByteArray message);
-    void clientDisconnected(QTcpSocket *clientSocket);
+    // Server(const Server &) = delete;
+    // Server &operator=(const Server &) = delete;
+    // Server(Server &&) = delete;
+    // Server &operator=(Server &&) = delete;
+    // ~Server() = default;
+
+    static auto &getInstance() {
+        static Server instance;
+        return instance;
+    }
+
+    void onReceived(QTcpSocket *sender, QByteArray message) override;
+    void onDisconnected(QTcpSocket *clientSocket) override;
     BaseCmd *getCmd(QString cmdName);
-    User *getUser(QString userName);
-    User *getUser(QTcpSocket *socket);
     bool isAuthorized(QTcpSocket *sender, QString cmdName);
 
    private:
     Server();
-    void fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message);
+    void fileTransfer(QTcpSocket *sender, QString localFile, QString serverPath);
     void parseInternalCmd(QTcpSocket *sender, QByteArray message);
+    void clearUserAuths(QTcpSocket *sender);
     void connectProcess(QTcpSocket *sender, QProcess *process);
-    QList<QString> getDlibs(QString path);
 
-    QList<User *> userList;
-    static Server *m_instance;
     QString transferredFileName;
     QString transferredFileLocation;
     QByteArray transferredFileBuffer;

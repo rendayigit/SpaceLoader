@@ -1,11 +1,11 @@
 #include "testClient.h"
 
-Client::Client() { }
+TestClient::TestClient() { }
 
-void Client::onReceived(QByteArray message) {
+void TestClient::onReceived(QByteArray message) {
     receivedString = message.data();
 }
 
-void Client::onDisconnected() {
+void TestClient::onDisconnected() {
     qDebug() << "Disconnected";
 }

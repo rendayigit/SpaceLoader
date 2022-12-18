@@ -14,13 +14,17 @@
 class Client : public TCPClient, public Operations {
     Q_OBJECT
    public:
-    static Client *getInstance();
-    void onReceived(QByteArray message);
-    void onDisconnected();
+    static auto &getInstance() {
+        static Client instance;
+        return instance;
+    }
+
+    void onReceived(QByteArray message) override;
+    void onDisconnected() override;
     void start(QList<QString> commandArguments);
     void stopAllListeners();
 
-    void fileTransfer(QTcpSocket *sender, FileTransferCmd *cmd, QByteArray message);
+    void fileTransfer(QString localFile, QString serverPath);
     void parseInternalCmd(QTcpSocket *sender, QByteArray message);
     void connectProcess(QTcpSocket *sender, QProcess *process);
 
@@ -45,8 +49,8 @@ class Client : public TCPClient, public Operations {
 
    private:
     Client();
-    static Client *m_instance;
     QList<Client *> listeners;
+    bool noloop = false;
 };
 
 #endif  // CLIENT_H

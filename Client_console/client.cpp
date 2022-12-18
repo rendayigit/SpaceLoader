@@ -1,26 +1,13 @@
 #include "client.h"
 
+#include "../common.h"
+#include "../path.h"
+
 using namespace std;
 
-Client *Client::m_instance = Client::getInstance();
-Client::Client() : Operations(Path::client_cmds_Yaml) {}
+Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
 
-Client *Client::getInstance() {
-    if (Client::m_instance == nullptr) {
-        Client::m_instance = new Client;
-    }
-    return Client::m_instance;
-}
-
-void Client::onReceived(QByteArray message) {
-    QString messageToPrint = message;
-    if (message.contains("help")) {
-        messageToPrint = helpFormatter(messageToPrint);
-        std::cout << messageToPrint.toStdString() << std::endl;
-    } else {
-        std::cout << message.toStdString() << std::endl;
-    }
-}
+void Client::onReceived(QByteArray message) { std::cout << message.toStdString() << std::endl; }
 
 void Client::onDisconnected() { std::cout << "Disconnected From Server!"; }
 
@@ -37,17 +24,24 @@ void Client::parse(QByteArray message) {
     if (not parseMessage(nullptr, message)) {
         // If the command cannot be found in the client cmds xml then it must be a
         // command for the server
-        m_instance->sendCommand(message);
+        transmit(message);
     }
 }
 
 void Client::start(QList<QString> commandArguments) {
-    connect(m_instance, &Client::consoleInputReceived, m_instance, &Client::parse);
-	
+    connect(this, &Client::consoleInputReceived, this, &Client::parse);
+
     populateCmdLists();
 
-    while (!m_instance->attemptConnection(commandArguments.first(), 1234)) {
+    while (not attemptConnection(commandArguments.first(), 1234)) {
         commandArguments.removeFirst();
+
+        for (auto c : commandArguments) {
+            if (c.contains("noloop")) {
+                exit(0);
+            }
+        }
+
         std::cout << "Connection error please re-enter IP: ";
         std::string ip;
         std::cin >> ip;
@@ -58,27 +52,44 @@ void Client::start(QList<QString> commandArguments) {
     /* Transmit username */
     QByteArray username = getenv("USERNAME");
     QHostAddress ip(getSocket()->localAddress().toIPv4Address());
-    m_instance->sendCommand("addUser " + username);
+    transmit("addUser " + username);
+    QThread::usleep(250);
+    getSocket()->flush();
+    QThread::usleep(250);
 
-    while (!commandArguments.isEmpty()) {
-        QThread::usleep(100);
-        QByteArray value = commandArguments.first().toLocal8Bit();
+    while (not commandArguments.isEmpty()) {
+        QString command = commandArguments.first();
         commandArguments.removeFirst();
-
-        emit consoleInputReceived(value);
+        QThread::usleep(100);
+        if (command.contains("noloop", Qt::CaseInsensitive)) {
+            noloop = true;
+            int idx = command.indexOf("noloop", 0, Qt::CaseInsensitive) + 7;
+            QString timeout = command.mid(idx, command.length() - idx);
+            if (timeout.size() > 0) {
+                std::cout << "Waiting for " << timeout.toStdString() << " seconds before exiting..."
+                          << std::endl;
+                QThread::sleep(timeout.toInt());
+            }
+        } else {
+            emit consoleInputReceived(command.toLocal8Bit());
+        }
     }
 
-    QtConcurrent::run(m_instance, &Client::loopForCommands);
+    if (noloop) {
+        exit(0);
+    }
+
+    QtConcurrent::run(this, &Client::loopForCommands);
 }
 
 void Client::listenTo(QString msg) {
-    int idx1 = msg.indexOf(" ", QString("ListenTo").size(), Qt::CaseInsensitive) + 1;
+    int idx1 = msg.indexOf(" ", QString("Listen").size(), Qt::CaseInsensitive) + 1;
 
     QString ip;
     QString port;
 
     vector<YAML::Node> nodeList = Yaml::getNodeListByKey(
-        Path::config_Yaml.toStdString(), "name", msg.mid(idx1, msg.size()).toStdString());
+        Paths().getConfigYaml().toStdString(), "name", msg.mid(idx1, msg.size()).toStdString());
     if (nodeList.size() < 1) {
         int idx2 = msg.indexOf(":", idx1, Qt::CaseInsensitive);
         int idx3 = msg.size();
@@ -100,18 +111,18 @@ void Client::stopListen(QString ipPort) {
     QString socketAddress;
     QString givenIpPortPair;
 
-    int idx1 = ipPort.indexOf(" ", QString("StopListeningTo").size(), Qt::CaseInsensitive) + 1;
+    int idx1 = ipPort.indexOf(" ", QString("StopListen").size(), Qt::CaseInsensitive) + 1;
 
-    vector<YAML::Node> nodeList = Yaml::getNodeListByKey(
-        Path::config_Yaml.toStdString(), "name", ipPort.mid(idx1, ipPort.size()).toStdString());
+    vector<YAML::Node> nodeList =
+        Yaml::getNodeListByKey(Paths().getConfigYaml().toStdString(), "name",
+                               ipPort.mid(idx1, ipPort.size()).toStdString());
     if (nodeList.size() < 1) {
         int idx2 = ipPort.indexOf(":", idx1, Qt::CaseInsensitive);
         int idx3 = ipPort.size();
 
         ipPort = ipPort.mid(idx1, idx2 - idx1) + ":" + ipPort.mid(idx2 + 1, idx3 - idx2 - 1);
     } else {
-        ipPort = QString::fromStdString(Yaml::getValue(nodeList.at(0), "ip")) +
-                 ":" +
+        ipPort = QString::fromStdString(Yaml::getValue(nodeList.at(0), "ip")) + ":" +
                  QString::fromStdString(Yaml::getValue(nodeList.at(0), "port"));
     }
 
@@ -121,7 +132,7 @@ void Client::stopListen(QString ipPort) {
         QString port = QString::number(listener->getSocket()->peerPort());
         givenIpPortPair = clientAddress + ":" + port;
 
-        if (cmp(ipPort, givenIpPortPair)) {
+        if (Cmp(ipPort, givenIpPortPair)) {
             listener->disconnect();
             delete listener;
             listeners.removeOne(listener);
@@ -129,57 +140,24 @@ void Client::stopListen(QString ipPort) {
     }
 }
 
-void Client::help(QByteArray message) {
-    if (cmp("help", message)) {
-        std::cout << "\nClient command list:\n" << std::endl;
-        for (auto &cmd : cmdList) {
-            QString helpString = "\t" + cmd->getCmdCallString();
-            helpString.insert(25, "- " + cmd->getCmdDescription());
-            helpString = helpFormatter(helpString);
-            std::cout << helpString.toStdString() << std::endl;
-        }
-        m_instance->sendCommand(message);
-    } else {
-        QString requestedCmd = message.mid(message.indexOf("help ") + 5, message.size());
-        requestedCmd = requestedCmd.toLower();
-        vector<YAML::Node> nodeList = Yaml::getNodeListByKey(
-            Path::client_cmds_Yaml.toStdString(), "id", requestedCmd.toStdString());
-        if (nodeList.size() < 1) {
-            m_instance->sendCommand(message);
-            return;
-        }
-
-        QString helpString = "\t" + QString::fromStdString(Yaml::getValue(
-                                        nodeList.at(0), "Description"));
-        helpString.insert(25, "- " + QString::fromStdString(
-                                         Yaml::getValue(nodeList.at(0), "type")));
-        helpString = helpFormatter(helpString);
-        std::cout << helpString.toStdString() << std::endl;
-    }
-}
-
 void Client::stopAllListeners() {
     for (auto &listener : listeners) {
-        listener->disconnect();
+        listener->getSocket()->abort();
         delete listener;
         listeners.removeOne(listener);
     }
 }
 
-void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QByteArray message) {
-    m_instance->sendCommand(message);
+void Client::fileTransfer(QString localFile, QString serverPath) {
+    transmit("transmit -s " + localFile.toLocal8Bit() + " -d " + serverPath.toLocal8Bit());
     QThread::msleep(10);
 
-    int endOfCmdName = message.indexOf(" ");
-    QString fileNamePath = message.mid(endOfCmdName + 1, message.size());
-
-    QFile file(fileNamePath);
+    QFile file(localFile);
     file.open(QIODevice::ReadOnly);
-    fileNamePath.remove(fileNamePath.size() - 1);
     QByteArray fileData = file.readAll();
     if (fileData.isNull()) {
         std::cout << "An error occured: Cannot open the provided file" << std::endl;
-        log()->Error("Error opening" + fileNamePath);
+        Log().Error("Error opening" + localFile);
         return;
     }
     std::cout << "File size: " << fileData.size() / BYTE_TO_KILOBYTE << "KiloByte" << std::endl;
@@ -188,10 +166,10 @@ void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QB
     int iteration = 0;
     while (!fileData.isNull()) {
         if (fileData.size() >= FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE) {
-            m_instance->sendCommand(fileData.mid(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE));
+            transmit(fileData.mid(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE));
             fileData.remove(0, FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE);
         } else {
-            m_instance->sendCommand(fileData.mid(0, fileData.size()));
+            transmit(fileData.mid(0, fileData.size()));
             fileData.clear();
         }
         iteration++;
@@ -200,25 +178,39 @@ void Client::fileTransfer(QTcpSocket * /*sender*/, FileTransferCmd * /*cmd*/, QB
             std::cout << ".";
         }
     }
-    m_instance->sendCommand("#END");
+    transmit("#END");
 
     if (iteration >= 10) {
         std::cout << " Transfer Complete" << std::endl;
     } else {
         std::cout << "An error occured white transferring the file." << std::endl;
-        log()->Error("An error occured white transferring file: " + fileNamePath);
+        Log().Error("An error occured white transferring file: " + localFile);
     }
 }
 
 void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray message) {
-    if (cmp(message, "help")) {
-        help(message);
-    } else if (cmp(message, "ListenTo")) {
+    if (Cmp(message, "help")) {
+        std::cout << (" - Client Commands - \n" + Operations::help()).toStdString();
+        transmit("help");
+    } else if (Cmp(message, "exit")) {
+        exit(0);
+    } else if (Cmp(message, "Listen")) {
         listenTo(message);
-    } else if (cmp(message, "StopListeningTo")) {
+    } else if (Cmp(message, "StopListen")) {
         stopListen(message);
-    } else if (cmp(message, "getAuth")) {
-        m_instance->sendCommand(message);
+    } else if (Cmp(message, "transmit")) {
+        message = message.simplified();
+
+        int sIndex = message.indexOf("-s", 0) + 3;
+        int dIndex = message.indexOf("-d") - 1;
+
+        QString localFileAndPath = message.mid(sIndex, dIndex - sIndex).simplified();
+        QString serverPath = message.mid(dIndex + 4, message.length()).simplified();
+
+        std::cout << "localFileAndPath: " << localFileAndPath.toStdString() << std::endl;
+        std::cout << "serverPath: " << serverPath.toStdString() << std::endl;
+
+        fileTransfer(localFileAndPath, serverPath);
     }
 }
 

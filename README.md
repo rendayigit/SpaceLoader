@@ -1,5 +1,7 @@
 # [SpaceLoader](https://github.com/rendayigit/SpaceLoader)
 
+![sl](https://user-images.githubusercontent.com/26045359/204103152-a5e0e2e3-ff24-4157-aa15-8c2d4f51f523.PNG)
+
 A project where a Client can call batch scripts located in the Server PC. These commands including the batch script locations are located in an xml file therefore configuration doesn't require recompilation. Written using the Qt framework.
 
 ## Environment Setup
@@ -36,7 +38,7 @@ A project where a Client can call batch scripts located in the Server PC. These 
 | 2 | ```pacman -Ss <package>``` | search package |
 | 3 | ```pacman -S <package>``` | install package |
 | 4 | ```pacman -R <package>``` | uninstall package |
-| 5 | ```pacman -Qet``` | list installed packages |
+| 5 | ```pacman -Qe``` | list installed packages |
 | 6 | ```pacman -Syyu``` | update |
 | 7 | ```pacman -Syyu --disable-download-timeout``` | update (use this if ur network is slow) |
 

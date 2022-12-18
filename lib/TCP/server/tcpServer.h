@@ -10,6 +10,9 @@
 #include <QtNetwork/QTcpServer>
 #include <QtNetwork/QTcpSocket>
 
+/**
+ * A class for TCP Server operations.
+ */
 class TCPServer : public QObject {
     Q_OBJECT
    public:
@@ -30,14 +33,21 @@ class TCPServer : public QObject {
      * @param sender - Sender socket.
      * @param message - message received from the client in raw format.
      */
-    virtual void onReceived(QTcpSocket *sender, QByteArray message) = 0;
+    virtual void onReceived(QTcpSocket *sender, QByteArray message) {}
 
     /**
-     * @brief clientDisconnected - This virtual function is automatically called
+     * @brief onDisconnected - This virtual function is automatically called
      * when a client is disconnected from the server.
      * @param clientSocket - client socket.
      */
-    virtual void clientDisconnected(QTcpSocket *clientSocket) = 0;
+    virtual void onDisconnected(QTcpSocket *clientSocket) {}
+
+    /**
+     * @brief onConnected - This virtual function is automatically called
+     * when a client is connected to the server.
+     * @param clientSocket - client socket.
+     */
+    virtual void onConnected(QTcpSocket *clientSocket) {}
 
     /**
      * @brief broadcast - Broadcast a message to all connected clients.
@@ -46,21 +56,45 @@ class TCPServer : public QObject {
     void broadcast(QByteArray message);
 
     /**
+     * @brief Get the Socket object
+     *
+     * @return QTcpSocket
+     */
+    QTcpServer *getServer() const { return server; }
+
+    /**
      * @brief transmit - Send a message to given client.
      *
      * @param client - Client socket.
      * @param message - Message to send.
      */
-    static void transmit(QTcpSocket *client, QByteArray message);
+    static void transmit(QTcpSocket *client, QByteArray data);
 
    public slots:
+
+    /**
+     * A callback function that is called when a new connection is established.
+     *
+     * @returns None
+     */
     void onNewConnection();
+
+    /**
+     * A callback function that is invoked when the input tensor is disconnected.
+     *
+     * @returns None
+     */
     void onDisconnected();
+
+    /**
+     * Forwards received data from the serial port to onReceived().
+     *
+     * @returns None
+     */
     void onReadyRead();
 
    private:
     QTcpServer *server;
-    QTcpSocket *socket;
     QList<QTcpSocket *> socketList;
 };
 

@@ -2,15 +2,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Server",
+            "name": "TESTS",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Server/SERVER.exe",
+            "program": "${workspaceFolder}/build/tests/tests.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/build/",
             "windows": {
-                "program": "${workspaceFolder}/build/Server/SERVER.exe",
+                "program": "${workspaceFolder}/build/tests/tests.exe",
                 "environment": [
                     {
                         "name": "PATH",
@@ -20,7 +20,7 @@
                 "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
             },
             "linux": {
-                "program": "${workspaceFolder}/build/Server/SERVER",
+                "program": "${workspaceFolder}/build/tests/tests",
             },
             "externalConsole": false,
             "MIMode": "gdb",
@@ -35,15 +35,15 @@
             "showDisplayString": true,
         },
         {
-            "name": "Client_console",
+            "name": "SERVER",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Client_console/CONSOLE.exe",
+            "program": "${workspaceFolder}/bin/SERVER.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/",
+            "cwd": "${workspaceFolder}/bin/",
             "windows": {
-                "program": "${workspaceFolder}/build/Client_console/CONSOLE.exe",
+                "program": "${workspaceFolder}/bin/SERVER.exe",
                 "environment": [
                     {
                         "name": "PATH",
@@ -53,7 +53,73 @@
                 "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
             },
             "linux": {
-                "program": "${workspaceFolder}/build/Client_console/CONSOLE",
+                "program": "${workspaceFolder}/bin/SERVER",
+            },
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+            ],
+            "visualizerFile": "${workspaceFolder}/.vscode/qt.natvis.xml",
+            "showDisplayString": true,
+        },
+        {
+            "name": "CONSOLE",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/CONSOLE.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/bin/",
+            "windows": {
+                "program": "${workspaceFolder}/bin/CONSOLE.exe",
+                "environment": [
+                    {
+                        "name": "PATH",
+                        "value": "%PATH%;C:/msys64/mingw64/bin/"
+                    }
+                ],
+                "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+            },
+            "linux": {
+                "program": "${workspaceFolder}/bin/CONSOLE",
+            },
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+            ],
+            "visualizerFile": "${workspaceFolder}/.vscode/qt.natvis.xml",
+            "showDisplayString": true,
+        },
+        {
+            "name": "GUI",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/GUI.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/bin/",
+            "windows": {
+                "program": "${workspaceFolder}/bin/GUI.exe",
+                "environment": [
+                    {
+                        "name": "PATH",
+                        "value": "%PATH%;C:/msys64/mingw64/bin/"
+                    }
+                ],
+                "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+            },
+            "linux": {
+                "program": "${workspaceFolder}/bin/GUI",
             },
             "externalConsole": false,
             "MIMode": "gdb",

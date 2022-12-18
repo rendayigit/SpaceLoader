@@ -1,9 +1,9 @@
-bin/
-
 build/
-
 .cache/
-
 Logs/
-
+bin/Logs/
+bin/SERVER*
+bin/CONSOLE*
+bin/GUI*
+bin/cmds/
 *.user
