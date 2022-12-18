@@ -21,14 +21,14 @@ jobs:
       - name: Install MSYS2 Packages
         run: |
             cd ${{github.workspace}}/msys2/usr/bin/
-            bash.exe pacman -S mingw-w64-x86_64-qt5 --noconfirm
-            bash.exe pacman -S mingw-w64-x86_64-qt5-base --noconfirm
-            bash.exe pacman -S mingw-w64-x86_64-qt5-declarative --noconfirm
-            bash.exe pacman -S mingw-w64-x86_64-cmake --noconfirm
-            bash.exe pacman -S mingw-w64-x86_64-make --noconfirm
-            bash.exe pacman -S mingw-w64-x86_64-gtest --noconfirm
-            bash.exe pacman -S mingw-w64-x86_64-yaml-cpp --noconfirm
-            bash.exe pacman -S mingw-w64-x86_64-ninja --noconfirm
+            pacman.exe -S mingw-w64-x86_64-qt5 --noconfirm
+            pacman.exe -S mingw-w64-x86_64-qt5-base --noconfirm
+            pacman.exe -S mingw-w64-x86_64-qt5-declarative --noconfirm
+            pacman.exe -S mingw-w64-x86_64-cmake --noconfirm
+            pacman.exe -S mingw-w64-x86_64-make --noconfirm
+            pacman.exe -S mingw-w64-x86_64-gtest --noconfirm
+            pacman.exe -S mingw-w64-x86_64-yaml-cpp --noconfirm
+            pacman.exe -S mingw-w64-x86_64-ninja --noconfirm
             
       - name: Build All
         run: |
