@@ -35,9 +35,7 @@ jobs:
 
       - name: Build All
         run: |
-            dir
             cd ${{github.workspace}}
-            dir
             mkdir build
-            cmake -B ${{github.workspace}}/build -G "MinGW Makefiles"
+            cmake -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -B ${{github.workspace}}/build -G "MinGW Makefiles"
             cmake --build ${{github.workspace}}/build --config Release --target all
