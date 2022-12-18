@@ -37,9 +37,9 @@ jobs:
 
       - name: Dir
         run: |
-          cd ${{github.workspace}}/msys2/mingw64/bin/
+          cd ${{github.workspace}}/msys2/
           dir
-          cd ${{github.workspace}}/msys2/mingw32/bin/
+          cd ${{github.workspace}}/msys2/usr/bin/
           dir
 
       - name: Build All
