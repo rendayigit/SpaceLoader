@@ -11,7 +11,10 @@ jobs:
     runs-on: windows-latest
     
     steps:
-      - name: Install MSYS2
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
         run: |
           mkdir ${{github.workspace}}/msys2/
           cd ${{github.workspace}}/msys2/
@@ -20,8 +23,6 @@ jobs:
           set PATH=%PATH%;${{github.workspace}}/msys2/usr/bin/
           set PATH=%PATH%;${{github.workspace}}/msys2/mingw64/bin/
 
-      - name: Install MSYS2 Packages
-        run: |
           cd ${{github.workspace}}/msys2/usr/bin/
           pacman.exe -S mingw-w64-x86_64-qt5 --noconfirm
           pacman.exe -S mingw-w64-x86_64-qt5-base --noconfirm
@@ -32,18 +33,6 @@ jobs:
           pacman.exe -S mingw-w64-x86_64-yaml-cpp --noconfirm
           pacman.exe -S mingw-w64-x86_64-ninja --noconfirm
 
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Dir
-        run: |
-          cd ${{github.workspace}}/msys2/
-          dir
-          cd ${{github.workspace}}/msys2/usr/bin/
-          dir
-
-      - name: Build All
-        run: |
           mkdir ${{github.workspace}}/build
           ${{github.workspace}}/msys2/mingw64/bin/cmake.exe -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_CC_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=${{github.workspace}}/msys2/mingw64/bin/g++.exe -S ${{github.workspace}}/msys2/mingw64 -B ${{github.workspace}}/build/ -G "MinGW Makefiles"
           ${{github.workspace}}/msys2/mingw64/bin/cmake.exe --build ${{github.workspace}}/build/ --config Release --target all
