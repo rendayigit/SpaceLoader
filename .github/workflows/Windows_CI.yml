@@ -48,5 +48,8 @@ jobs:
           set PATH=%PATH%;${{github.workspace}}/msys2/mingw64/bin/
 
           mkdir ${{github.workspace}}/build
-          ${{github.workspace}}/msys2/mingw64/bin/cmake.exe -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_CC_COMPILER:FILEPATH=${{github.workspace}}/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER:FILEPATH=${{github.workspace}}/mingw64/bin/g++.exe -S ${{github.workspace}} -B ${{github.workspace}}/build/ -G "MinGW Makefiles"
+          ${{github.workspace}}/msys2/mingw64/bin/cmake.exe -DCMAKE_PREFIX_PATH:STRING=${{github.workspace}}/msys2/mingw64/lib/cmake/ -DCMAKE_BUILD_TYPE:STRING=Release -S ${{github.workspace}} -B ${{github.workspace}}/build/ -G "MinGW Makefiles"
           ${{github.workspace}}/msys2/mingw64/bin/cmake.exe --build ${{github.workspace}}/build/ --config Release --target all
+        env:
+          CC: ${{github.workspace}}/mingw64/bin/gcc.exe
+          CXX: ${{github.workspace}}/mingw64/bin/g++.exe
