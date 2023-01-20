@@ -178,50 +178,71 @@ void Backend::parse(QString text) {
     }
 }
 
-void Backend::fileTransfer() {
-    ssh_session my_ssh_session;
-    int verbosity = SSH_LOG_PROTOCOL;
-    int port = 22;
-    int access_type = O_WRONLY | O_CREAT | O_TRUNC;
+int Backend::fileTransferSsh(QString localFile, QString serverPath) {
+    ssh_session session = ssh_new();
 
-    my_ssh_session = ssh_new();
-    if (my_ssh_session == NULL) exit(-1);
+    ssh_options_set(session, SSH_OPTIONS_HOST, "192.168.1.2");
+    ssh_options_set(session, SSH_OPTIONS_USER, "Administrator");
+    
+    int rc = ssh_connect(session);
 
-    ssh_options_set(my_ssh_session, SSH_OPTIONS_HOST, "192.168.1.2");
-    ssh_options_set(my_ssh_session, SSH_OPTIONS_USER, "Administrator");
-    ssh_options_set(my_ssh_session, SSH_OPTIONS_PORT, &port);
-    ssh_options_set(my_ssh_session, SSH_OPTIONS_SSH_DIR, "C:/Workspace/TARGET_TOOLS/TargetConnect");
-    ssh_options_set(my_ssh_session, SSH_OPTIONS_PASSWORD_AUTH, "uyssw");
-    ssh_options_set(my_ssh_session, SSH_OPTIONS_LOG_VERBOSITY, &verbosity);
-
-    sftp_session sftp = sftp_new(my_ssh_session);
-    if (sftp == NULL) {
-        // TODO text or something that shows us no sftp connection
+    if(rc != SSH_OK) {
+        qDebug() << "Error connecting to host: " << ssh_get_error(session);
+        return 0;
     }
 
-    int rc = sftp_init(sftp);
-    {
-        // TODO text or sometthing that shows us sftp init failed
-        sftp_free(sftp);
+    rc = ssh_userauth_password(session, "Administrator", "uyssw");
+    if(rc != SSH_OK) {
+        qDebug() << "Error authenticating with password: " << ssh_get_error(session);
+        return 0;
     }
 
-    sftp_file file = sftp_open(sftp, "/home/helloworld.txt", access_type, 1);
-    if (file == NULL) {
-        //TODO text or something that shows us file open failed
+    std::ifstream file(localFile.toStdString(), std::ios::binary);
+    if(!file.is_open()) {
+        qDebug() << "Error opening file";
+        return 0;
     }
 
-    std::ifstream fin("file.txt", std::ios::binary);
+    file.seekg(0, file.end());
+    int fileSize = file.tellg();
+    file.seekg(0, file.beg());
 
-    if (fin) {
-        fin.seekg(0, std::ios::end);
-        std::ios::pos_type bufsize = fin.tellg();
-        fin.seekg(0);                             
+    char* buffer = new char[fileSize];
+    file.read(buffer, fileSize);
 
-        std::vector<char> buf(bufsize);
-        fin.read(buf.data(), bufsize);
-
-        sftp_write(file, buf.data(), bufsize);
+    sftp_session sftp = sftp_new(session);
+    if(sftp == NULL) {
+        qDebug() << "Error allocating SFTP session: " << ssh_get_error(session);
+        return 0;
     }
 
-    ssh_free(my_ssh_session);
+    rc = sftp_init(session);
+    if(rc != SSH_OK) {
+        qDebug() << "Error initializing SFTP session: " << ssh_get_error(session);
+        return 0;
+    }
+
+    QString fileName = localFile.split("/").last();
+    QString remoteFilePath = serverPath + "/" + fileName;
+
+    sftp_file fileHandle = sftp_open(sftp, remoteFilePath.toLocal8Bit, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
+    if(!fileHandle) {
+        qDebug() << "Error opening file on remote server: " << ssh_get_error(session);
+        return 0;
+    }
+
+    rc = sftp_write(fileHandle, buffer, fileSize);
+    if(rc < 0) {
+        qDebug() << "Error writing file to remote server: " << ssh_get_error(session);
+        return 0;
+    }
+
+    qDebug() << "File transfer complete";
+
+    sftp_close(fileHandle);
+    sftp_free(sftp);
+    ssh_disconnect(session);
+    ssh_free(session);
+
+    return 1;
 }

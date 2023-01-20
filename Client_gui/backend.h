@@ -26,7 +26,7 @@ class Backend : public TCPClient {
     Q_INVOKABLE QString getLocalIp();
     Q_INVOKABLE void transmitEgseTc(QString tc);
     Q_INVOKABLE void egseConnect(QString deviceIp, QString devicePort);
-    Q_INVOKABLE void fileTransfer();
+    Q_INVOKABLE int fileTransferSsh(QString localFile, QString serverPath);
 
    signals:
     void getReceivedText(QString text);
