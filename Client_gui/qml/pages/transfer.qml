@@ -83,6 +83,7 @@ Rectangle {
                     progressBar.visible = true
                     // TODO - implement
                     // backend.changeYamlFile("Config.FileTransfer.remotePath", serverPath.text)
+                    // TODO - if backend.fileTransfer returns not 0 then print an error msg on the GUI.
                     // backend.fileTransfer(fileToUploadPath, serverPath.text)
                 } else {
                     print("Upload Error, Set server path and select a file to upload first.")

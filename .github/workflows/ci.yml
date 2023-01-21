@@ -26,10 +26,11 @@ jobs:
         make
         sudo make install    # Install in /usr/local/ by default
 
-    - name: Install yaml-cpp 
+    - name: Install Libraries 
       run:  |
         sudo apt install libyaml-cpp-dev
-          
+        sudo apt install libssh-dev
+
     - name: Checkout
       uses: actions/checkout@v2
 
