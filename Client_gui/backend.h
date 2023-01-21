@@ -25,7 +25,7 @@ class Backend : public TCPClient {
     Q_INVOKABLE QString getLocalIp();
     Q_INVOKABLE void transmitEgseTc(QString tc);
     Q_INVOKABLE void egseConnect(QString deviceIp, QString devicePort);
-    Q_INVOKABLE static int fileTransfer(QString localFile, QString serverPath);
+    Q_INVOKABLE int fileTransfer(QString localFile, QString serverPath);
 
    signals:
     void getReceivedText(QString text);
@@ -36,6 +36,8 @@ class Backend : public TCPClient {
     void getListenerText(QString text);
     void egseError(bool isError, QString text);
     void egseReply(QString message);
+    void setTransferProgress(bool isProgressing);
+    void setTransferError(bool isError, QString errorMessage);
 
    private:
     void parse(QString text);
