@@ -1,17 +1,13 @@
 #include "backend.h"
 
-#include <QtConcurrent/qtconcurrentrun.h>
+#include <QtConcurrent/QtConcurrent>
 #include <fcntl.h>
 #include <libssh/libssh.h>
 #include <libssh/sftp.h>
 #include <sys/stat.h>
-#include <unistd.h>
 
-#include <QtCore/QFile>
 #include <QtCore/QThread>
 #include <fstream>
-#include <iostream>
-#include <sstream>
 
 #include "../common.h"
 #include "../lib/Logger/logger.h"
