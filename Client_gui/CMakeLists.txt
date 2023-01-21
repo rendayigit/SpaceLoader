@@ -15,6 +15,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin/)
 
 find_package(QT NAMES Qt5 COMPONENTS Core Quick REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED) #if error run: sudo apt-get install libgl1-mesa-dev
+find_package(libssh REQUIRED)
 
 set(PROJECT_SOURCES
         ../lib/Logger/logger.cpp
@@ -44,4 +45,5 @@ target_link_libraries(GUI PRIVATE
         Qt${QT_VERSION_MAJOR}::Core 
         Qt${QT_VERSION_MAJOR}::Quick
         yaml-cpp
+        ssh
         )
