@@ -1,8 +1,14 @@
 #include "client.h"
 
+#include <QtConcurrent/QtConcurrent>
+#include <QtCore/QCoreApplication>
 #include <QtCore/QThread>
+#include <QtNetwork/QHostAddress>
+#include <QtNetwork/QNetworkInterface>
+#include <iostream>
 
 #include "../common.h"
+#include "../constants.h"
 #include "../path.h"
 
 using namespace std;
@@ -10,23 +16,30 @@ using namespace std;
 Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
 
 void Client::onReceived(QByteArray message) {
-    cout << message.toStdString() << endl;
+    qInfo() << message;
 
     if (message.contains("Version =")) {
-
         float serverVersionNumeric = Operations::spaceloaderVersion().split(" = ").at(1).toFloat();
         float clientVersionNumeric =
             QString::fromStdString(message.toStdString()).split(" = ").at(1).toFloat();
 
         if (serverVersionNumeric < clientVersionNumeric) {
-            cout << "WARNING Server version is older than the Client version !!!\n";
-        } else if(serverVersionNumeric > clientVersionNumeric) {
-            cout << "WARNING Client version is older than the Server version !!!\n";
+            QString message = "WARNING Server version is older than the Client version !!!";
+            qWarning() << message;
+            Log().Warn(message);
+        } else if (serverVersionNumeric > clientVersionNumeric) {
+            QString message = "WARNING Client version is older than the Server version !!!";
+            qWarning() << message;
+            Log().Warn(message);
         }
     }
 }
 
-void Client::onDisconnected() { cout << "Disconnected From Server!"; }
+void Client::onDisconnected() {
+    QString message = "Disconnected From Server!";
+    qWarning() << message;
+    Log().Warn(message);
+}
 
 void Client::loopForCommands() {
     while (true) {
@@ -84,7 +97,7 @@ void Client::start(QList<QString> commandArguments) {
             QString timeout = command.mid(idx, command.length() - idx);
             if (timeout.size() > 0) {
                 cout << "Waiting for " << timeout.toStdString() << " seconds before exiting..."
-                          << endl;
+                     << endl;
                 QThread::sleep(timeout.toInt());
             }
         } else {

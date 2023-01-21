@@ -1,9 +1,11 @@
 #include "server.h"
 
+#include <iostream>
+
 #include "../Commands/cmd_plugin_interface.h"
+#include "../version.h"
 #include "User/userOperations.h"
 #include "logging.h"
-#include "../version.h"
 
 Server::Server() : Operations(Paths().getServerCmdsYaml()) {
     isFileTransferInProgress = false;
