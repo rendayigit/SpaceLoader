@@ -5,9 +5,6 @@ import QtQuick.Layouts 1.15
 import QtQuick.Timeline 1.0
 
 Item {
-
-    property string userInfo;
-
     Component.onCompleted: {
         backend.getUserList();
     }
@@ -17,19 +14,32 @@ Item {
         radius: 10
         color: "#27273a"
 
+        Label {
+            id: usersTitleLabel
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.topMargin: 30
+            anchors.leftMargin: 30
+
+            color: "#ffffff"
+            text: "Connected Users"
+            font.pixelSize: 30
+            font.family: "Segoe UI"
+        }
+
         Rectangle {
             id: userListRectangle
 
-            anchors.top: parent.top
+            anchors.top: usersTitleLabel.bottom
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.topMargin: 10
             anchors.bottomMargin: 10
-            anchors.leftMargin: 10
-            anchors.rightMargin: 10
+            anchors.leftMargin: 50
+            anchors.rightMargin: 50
             radius: 10
-            color: "#000000"
+            color: "#00000000"
 
             ScrollView {
                 anchors.left: parent.left
@@ -41,7 +51,7 @@ Item {
                 clip: true
 
                 Column {
-                    id: logsColumn
+                    id: usersColumn
                     spacing: 20
                 }
             }
@@ -52,17 +62,28 @@ Item {
         target: backend
 
         function onGetUsers(text) {
-            var userList = text.split("\n");
+            var userList = text.split("),");
+
+            //TODO - remove these
+            userList.push("User #x: test user (127.0.0.1)")
+            userList.push("User #x: test user (127.0.0.1)")
+            userList.push("User #x: test user (127.0.0.1)")
+            userList.push("User #x: test user (127.0.0.1)")
+            userList.push("User #x: test user (127.0.0.1)")
+            userList.push("User #x: test user (127.0.0.1)")
+            userList.push("User #x: test user (127.0.0.1)")
+            userList.push("User #x: test user (127.0.0.1)")
 
             for (var i = 0; i < userList.length; i++) {
-                console.log(userList[i])
-                var userIp = "User Ip: " + userList[i].split(": ")[1].split(" ")[1].replace("(", "").replace(")", "");
-                var username = "Username: " + userList[i].split(": ")[1].split(" ")[0];
-                var item = Qt.createComponent("../components/CustomUserListItem.qml").createObject(logsColumn, {
-                    "width": userListRectangle.width - 20,
-                    "userIp": userIp,
-                    "username": username
-                });
+                var userIp = userList[i].split(": ")[1].split(" (")[1].replace(")","");
+                var userName = userList[i].split(": ")[1].split(" ")[0];
+                
+                var itemUserItem = Qt.createComponent("../components/CustomUserListItem.qml")
+                .createObject(usersColumn, {
+                                  "userName": userName,
+                                  "userIp": userIp,
+                                  "width": parent.width - 100
+                              });
             }
         }
     }
