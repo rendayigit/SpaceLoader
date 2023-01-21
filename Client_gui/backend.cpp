@@ -203,9 +203,9 @@ int Backend::fileTransferSsh(QString localFile, QString serverPath) {
         return 0;
     }
 
-    file.seekg(0, file.end());
+    file.seekg(0, file.end);
     int fileSize = file.tellg();
-    file.seekg(0, file.beg());
+    file.seekg(0, file.beg);
 
     char* buffer = new char[fileSize];
     file.read(buffer, fileSize);
@@ -216,7 +216,7 @@ int Backend::fileTransferSsh(QString localFile, QString serverPath) {
         return 0;
     }
 
-    rc = sftp_init(session);
+    rc = sftp_init(sftp);
     if(rc != SSH_OK) {
         qDebug() << "Error initializing SFTP session: " << ssh_get_error(session);
         return 0;
@@ -225,7 +225,7 @@ int Backend::fileTransferSsh(QString localFile, QString serverPath) {
     QString fileName = localFile.split("/").last();
     QString remoteFilePath = serverPath + "/" + fileName;
 
-    sftp_file fileHandle = sftp_open(sftp, remoteFilePath.toLocal8Bit, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
+    sftp_file fileHandle = sftp_open(sftp, remoteFilePath.toLocal8Bit(), O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
     if(!fileHandle) {
         qDebug() << "Error opening file on remote server: " << ssh_get_error(session);
         return 0;
