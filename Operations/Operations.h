@@ -48,7 +48,7 @@ class Operations {
 
     void timerTrigger();
     QString help();
-    QString spaceloaderVersion();
+    static QString spaceloaderVersion();
 
    private:
     static bool checkTimerFlag(std::vector<YAML::Node> cmdsWithTheTimerFlagSetNodeList,
