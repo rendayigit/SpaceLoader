@@ -4,10 +4,9 @@ Config:
       ip: 192.168.2.1
       port: 3132
       username: Administrator
-      password: uyssw
     egse:
       ip: 192.168.1.250
       port: 5004
     listenTo: sD
   FileTransfer:
-    remotePath: D:/MahmutTuncer
+    remotePath: D:/

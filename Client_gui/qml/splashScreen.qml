@@ -47,8 +47,7 @@ Window {
 
         // Verify Login
         function checkLogin() {
-            // TODO - This is the password
-            if (loginTextField.text == backend.getConfigValue("Config.Ips.targetPc.password", "password")) {
+            if (backend.authenticate(loginTextField.text) == 0) {
                 loginTextField.borderColor = "#00ff7f"
                 labelPassword.visible = false
                 loginAnimationFrameMarginTop.running = true

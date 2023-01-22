@@ -1,11 +1,11 @@
 #include "backend.h"
 
-#include <QtConcurrent/QtConcurrent>
 #include <fcntl.h>
 #include <libssh/libssh.h>
 #include <libssh/sftp.h>
 #include <sys/stat.h>
 
+#include <QtConcurrent/QtConcurrent>
 #include <QtCore/QThread>
 #include <fstream>
 
@@ -134,7 +134,6 @@ int Backend::fileTransfer(QString localFile, QString serverPath) {
 
         QString host = Backend::getConfigValue("Config.Ips.targetPc.ip", "ip");
         QString username = Backend::getConfigValue("Config.Ips.targetPc.username", "username");
-        QString password = Backend::getConfigValue("Config.Ips.targetPc.password", "password");
 
         ssh_options_set(session, SSH_OPTIONS_HOST, host.toStdString().c_str());
         ssh_options_set(session, SSH_OPTIONS_USER, username.toStdString().c_str());
@@ -149,7 +148,8 @@ int Backend::fileTransfer(QString localFile, QString serverPath) {
             return -1;
         }
 
-        rc = ssh_userauth_password(session, username.toStdString().c_str(), password.toStdString().c_str());
+        rc = ssh_userauth_password(session, username.toStdString().c_str(),
+                                   sshPassword.toStdString().c_str());
         if (rc != SSH_OK) {
             QString errorMessage = "Error authenticating with password: " +
                                    QString::fromStdString(ssh_get_error(session));
@@ -221,6 +221,42 @@ int Backend::fileTransfer(QString localFile, QString serverPath) {
         ssh_free(session);
 
         emit setTransferProgress(false);
+        return 0;
+    });
+
+    return 0;
+}
+
+int Backend::authenticate(QString password) {
+    QtConcurrent::run([=]() {
+        ssh_session session = ssh_new();
+
+        QString host = Backend::getConfigValue("Config.Ips.targetPc.ip", "ip");
+        QString username = Backend::getConfigValue("Config.Ips.targetPc.username", "username");
+
+        ssh_options_set(session, SSH_OPTIONS_HOST, host.toStdString().c_str());
+        ssh_options_set(session, SSH_OPTIONS_USER, username.toStdString().c_str());
+
+        int rc = ssh_connect(session);
+
+        if (rc != SSH_OK) {
+            QString errorMessage =
+                "Error connecting to host: " + QString::fromStdString(ssh_get_error(session));
+            Log().Error(errorMessage);
+            emit setTransferError(true, errorMessage);
+            return -1;
+        }
+
+        rc = ssh_userauth_password(session, username.toStdString().c_str(),
+                                   password.toStdString().c_str());
+        if (rc != SSH_OK) {
+            QString errorMessage = "Error authenticating with password: " +
+                                   QString::fromStdString(ssh_get_error(session));
+            Log().Error(errorMessage);
+            emit setTransferError(true, errorMessage);
+            return -1;
+        }
+        sshPassword = password;
         return 0;
     });
 
