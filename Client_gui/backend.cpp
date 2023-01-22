@@ -132,8 +132,12 @@ int Backend::fileTransfer(QString localFile, QString serverPath) {
 
         ssh_session session = ssh_new();
 
-        ssh_options_set(session, SSH_OPTIONS_HOST, "192.168.1.2");
-        ssh_options_set(session, SSH_OPTIONS_USER, "Administrator");
+        QString host = Backend::getConfigValue("Config.Ips.targetPc.ip", "ip");
+        QString username = Backend::getConfigValue("Config.Ips.targetPc.username", "username");
+        QString password = Backend::getConfigValue("Config.Ips.targetPc.password", "password");
+
+        ssh_options_set(session, SSH_OPTIONS_HOST, host.toStdString().c_str());
+        ssh_options_set(session, SSH_OPTIONS_USER, username.toStdString().c_str());
 
         int rc = ssh_connect(session);
 
@@ -145,7 +149,7 @@ int Backend::fileTransfer(QString localFile, QString serverPath) {
             return -1;
         }
 
-        rc = ssh_userauth_password(session, "Administrator", "uyssw");
+        rc = ssh_userauth_password(session, username.toStdString().c_str(), password.toStdString().c_str());
         if (rc != SSH_OK) {
             QString errorMessage = "Error authenticating with password: " +
                                    QString::fromStdString(ssh_get_error(session));
