@@ -1,5 +1,7 @@
 #include "listener.h"
 
+Listener::Listener(Backend* backend) : backend(backend) {}
+
 void Listener::onReceived(QByteArray message) { emit backend->getListenerText(message); }
 
 void Listener::disconnect() {

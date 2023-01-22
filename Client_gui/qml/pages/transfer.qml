@@ -62,6 +62,23 @@ Rectangle {
             text: "D:/"
         }
 
+        Label {
+            id: transmissionErrorLabel
+            
+            anchors.top: parent.bottom
+
+            anchors.topMargin: 10
+            anchors.horizontalCenter: parent.horizontalCenter
+            
+            color: "#ff0000"
+            font.pointSize: 15
+            font.family: "Segoe UI"
+            font.weight: Font.Normal
+            visible: false
+
+            text: ""
+        }
+
         CustomButton {
             id: buttonUpload
             
@@ -84,8 +101,9 @@ Rectangle {
                 print("server path: " + serverPath.text)
 
                 if (serverPath.text.length > 0 && fileToUploadPath.length > 0) {
-                    progressBar.visible = true
-                    backend.updateYamlFile("Config.FileTransfer.remotePath", serverPath.text)
+                    // TODO - implement
+                    // backend.changeYamlFile("Config.FileTransfer.remotePath", serverPath.text)
+                    backend.fileTransfer(fileToUploadPath, serverPath.text)
                 } else {
                     print("Upload Error, Set server path and select a file to upload first.")
                 }
@@ -206,6 +224,21 @@ Rectangle {
     Connections {
         target: backend
 
-        // TODO - implement onTransferComplete()
+        function onSetTransferProgress(isProgressing) {
+            progressBar.visible = isProgressing
+
+            if(isProgressing) {
+                transmissionErrorLabel.visible = false
+            }
+        }
+
+        function onSetTransferError(isError, errorMessage) {
+            transmissionErrorLabel.visible = isError
+            transmissionErrorLabel.text = errorMessage
+
+            if(isError) {
+                progressBar.visible = false
+            }
+        }
     }
 }
