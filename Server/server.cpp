@@ -44,7 +44,7 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
             transmit(sender, "I don't understand that command :(");
         }
 
-        std::cout << message.toStdString() << std::endl;
+        qDebug() << message;
     } else {  // File transfer operations
         if (sender == fileTransfererSocket) {
             if (not Cmp(message.data(), "#END")) {
@@ -150,17 +150,15 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
         QString localFileAndPath = message.mid(sIndex, dIndex - sIndex).simplified();
         QString serverPath = message.mid(dIndex + 4, message.length()).simplified();
 
-        std::cout << "localFileAndPath: " << localFileAndPath.toStdString() << std::endl;
-        std::cout << "serverPath: " << serverPath.toStdString() << std::endl;
+        qDebug() << "localFileAndPath: " << localFileAndPath;
+        qDebug() << "serverPath: " << serverPath;
 
         fileTransfer(sender, localFileAndPath, serverPath);
     } else if (Cmp(message, "plugin")) {
         QPluginLoader loader(Path::getInstance().getExecutablePath() + "cmds/lib" +
                              GetParam(message).mid(0, GetParam(message).indexOf(" ")) + ".dll");
-        std::cout << (Path::getInstance().getExecutablePath() + "cmds/lib" +
-                      GetParam(message).mid(0, GetParam(message).indexOf(" ")) + ".dll")
-                         .toStdString()
-                  << std::endl;
+        qDebug() << (Path::getInstance().getExecutablePath() + "cmds/lib" +
+                      GetParam(message).mid(0, GetParam(message).indexOf(" ")) + ".dll");
         if (auto *instance = loader.instance()) {
             if (auto *plugin = qobject_cast<CmdPluginInterface *>(instance)) {
                 plugin->run(sender, GetParam(message).toLocal8Bit());
