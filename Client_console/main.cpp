@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (commandArguments.isEmpty()) {
-        qDebug() << "Enter Server IP: ";
+        std::cout << "Enter Server IP: ";
         std::string ip;
         std::cin >> ip;
         commandArguments.append(QString::fromStdString(ip));

@@ -7,9 +7,9 @@ using namespace std;
 
 Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
 
-void Client::onReceived(QByteArray message) { qDebug() << message; }
+void Client::onReceived(QByteArray message) { qInfo() << message; }
 
-void Client::onDisconnected() { qDebug() << "Disconnected From Server!"; }
+void Client::onDisconnected() { qWarning() << "Disconnected From Server!"; }
 
 void Client::loopForCommands() {
     while (true) {
@@ -42,7 +42,7 @@ void Client::start(QList<QString> commandArguments) {
             }
         }
 
-        qDebug() << "Connection error please re-enter IP: ";
+        qWarning() << "Connection error please re-enter IP: ";
         std::string ip;
         std::cin >> ip;
         commandArguments.insert(0, QString::fromStdString(ip));
@@ -155,13 +155,13 @@ void Client::fileTransfer(QString localFile, QString serverPath) {
     file.open(QIODevice::ReadOnly);
     QByteArray fileData = file.readAll();
     if (fileData.isNull()) {
-        qDebug() << "An error occured: Cannot open the provided file";
+        qCritical() << "An error occured: Cannot open the provided file";
         Log().Error("Error opening" + localFile);
         return;
     }
-    qDebug() << "File size: " << fileData.size() / BYTE_TO_KILOBYTE << "KiloByte";
+    qInfo() << "File size: " << fileData.size() / BYTE_TO_KILOBYTE << "KiloByte";
     int approxfileSize = fileData.size() / (FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE * 10) + 1;
-    qDebug() << "Progress: ";
+    std::cout << "Progress: ";
     int iteration = 0;
     while (!fileData.isNull()) {
         if (fileData.size() >= FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE) {
@@ -174,22 +174,22 @@ void Client::fileTransfer(QString localFile, QString serverPath) {
         iteration++;
         QThread::msleep(30);
         if (iteration % approxfileSize == 0) {
-            qDebug() << ".";
+            std::cout << ".";
         }
     }
     transmit("#END");
 
     if (iteration >= 10) {
-        qDebug() << " Transfer Complete";
+        qInfo() << " Transfer Complete";
     } else {
-        qDebug() << "An error occured white transferring the file.";
+        qCritical() << "An error occured white transferring the file.";
         Log().Error("An error occured white transferring file: " + localFile);
     }
 }
 
 void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray message) {
     if (Cmp(message, "help")) {
-        qDebug() << (" - Client Commands - \n" + Operations::help());
+        qInfo() << (" - Client Commands - \n" + Operations::help());
         transmit("help");
     } else if (Cmp(message, "exit")) {
         exit(0);
@@ -206,8 +206,8 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
         QString localFileAndPath = message.mid(sIndex, dIndex - sIndex).simplified();
         QString serverPath = message.mid(dIndex + 4, message.length()).simplified();
 
-        qDebug() << "localFileAndPath: " << localFileAndPath;
-        qDebug() << "serverPath: " << serverPath;
+        qInfo() << "localFileAndPath: " << localFileAndPath;
+        qInfo() << "serverPath: " << serverPath;
 
         fileTransfer(localFileAndPath, serverPath);
     }
@@ -215,5 +215,5 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
 
 void Client::connectProcess(QTcpSocket * /*sender*/, QProcess *process) {
     connect(process, &QProcess::readyReadStandardOutput, this,
-            [=]() { qDebug() << process->readLine(); });
+            [=]() { qInfo() << process->readLine(); });
 }
