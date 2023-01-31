@@ -7,9 +7,9 @@ using namespace std;
 
 Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
 
-void Client::onReceived(QByteArray message) { std::cout << message.toStdString() << std::endl; }
+void Client::onReceived(QByteArray message) { qInfo() << message; }
 
-void Client::onDisconnected() { std::cout << "Disconnected From Server!"; }
+void Client::onDisconnected() { qWarning() << "Disconnected From Server!"; }
 
 void Client::loopForCommands() {
     while (true) {
@@ -42,7 +42,7 @@ void Client::start(QList<QString> commandArguments) {
             }
         }
 
-        std::cout << "Connection error please re-enter IP: ";
+        qWarning() << "Connection error please re-enter IP: ";
         std::string ip;
         std::cin >> ip;
         commandArguments.insert(0, QString::fromStdString(ip));
@@ -66,8 +66,7 @@ void Client::start(QList<QString> commandArguments) {
             int idx = command.indexOf("noloop", 0, Qt::CaseInsensitive) + 7;
             QString timeout = command.mid(idx, command.length() - idx);
             if (timeout.size() > 0) {
-                std::cout << "Waiting for " << timeout.toStdString() << " seconds before exiting..."
-                          << std::endl;
+                qDebug() << "Waiting for " << timeout << " seconds before exiting...";
                 QThread::sleep(timeout.toInt());
             }
         } else {
@@ -156,11 +155,11 @@ void Client::fileTransfer(QString localFile, QString serverPath) {
     file.open(QIODevice::ReadOnly);
     QByteArray fileData = file.readAll();
     if (fileData.isNull()) {
-        std::cout << "An error occured: Cannot open the provided file" << std::endl;
+        qCritical() << "An error occured: Cannot open the provided file";
         Log().Error("Error opening" + localFile);
         return;
     }
-    std::cout << "File size: " << fileData.size() / BYTE_TO_KILOBYTE << "KiloByte" << std::endl;
+    qInfo() << "File size: " << fileData.size() / BYTE_TO_KILOBYTE << "KiloByte";
     int approxfileSize = fileData.size() / (FILETRANSFER_MAX_SINGLE_PACKET_BYTE_SIZE * 10) + 1;
     std::cout << "Progress: ";
     int iteration = 0;
@@ -181,16 +180,16 @@ void Client::fileTransfer(QString localFile, QString serverPath) {
     transmit("#END");
 
     if (iteration >= 10) {
-        std::cout << " Transfer Complete" << std::endl;
+        qInfo() << " Transfer Complete";
     } else {
-        std::cout << "An error occured white transferring the file." << std::endl;
+        qCritical() << "An error occured white transferring the file.";
         Log().Error("An error occured white transferring file: " + localFile);
     }
 }
 
 void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray message) {
     if (Cmp(message, "help")) {
-        std::cout << (" - Client Commands - \n" + Operations::help()).toStdString();
+        qInfo() << (" - Client Commands - \n" + Operations::help());
         transmit("help");
     } else if (Cmp(message, "exit")) {
         exit(0);
@@ -207,8 +206,8 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
         QString localFileAndPath = message.mid(sIndex, dIndex - sIndex).simplified();
         QString serverPath = message.mid(dIndex + 4, message.length()).simplified();
 
-        std::cout << "localFileAndPath: " << localFileAndPath.toStdString() << std::endl;
-        std::cout << "serverPath: " << serverPath.toStdString() << std::endl;
+        qInfo() << "localFileAndPath: " << localFileAndPath;
+        qInfo() << "serverPath: " << serverPath;
 
         fileTransfer(localFileAndPath, serverPath);
     }
@@ -216,5 +215,5 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
 
 void Client::connectProcess(QTcpSocket * /*sender*/, QProcess *process) {
     connect(process, &QProcess::readyReadStandardOutput, this,
-            [=]() { std::cout << process->readLine().toStdString() << std::endl; });
+            [=]() { qInfo() << process->readLine(); });
 }
