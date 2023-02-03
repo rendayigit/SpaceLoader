@@ -1,11 +1,12 @@
 #include "ssh.h"
 
-ssh_session session;
+int SSH::fileTransfer(ssh_session session, QString localFile, QString serverPath) {
+    int returnCode;
 
-int SSH::fileTransfer(QString localFile, QString serverPath) {
-    int rc = initConnection();
-
-    if(rc == -1) {
+    if (session == nullptr) {
+        QString errorMessage = "Session is null";
+        Log().Error(errorMessage);
+        qCritical() << errorMessage;
         return -1;
     }
 
@@ -31,8 +32,8 @@ int SSH::fileTransfer(QString localFile, QString serverPath) {
         return -1;
     }
 
-    rc = sftp_init(sftp);
-    if (rc != SSH_OK) {
+    returnCode = sftp_init(sftp);
+    if (returnCode != SSH_OK) {
         QString errorMessage =
             "Error initializing SFTP session: " + QString::fromStdString(ssh_get_error(session));
         Log().Error(errorMessage);
@@ -51,8 +52,8 @@ int SSH::fileTransfer(QString localFile, QString serverPath) {
         return -1;
     }
 
-    rc = sftp_write(fileHandle, buffer, fileSize);
-    if (rc < 0) {
+    returnCode = sftp_write(fileHandle, buffer, fileSize);
+    if (returnCode < 0) {
         QString errorMessage = "Error writing file to remote server: " +
                                QString::fromStdString(ssh_get_error(session));
         Log().Error(errorMessage);
@@ -69,24 +70,31 @@ int SSH::fileTransfer(QString localFile, QString serverPath) {
     return 0;
 }
 
-QString SSH::runCommand(QString command) {
+QString SSH::runCommand(ssh_session session, QString command) {
     ssh_channel channel;
-    int rc;
+    int returnCode;
 
-    channel = ssh_channel_new(session);
-    if (channel == NULL) return "";
-
-    rc = ssh_channel_open_session(channel);
-    if (rc != SSH_OK) {
-        ssh_channel_free(channel);
-        return "";
+    if (session == nullptr) {
+        QString errorMessage = "Session is null";
+        Log().Error(errorMessage);
+        qCritical() << errorMessage;
+        return;
     }
 
-    rc = ssh_channel_request_exec(channel, "ls -l");
-    if (rc != SSH_OK) {
+    channel = ssh_channel_new(session);
+    if (channel == NULL) return;
+
+    returnCode = ssh_channel_open_session(channel);
+    if (returnCode != SSH_OK) {
+        ssh_channel_free(channel);
+        return;
+    }
+
+    returnCode = ssh_channel_request_exec(channel, command.toStdString().c_str());
+    if (returnCode != SSH_OK) {
         ssh_channel_close(channel);
         ssh_channel_free(channel);
-        return "";
+        return;
     }
 
     char buffer[256];
@@ -97,50 +105,49 @@ QString SSH::runCommand(QString command) {
         if (fwrite(buffer, 1, nbytes, stdout) != nbytes) {
             ssh_channel_close(channel);
             ssh_channel_free(channel);
-            return "";
+            return;
         }
         nbytes = ssh_channel_read(channel, buffer, sizeof(buffer), 0);
     }
 
+    ssh_channel_close(channel);
+    ssh_channel_free(channel);
+
     if (nbytes < 0) {
-        ssh_channel_close(channel);
-        ssh_channel_free(channel);
-        return "";
+        return;
     }
 
     ssh_channel_send_eof(channel);
-    ssh_channel_close(channel);
-    ssh_channel_free(channel);
 
     return QString::fromUtf8(buffer, nbytes);
 }
 
-int SSH::downloadFile(QString serverPath, QString localPath) {
+int SSH::downloadFile(ssh_session session, QString serverPath, QString localPath) {
     // TODO this function might be implement with run command on server.
 }
 
-int SSH::initConnection() {
-    session = ssh_new();
+ssh_session SSH::createSession() {
+    ssh_session session = ssh_new();
 
     ssh_options_set(session, SSH_OPTIONS_HOST, "192.168.1.2");
     ssh_options_set(session, SSH_OPTIONS_USER, "Administrator");
 
-    int rc = ssh_connect(session);
+    int returnCode = ssh_connect(session);
 
-    if (rc != SSH_OK) {
+    if (returnCode != SSH_OK) {
         QString errorMessage =
             "Error connecting to host: " + QString::fromStdString(ssh_get_error(session));
         Log().Error(errorMessage);
-        return -1;
+        return nullptr;
     }
 
-    rc = ssh_userauth_password(session, "Administrator", "uyssw");
-    if (rc != SSH_OK) {
+    returnCode = ssh_userauth_password(session, "Administrator", "uyssw");
+    if (returnCode != SSH_OK) {
         QString errorMessage =
             "Error authenticating with password: " + QString::fromStdString(ssh_get_error(session));
         Log().Error(errorMessage);
-        return -1;
+        return nullptr;
     }
 
-    return rc;
+    return session;
 }

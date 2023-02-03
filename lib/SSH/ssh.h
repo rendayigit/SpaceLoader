@@ -18,12 +18,12 @@ class SSH {
         SSH(SSH &&) = delete;
         SSH &operator=(SSH &&) = delete;
 
-        static int fileTransfer(QString localFile, QString serverPath);
-        static QString runCommand(QString command);
-        static int downloadFile(QString serverPath, QString localPath);
+        static int fileTransfer(ssh_session session, QString localFile, QString serverPath);
+        static QString runCommand(ssh_session session, QString command);
+        static int downloadFile(ssh_session session, QString serverPath, QString localPath);
+        static ssh_session createSession();
 
     private:
-        static int initConnection();
 };
 
 #endif // SSH_H
