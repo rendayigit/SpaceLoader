@@ -16,7 +16,7 @@ using namespace std;
 Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
 
 void Client::onReceived(QByteArray message) {
-    qInfo() << message;
+    qInfo().noquote() << message;
 
     if (message.contains("Version =")) {
         float serverVersionNumeric = Operations::spaceloaderVersion().split(" = ").at(1).toFloat();
@@ -25,11 +25,11 @@ void Client::onReceived(QByteArray message) {
 
         if (serverVersionNumeric < clientVersionNumeric) {
             QString message = "WARNING Server version is older than the Client version !!!";
-            qWarning() << message;
+            qWarning().noquote() << message;
             Log().Warn(message);
         } else if (serverVersionNumeric > clientVersionNumeric) {
             QString message = "WARNING Client version is older than the Server version !!!";
-            qWarning() << message;
+            qWarning().noquote() << message;
             Log().Warn(message);
         }
     }
@@ -37,7 +37,7 @@ void Client::onReceived(QByteArray message) {
 
 void Client::onDisconnected() {
     QString message = "Disconnected From Server!";
-    qWarning() << message;
+    qWarning().noquote() << message;
     Log().Warn(message);
 }
 

@@ -38,7 +38,7 @@ bool Logger::createLogsDirectory() {
         return true;
     }
 
-    qWarning() << "Could not create " << logDir;
+    qWarning().noquote() << "Could not create " << logDir;
     return false;
 }
 

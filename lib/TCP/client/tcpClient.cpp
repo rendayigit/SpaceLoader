@@ -12,7 +12,7 @@ bool TCPClient::attemptConnection(QString serverIP, qint32 serverPort) {
                 SLOT(onError(QAbstractSocket::SocketError)));
         return true;
     }
-    qInfo() << socket->errorString();
+    qInfo().noquote() << socket->errorString();
     return false;
 }
 

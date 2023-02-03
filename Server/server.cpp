@@ -55,7 +55,7 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
             } else {  // Finalize file transfer
                 isFileTransferInProgress = false;
                 QFile file(transferredFileLocation + transferredFileName);
-                qInfo() << "Copied file to " << transferredFileLocation + transferredFileName;
+                qInfo().noquote() << "Copied file to " << transferredFileLocation + transferredFileName;
                 file.open(QIODevice::WriteOnly);
                 file.write(transferredFileBuffer);
                 file.close();
