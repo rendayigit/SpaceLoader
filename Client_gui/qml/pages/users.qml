@@ -5,6 +5,8 @@ import QtQuick.Layouts 1.15
 import QtQuick.Timeline 1.0
 
 Item {
+    id: root
+
     Component.onCompleted: {
         backend.getUserList();
     }
@@ -42,19 +44,22 @@ Item {
             color: "#00000000"
 
             ScrollView {
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.top: parent.top
-                anchors.leftMargin: 4
-                anchors.bottomMargin: 4
-                anchors.topMargin: 4
+                anchors.fill: parent
+//                anchors.Margin: 4
                 clip: true
 
                 Column {
                     id: usersColumn
                     spacing: 20
+                    anchors.fill: parent
                 }
             }
+        }
+    }
+
+    onWidthChanged: {
+        for (var a = 0; a < usersColumn.children.length; a++) {
+            usersColumn.children[a].width = root.width - 100
         }
     }
 
@@ -78,11 +83,11 @@ Item {
                 var userIp = userList[i].split(": ")[1].split(" (")[1].replace(")","");
                 var userName = userList[i].split(": ")[1].split(" ")[0];
                 
-                var itemUserItem = Qt.createComponent("../components/CustomUserListItem.qml")
+                Qt.createComponent("../components/CustomUserListItem.qml")
                 .createObject(usersColumn, {
                                   "userName": userName,
                                   "userIp": userIp,
-                                  "width": parent.width - 100
+                                  "width": root.width - 100
                               });
             }
         }
