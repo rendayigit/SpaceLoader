@@ -10,9 +10,9 @@ TCPServer::TCPServer(QObject *parent) : QObject(parent) {
 
 void TCPServer::startServer(qint32 portNumber) {
     if (server->listen(QHostAddress::Any, portNumber)) {
-        qInfo() << "Server up, port: " << portNumber;
+        qInfo().noquote() << "Server up, port: " << portNumber;
     } else {
-        qInfo() << server->errorString();
+        qInfo().noquote() << server->errorString();
     }
 }
 

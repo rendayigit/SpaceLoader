@@ -1,9 +1,11 @@
 #include "server.h"
 
+#include <iostream>
+
 #include "../Commands/cmd_plugin_interface.h"
+#include "../version.h"
 #include "User/userOperations.h"
 #include "logging.h"
-#include "../version.h"
 
 Server::Server() : Operations(Paths().getServerCmdsYaml()) {
     isFileTransferInProgress = false;
@@ -53,7 +55,7 @@ void Server::onReceived(QTcpSocket *sender, QByteArray message) {
             } else {  // Finalize file transfer
                 isFileTransferInProgress = false;
                 QFile file(transferredFileLocation + transferredFileName);
-                qInfo() << "Copied file to " << transferredFileLocation + transferredFileName;
+                qInfo().noquote() << "Copied file to " << transferredFileLocation + transferredFileName;
                 file.open(QIODevice::WriteOnly);
                 file.write(transferredFileBuffer);
                 file.close();
@@ -113,7 +115,7 @@ void Server::parseInternalCmd(QTcpSocket *sender, QByteArray message) {
     } else if (Cmp(message, "help")) {
         Transmit(sender, (" - Server Commands - \n" + Operations::help()).toLocal8Bit());
     } else if (Cmp(message, "version")) {
-        Transmit(sender, QString::fromStdString(Version).toLocal8Bit());
+        Transmit(sender, Operations::spaceloaderVersion().toLocal8Bit());
     } else if (Cmp(message, "sa")) {
         Transmit(sender, "AS");
     } else if (Cmp(message, "UpdateCmds")) {

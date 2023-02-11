@@ -1,14 +1,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <QtConcurrent/QtConcurrent>
-#include <QtCore/QCoreApplication>
-#include <QtNetwork/QHostAddress>
-#include <QtNetwork/QNetworkInterface>
-#include <iostream>
-
 #include "../Operations/Operations.h"
-#include "../constants.h"
 #include "../lib/TCP/client/tcpClient.h"
 
 class Client : public TCPClient, public Operations {
