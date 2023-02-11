@@ -112,7 +112,7 @@ class Yaml {
     static std::vector<YAML::Node> getSeconds(const YAML::Node &node, const std::string &key);
 
     /**
-     * @brief Set the yaml node in the given yaml file with the given node path.
+     * @brief Set the yaml node in the given yaml file with the given value.
      *
      * @param yamlFilePath           The path where the yaml file is located.
      * @param path                   The path to the desired node. Nodes must be separated by a '.'

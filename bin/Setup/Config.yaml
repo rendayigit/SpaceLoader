@@ -1,12 +1,12 @@
 Config:
   Ips:
     targetPc:
-      ip: 192.168.2.1
-      port: 3132
+      ip: 127.0.0.1
+      port: 1234
       username: Administrator
     egse:
       ip: 192.168.1.250
       port: 5004
-    listenTo: sD
+    listenTo: 127.0.0.1:1235
   FileTransfer:
     remotePath: D:/

@@ -1,4 +1,3 @@
-#include <iostream>
 #include <fstream>
 #include "yaml.h"
 
@@ -89,10 +88,10 @@ vector<Node> Yaml::getSeconds(const Node &node, const string &key) {
 }
 
 void Yaml::setValueByPath(const std::string &yamlFilePath, const string path, const string value) {
-    YAML::Emitter out;
-    Node temp = LoadFile(yamlFilePath);
-    searchByNodePath(temp, splitPath(path, '.')).at(0) = value;
-    out << temp;
+    Node rootNode = LoadFile(yamlFilePath);
+    searchByNodePath(rootNode, splitPath(path, '.')).at(0) = value;
+    YAML::Emitter out; 
+    out << rootNode;
     std::ofstream ofout(yamlFilePath);
     ofout << out.c_str();
 }
