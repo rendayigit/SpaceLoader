@@ -89,28 +89,49 @@ Item {
             font.family: "Segoe UI"
         }
 
-        ScrollView {
-            id: scroll
+
+        Flickable {
+            id: targetMachinesFlickable
 
             anchors.left: targetMachinesAcquiredLabel.right
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
-            anchors.leftMargin: 20
+            contentHeight: parent.height
+
+            flickableDirection: Flickable.HorizontalFlick
+            boundsBehavior: Flickable.DragAndOvershootBounds
+            maximumFlickVelocity: 30
 
             clip: true
 
-            Row {
-                id: targetMachineRow
+            property real currentX: 0
+            property real currentY: 0
+            onFlickEnded: {
+                currentX = contentX
+                currentY = contentY
+                scrollView.contentX = contentX
+                scrollView.contentY = contentY
+            }
+
+            ScrollView {
+                id: scroll
 
                 anchors.fill: parent
+                anchors.leftMargin: 20
 
-                topPadding: 25
-                bottomPadding: 25
-                leftPadding: 20
-                transformOrigin: Item.Center
-                spacing: 20
+                Row {
+                    id: targetMachineRow
+
+                    anchors.fill: parent
+
+                    topPadding: 25
+                    bottomPadding: 25
+                    leftPadding: 20
+                    transformOrigin: Item.Center
+                    spacing: 20
+                }
             }
         }
     }
