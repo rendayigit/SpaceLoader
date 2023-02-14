@@ -7,8 +7,8 @@ void TestServer::onReceived([[maybe_unused]] QTcpSocket *sender, QByteArray mess
 }
 
 void TestServer::onDisconnected(QTcpSocket *clientSocket) {
-    qDebug() << clientSocket->peerAddress().toIPv4Address() << " disconnected";
+    qDebug().noquote() << clientSocket->peerAddress().toIPv4Address() << " disconnected";
 }
 void TestServer::onConnected(QTcpSocket *clientSocket) {
-    qDebug() << clientSocket->peerAddress().toIPv4Address() << " connected";
+    qDebug().noquote() << clientSocket->peerAddress().toIPv4Address() << " connected";
 }

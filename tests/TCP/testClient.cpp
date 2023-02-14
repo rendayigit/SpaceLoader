@@ -7,5 +7,5 @@ void TestClient::onReceived(QByteArray message) {
 }
 
 void TestClient::onDisconnected() {
-    qDebug() << "Disconnected";
+    qDebug().noquote() << "Disconnected";
 }

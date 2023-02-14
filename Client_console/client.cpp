@@ -66,7 +66,7 @@ void Client::start(QList<QString> commandArguments) {
             int idx = command.indexOf("noloop", 0, Qt::CaseInsensitive) + 7;
             QString timeout = command.mid(idx, command.length() - idx);
             if (timeout.size() > 0) {
-                qDebug() << "Waiting for " << timeout << " seconds before exiting...";
+                qDebug().noquote() << "Waiting for " << timeout << " seconds before exiting...";
                 QThread::sleep(timeout.toInt());
             }
         } else {

@@ -72,7 +72,7 @@ TEST(tcp_test, ReceiveFromClients) {
 
     EXPECT_TRUE(QString::compare(client1->receivedString, testString2))
         << "String received from client1 and string transmitted from the server are not identical!";
-    qDebug() << client1->receivedString << ": received";
+    qDebug().noquote() << client1->receivedString << ": received";
     EXPECT_TRUE(QString::compare(client2->receivedString, testString2))
         << "String received from client2 and string transmitted from the server are not identical!";
     EXPECT_TRUE(QString::compare(client3->receivedString, testString2))
