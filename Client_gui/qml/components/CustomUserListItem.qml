@@ -106,15 +106,6 @@ Item {
 
             clip: true
 
-            property real currentX: 0
-            property real currentY: 0
-            onFlickEnded: {
-                currentX = contentX
-                currentY = contentY
-                scrollView.contentX = contentX
-                scrollView.contentY = contentY
-            }
-
             ScrollView {
                 id: scroll
 

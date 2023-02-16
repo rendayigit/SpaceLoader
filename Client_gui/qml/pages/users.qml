@@ -43,17 +43,30 @@ Item {
             radius: 10
             color: "#00000000"
 
-            ScrollView {
+            Flickable {
                 anchors.fill: parent
-//                anchors.Margin: 4
-                clip: true
+                
+                contentHeight: parent.height
 
-                Column {
-                    id: usersColumn
-                    spacing: 20
+                flickableDirection: Flickable.VerticalFlick
+                boundsBehavior: Flickable.DragAndOvershootBounds
+                maximumFlickVelocity: 50
+
+                clip: true
+                
+                ScrollView {
                     anchors.fill: parent
+    //                anchors.Margin: 4
+                    // clip: true
+
+                    Column {
+                        id: usersColumn
+                        spacing: 20
+                        anchors.fill: parent
+                    }
                 }
             }
+
         }
     }
 
@@ -70,14 +83,6 @@ Item {
             var userList = text.split("),");
 
             //TODO - remove these
-            userList.push("User #x: test user (127.0.0.1)")
-            userList.push("User #x: test user (127.0.0.1)")
-            userList.push("User #x: test user (127.0.0.1)")
-            userList.push("User #x: test user (127.0.0.1)")
-            userList.push("User #x: test user (127.0.0.1)")
-            userList.push("User #x: test user (127.0.0.1)")
-            userList.push("User #x: test user (127.0.0.1)")
-            userList.push("User #x: test user (127.0.0.1)")
 
             for (var i = 0; i < userList.length; i++) {
                 var userIp = userList[i].split(": ")[1].split(" (")[1].replace(")","");
