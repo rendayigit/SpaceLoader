@@ -82,8 +82,6 @@ Item {
         function onGetUsers(text) {
             var userList = text.split("),");
 
-            //TODO - remove these
-
             for (var i = 0; i < userList.length; i++) {
                 var userIp = userList[i].split(": ")[1].split(" (")[1].replace(")","");
                 var userName = userList[i].split(": ")[1].split(" ")[0];
