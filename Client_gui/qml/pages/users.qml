@@ -1,62 +1,72 @@
-import QtQuick 2.0
 import "../components"
-import QtQuick.Timeline 1.0
+import QtQuick 2.0
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Timeline 1.0
 
 Item {
+    id: root
+
+    Component.onCompleted: {
+        backend.getUserList();
+    }
+
     Rectangle {
         anchors.fill: parent
         radius: 10
         color: "#27273a"
 
-        Component.onCompleted: {
-            backend.getUserList()
+        Label {
+            id: usersTitleLabel
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.topMargin: 30
+            anchors.leftMargin: 30
+
+            color: "#ffffff"
+            text: "Connected Users"
+            font.pixelSize: 30
+            font.family: "Segoe UI"
         }
 
         Rectangle {
-            anchors.top: parent.top
+            id: userListRectangle
+
+            anchors.top: usersTitleLabel.bottom
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.topMargin: 10
             anchors.bottomMargin: 10
-            anchors.leftMargin: 10
-            anchors.rightMargin: 10
-
+            anchors.leftMargin: 50
+            anchors.rightMargin: 50
             radius: 10
-            color: "#000000"
+            color: "#00000000"
 
-            Label {
-                id: label
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 10
-
-                color: "#ffffff"
-                text: qsTr("Logged In Users")
-                font.family: "Segoe UI"
-                font.pointSize: 11
-            }
-
-            ScrollView {
-                anchors.top: label.bottom
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 50
-
-                TextArea {
-                    id: textArea
-                    anchors.centerIn: parent
+            Flickable {
+                anchors.fill: parent
+                contentHeight: parent.height
+                flickableDirection: Flickable.VerticalFlick
+                clip: true
+                
+                ScrollView {
                     anchors.fill: parent
-                    color: "#ffffff"
-                    font.family: "Segoe UI"
-                    font.pointSize: 20
-                    textFormat: TextEdit.PlainText
+
+                    Column {
+                        id: usersColumn
+
+                        anchors.fill: parent
+                        
+                        spacing: 20
+                    }
                 }
             }
+        }
+    }
+
+    onWidthChanged: {
+        for (var a = 0; a < usersColumn.children.length; a++) {
+            usersColumn.children[a].width = root.width - 100
         }
     }
 
@@ -64,13 +74,19 @@ Item {
         target: backend
 
         function onGetUsers(text) {
-            textArea.text = text
+            var userList = text.split("),");
+
+            for (var i = 0; i < userList.length; i++) {
+                var userIp = userList[i].split(": ")[1].split(" (")[1].replace(")","");
+                var userName = userList[i].split(": ")[1].split(" ")[0];
+                
+                Qt.createComponent("../components/CustomUserListItem.qml")
+                .createObject(usersColumn, {
+                                  "userName": userName,
+                                  "userIp": userIp,
+                                  "width": root.width - 100
+                              });
+            }
         }
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}
-}
-##^##*/
