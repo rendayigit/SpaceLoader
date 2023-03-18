@@ -7,12 +7,12 @@ Rectangle {
 
     width: 200
     height: 50
-
     color: "#55AAFF"
     radius: 10
 
     Label {
         id: targetMachineNameLabel
+
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.topMargin: 10
@@ -30,14 +30,12 @@ Rectangle {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-
         anchors.margins: 5
 
         font.pointSize: 10
         colorDefault: "#ff0000"
         colorMouseOver: "#ff0080"
         colorPressed: "#ff00ff"
-
         text: "Kick"
     }
 }

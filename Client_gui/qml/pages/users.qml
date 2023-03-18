@@ -45,28 +45,22 @@ Item {
 
             Flickable {
                 anchors.fill: parent
-                
                 contentHeight: parent.height
-
                 flickableDirection: Flickable.VerticalFlick
-                boundsBehavior: Flickable.DragAndOvershootBounds
-                maximumFlickVelocity: 50
-
                 clip: true
                 
                 ScrollView {
                     anchors.fill: parent
-    //                anchors.Margin: 4
-                    // clip: true
 
                     Column {
                         id: usersColumn
-                        spacing: 20
+
                         anchors.fill: parent
+                        
+                        spacing: 20
                     }
                 }
             }
-
         }
     }
 

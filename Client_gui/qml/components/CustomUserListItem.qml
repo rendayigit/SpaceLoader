@@ -27,6 +27,7 @@ Item {
 
         Label {
             id: userNameTitleLabel
+
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.topMargin: 15
@@ -40,6 +41,7 @@ Item {
 
         Label {
             id: userNameLabel
+
             anchors.top: parent.top
             anchors.left: userNameTitleLabel.right
             anchors.topMargin: 15
@@ -53,6 +55,7 @@ Item {
 
         Label {
             id: userIpTitleLabel
+
             anchors.top: userNameTitleLabel.bottom
             anchors.left: parent.left
             anchors.topMargin: 10
@@ -66,6 +69,7 @@ Item {
 
         Label {
             id: userIpLabel
+
             anchors.top: userNameTitleLabel.bottom
             anchors.left: userIpTitleLabel.right
             anchors.topMargin: 10
@@ -79,6 +83,7 @@ Item {
 
         Label {
             id: targetMachinesAcquiredLabel
+
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: userIpLabel.right
             anchors.margins: 50
@@ -99,11 +104,7 @@ Item {
             anchors.bottom: parent.bottom
 
             contentHeight: parent.height
-
             flickableDirection: Flickable.HorizontalFlick
-            boundsBehavior: Flickable.DragAndOvershootBounds
-            maximumFlickVelocity: 30
-
             clip: true
 
             ScrollView {
@@ -118,9 +119,6 @@ Item {
                     anchors.fill: parent
 
                     topPadding: 25
-                    bottomPadding: 25
-                    leftPadding: 20
-                    transformOrigin: Item.Center
                     spacing: 20
                 }
             }
