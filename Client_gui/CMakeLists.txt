@@ -21,6 +21,7 @@ set(PROJECT_SOURCES
         ../lib/Logger/logger.cpp
         ../lib/TCP/client/tcpClient.cpp
         ../lib/YAML/yaml.cpp
+        ../lib/SSH/ssh.cpp
         listener.cpp
         egse.cpp
         backend.cpp

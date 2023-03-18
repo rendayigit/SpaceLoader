@@ -1,19 +1,17 @@
 #include "backend.h"
 
-#include <QtConcurrent/QtConcurrent>
 #include <fcntl.h>
-#include <libssh/libssh.h>
-#include <libssh/sftp.h>
 #include <sys/stat.h>
 
+#include <QtConcurrent/QtConcurrent>
 #include <QtCore/QThread>
 #include <fstream>
 
 #include "../common.h"
 #include "../lib/Logger/logger.h"
+#include "../lib/Ssh/ssh.h"
 #include "egse.h"
 #include "listener.h"
-#include "../lib/Ssh/ssh.h"
 
 Listener* listener;
 Egse* egse;
@@ -119,7 +117,7 @@ int Backend::fileTransfer(QString localFile, QString serverPath) {
     QtConcurrent::run([=]() {
         emit setTransferProgress(true);
 
-        SSH::fileTransfer(localFile, serverPath);
+        SSH::fileTransfer(localFile.toStdString(), serverPath.toStdString());
 
         emit setTransferProgress(false);
         return 0;
