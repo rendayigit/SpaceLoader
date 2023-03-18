@@ -1,6 +1,7 @@
 #include "ssh.h"
 
-int SSH::fileTransfer(ssh_session session, QString localFile, QString serverPath) {
+int SSH::fileTransfer(QString localFile, QString serverPath) {
+    ssh_session session = createSession();
     int returnCode;
 
     if (session == nullptr) {
@@ -70,61 +71,61 @@ int SSH::fileTransfer(ssh_session session, QString localFile, QString serverPath
     return 0;
 }
 
-QString SSH::runCommand(ssh_session session, QString command) {
-    ssh_channel channel;
-    int returnCode;
+// QString SSH::runCommand(ssh_session session, QString command) {
+//     ssh_channel channel;
+//     int returnCode;
 
-    if (session == nullptr) {
-        QString errorMessage = "Session is null";
-        Log().Error(errorMessage);
-        qCritical() << errorMessage;
-        return;
-    }
+//     if (session == nullptr) {
+//         QString errorMessage = "Session is null";
+//         Log().Error(errorMessage);
+//         qCritical() << errorMessage;
+//         return;
+//     }
 
-    channel = ssh_channel_new(session);
-    if (channel == NULL) return;
+//     channel = ssh_channel_new(session);
+//     if (channel == NULL) return;
 
-    returnCode = ssh_channel_open_session(channel);
-    if (returnCode != SSH_OK) {
-        ssh_channel_free(channel);
-        return;
-    }
+//     returnCode = ssh_channel_open_session(channel);
+//     if (returnCode != SSH_OK) {
+//         ssh_channel_free(channel);
+//         return;
+//     }
 
-    returnCode = ssh_channel_request_exec(channel, command.toStdString().c_str());
-    if (returnCode != SSH_OK) {
-        ssh_channel_close(channel);
-        ssh_channel_free(channel);
-        return;
-    }
+//     returnCode = ssh_channel_request_exec(channel, command.toStdString().c_str());
+//     if (returnCode != SSH_OK) {
+//         ssh_channel_close(channel);
+//         ssh_channel_free(channel);
+//         return;
+//     }
 
-    char buffer[256];
-    int nbytes;
+//     char buffer[256];
+//     int nbytes;
 
-    nbytes = ssh_channel_read(channel, buffer, sizeof(buffer), 0);
-    while (nbytes > 0) {
-        if (fwrite(buffer, 1, nbytes, stdout) != nbytes) {
-            ssh_channel_close(channel);
-            ssh_channel_free(channel);
-            return;
-        }
-        nbytes = ssh_channel_read(channel, buffer, sizeof(buffer), 0);
-    }
+//     nbytes = ssh_channel_read(channel, buffer, sizeof(buffer), 0);
+//     while (nbytes > 0) {
+//         if (fwrite(buffer, 1, nbytes, stdout) != nbytes) {
+//             ssh_channel_close(channel);
+//             ssh_channel_free(channel);
+//             return;
+//         }
+//         nbytes = ssh_channel_read(channel, buffer, sizeof(buffer), 0);
+//     }
 
-    ssh_channel_close(channel);
-    ssh_channel_free(channel);
+//     ssh_channel_close(channel);
+//     ssh_channel_free(channel);
 
-    if (nbytes < 0) {
-        return;
-    }
+//     if (nbytes < 0) {
+//         return;
+//     }
 
-    ssh_channel_send_eof(channel);
+//     ssh_channel_send_eof(channel);
 
-    return QString::fromUtf8(buffer, nbytes);
-}
+//     return QString::fromUtf8(buffer, nbytes);
+// }
 
-int SSH::downloadFile(ssh_session session, QString serverPath, QString localPath) {
+// int SSH::downloadFile(ssh_session session, QString serverPath, QString localPath) {
     // TODO this function might be implement with run command on server.
-}
+// }
 
 ssh_session SSH::createSession() {
     ssh_session session = ssh_new();
