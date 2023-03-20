@@ -17,8 +17,7 @@ class SSH {
     ~SSH() = delete;
 
     static int fileTransfer(std::string localFile, std::string serverPath);
-    // static QString runCommand(ssh_session &session, QString command);
-    // static int downloadFile(ssh_session &session, QString serverPath, QString localPath);
+    static std::string runCommand(std::string command);
     static ssh_session createSession();
 
    private:
