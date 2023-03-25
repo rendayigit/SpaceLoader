@@ -59,3 +59,4 @@ A project where a Client can call batch scripts located in the Server PC. These 
 
 
 ![Github Repo Stars](https://img.shields.io/github/actions/workflow/status/rendayigit/SpaceLoader/ci.yml)
+[![Pull Request Welcome](https://img.shields.io/github/issues-pr/rendayigit/SpaceLoader)](https://github.com/rendayigit/SpaceLoader/pulls)
