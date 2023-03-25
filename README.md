@@ -63,4 +63,5 @@ A project where a Client can call batch scripts located in the Server PC. These 
 [![Github issues](https://img.shields.io/github/issues-raw/rendayigit/SpaceLoader)](https://github.com/rendayigit/SpaceLoader/issues)
 [![Github Repo Size](https://img.shields.io/github/repo-size/rendayigit/SpaceLoader)](https://github.com/rendayigit/SpaceLoader)
 [![Github Repo Size in Bytes](https://img.shields.io/github/languages/code-size/rendayigit/SpaceLoader)](https://github.com/rendayigit/SpaceLoader)
+![Scrutinizer code quality (GitHub/Bitbucket)](https://img.shields.io/scrutinizer/quality/g/rendayigit/SpaceLoader/main)
 
