@@ -58,4 +58,4 @@ A project where a Client can call batch scripts located in the Server PC. These 
 - mingw-w64-x86_64-libssh
 
 
-https://img.shields.io/github/actions/workflow/status/rendayigit/SpaceLoader/version.yml
+(https://img.shields.io/github/actions/workflow/status/rendayigit/SpaceLoader/version.yml)
