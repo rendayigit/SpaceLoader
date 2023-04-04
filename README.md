@@ -14,7 +14,7 @@
 ![Lines of code](https://img.shields.io/tokei/lines/github/rendayigit/spaceloader?style=flat)
 ![GitHub repo file count](https://img.shields.io/github/directory-file-count/rendayigit/spaceloader?style=flat)
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/rendayigit/spaceloader/tag/total)
-![GitHub issues](https://img.shields.io/github/issues-raw/rendayigit/!%5BGitHub%20issues%5D(https://img.shields.io/github/issues/rendayigit/spaceloader))
+![GitHub issues](https://img.shields.io/github/issues-raw/rendayigit/spaceloader)
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/rendayigit/spaceloader)
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/rendayigit/spaceloader)
 ![GitHub watchers](https://img.shields.io/github/watchers/rendayigit/spaceloader)
