@@ -62,30 +62,30 @@ int SSH::fileTransfer(std::string localFile, std::string serverPath) {
     return 0;
 }
 
-std::string SSH::runCommand(std::string command) {
+int SSH::runCommand(std::string command) {
     ssh_session session = createSession();
     ssh_channel channel;
     int returnCode;
 
     if (session == nullptr) {
         std::cout << "Session is null" << ssh_get_error(session);
-        return;
+        return sessionIsNull;
     }
 
     channel = ssh_channel_new(session);
-    if (channel == NULL) return;
+    if (channel == NULL) return channelisNull;
 
     returnCode = ssh_channel_open_session(channel);
     if (returnCode != SSH_OK) {
         ssh_channel_free(channel);
-        return "";
+        return sessionCanNotOpenChannel;
     }
 
     returnCode = ssh_channel_request_exec(channel, command.c_str());
     if (returnCode != SSH_OK) {
         ssh_channel_close(channel);
         ssh_channel_free(channel);
-        return "";
+        return failExecRequest;
     }
 
     char buffer[256];
@@ -96,7 +96,7 @@ std::string SSH::runCommand(std::string command) {
         if (fwrite(buffer, 1, nbytes, stdout) != nbytes) {
             ssh_channel_close(channel);
             ssh_channel_free(channel);
-            return "";
+            return errorWhileWriting;
         }
         nbytes = ssh_channel_read(channel, buffer, sizeof(buffer), 0);
     }
@@ -105,7 +105,7 @@ std::string SSH::runCommand(std::string command) {
     ssh_channel_free(channel);
 
     if (nbytes < 0) {
-        return;
+        return emptyNbytes;
     }
 
     ssh_channel_send_eof(channel);
@@ -115,7 +115,13 @@ std::string SSH::runCommand(std::string command) {
         output += buffer[i];
     }
 
-    return output;
+    outputBuffer = output;
+
+    return succesfullRunCommand;
+}
+
+std::string SSH::getOutputBuffer() {
+    return outputBuffer;
 }
 
 ssh_session SSH::createSession() {

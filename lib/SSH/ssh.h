@@ -8,6 +8,15 @@
 
 #include <string>
 
+int sessionIsNull = 0;
+int channelisNull = 1;
+int sessionCanNotOpenChannel = 2;
+int failExecRequest = 3;
+int errorWhileWriting = 4;
+int emptyNbytes = 5;
+int succesfullRunCommand = 6;
+std::string outputBuffer = "";
+
 class SSH {
    public:
     SSH(const SSH &) = delete;
@@ -17,8 +26,9 @@ class SSH {
     ~SSH() = delete;
 
     static int fileTransfer(std::string localFile, std::string serverPath);
-    static std::string runCommand(std::string command);
+    static int runCommand(std::string command);
     static ssh_session createSession();
+    static std::string getOutputBuffer();
 
    private:
 };
