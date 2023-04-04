@@ -64,5 +64,14 @@
         <file>qml/pages/listen.qml</file>
         <file>qml/pages/debug.qml</file>
         <file>qml/pages/DraggablePanel.qml</file>
+        <file>qml/pages/registerViewer.qml</file>
+        <file>qml/components/Scoc3/register.qml</file>
+        <file>qml/components/Scoc3/field.qml</file>
+        <file>qml/components/Scoc3/module.qml</file>
+        <file>qml/components/Scoc3/confRWCombo.qml</file>
+        <file>qml/components/Scoc3/confRWText.qml</file>
+        <file>qml/components/Scoc3/confR.qml</file>
+        <file>qml/components/Scoc3/confWCombo.qml</file>
+        <file>qml/components/Scoc3/confWText.qml</file>
     </qresource>
 </RCC>

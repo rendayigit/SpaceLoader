@@ -17,6 +17,11 @@ find_package(QT NAMES Qt5 COMPONENTS Core Quick REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED) #if error run: sudo apt-get install libgl1-mesa-dev
 find_package(libssh REQUIRED)
 
+include_directories("Scoc3/")
+include_directories("../lib/YAML/")
+include_directories("../lib/Logger/")
+include_directories("../lib/TCP/client/")
+
 set(PROJECT_SOURCES
         ../lib/Logger/logger.cpp
         ../lib/TCP/client/tcpClient.cpp

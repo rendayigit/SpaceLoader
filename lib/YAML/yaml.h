@@ -111,21 +111,6 @@ class Yaml {
      */
     static std::vector<YAML::Node> getSeconds(const YAML::Node &node, const std::string &key);
 
-   private:
-    Yaml() = default;
-    ~Yaml() = default;
-
-    /**
-     * Searches for a node in a YAML document by a path of node names.
-     *
-     * @param node The root node of the YAML document.
-     * @param pathOrder The path of node names to search for.
-     *
-     * @returns The node found by the path, or an empty node if the path is not found.
-     */
-    static std::vector<YAML::Node> searchByNodePath(YAML::Node node,
-                                                    std::vector<std::string> pathOrder);
-
     /**
      * Searches a YAML node for a key-value pair.
      *
@@ -157,6 +142,21 @@ class Yaml {
      * @returns A list of values found.
      */
     static std::vector<std::string> searchValue(const YAML::Node &node, const std::string &key);
+
+   private:
+    Yaml() = default;
+    ~Yaml() = default;
+
+    /**
+     * Searches for a node in a YAML document by a path of node names.
+     *
+     * @param node The root node of the YAML document.
+     * @param pathOrder The path of node names to search for.
+     *
+     * @returns The node found by the path, or an empty node if the path is not found.
+     */
+    static std::vector<YAML::Node> searchByNodePath(YAML::Node node,
+                                                    std::vector<std::string> pathOrder);
 
     /**
      * Splits a path into a vector of strings.

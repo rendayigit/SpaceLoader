@@ -277,6 +277,14 @@ Window {
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                     onClicked: loaderView.source = "pages/egse.qml"
                 }
+
+                CustomAppButton {
+                    text: "Target Registers"
+                    setIcon: "../assets/svg_images/user_icon.svg"
+                    font.pointSize: 9
+                    Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                    onClicked: loaderView.source = "pages/registerViewer.qml"
+                }
             }
 
             ScrollBar.horizontal: ScrollBar {
