@@ -18,6 +18,12 @@
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/rendayigit/spaceloader)
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/rendayigit/spaceloader)
 ![GitHub watchers](https://img.shields.io/github/watchers/rendayigit/spaceloader)
+![GitHub last commit](https://img.shields.io/github/last-commit/rendayigit/spaceloader)
+![GitHub Release Date](https://img.shields.io/github/release-date/rendayigit/spaceloader)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/rendayigit/spaceloader)
+![Bower](https://img.shields.io/bower/l/asddaas)
+![AppVeyor tests](https://img.shields.io/appveyor/tests/rendayigit/spaceloader)
+![Codacy grade](https://img.shields.io/codacy/grade/asdasd)
 
 
 ![sl](https://user-images.githubusercontent.com/26045359/204103152-a5e0e2e3-ff24-4157-aa15-8c2d4f51f523.PNG)
