@@ -8,8 +8,6 @@
 [![Github Repo Size in Bytes](https://img.shields.io/github/languages/code-size/rendayigit/SpaceLoader)](https://github.com/rendayigit/SpaceLoader)
 ![Scrutinizer code quality (GitHub/Bitbucket)](https://img.shields.io/scrutinizer/quality/g/rendayigit/SpaceLoader/main)
 ![GitHub language count](https://img.shields.io/github/languages/count/rendayigit/SpaceLoader)
-
-![sl](https://user-images.githubusercontent.com/26045359/204103152-a5e0e2e3-ff24-4157-aa15-8c2d4f51f523.PNG)
 ![GitHub contributors](https://img.shields.io/github/contributors/rendayigit/spaceloader)
 ![GitHub forks](https://img.shields.io/github/forks/rendayigit/spaceloader?style=flat)
 ![GitHub Repo stars](https://img.shields.io/github/stars/rendayigit/spaceloader?style=flat)
@@ -21,6 +19,8 @@
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/rendayigit/spaceloader)
 ![GitHub watchers](https://img.shields.io/github/watchers/rendayigit/spaceloader)
 
+
+![sl](https://user-images.githubusercontent.com/26045359/204103152-a5e0e2e3-ff24-4157-aa15-8c2d4f51f523.PNG)
 
 A project where a Client can call batch scripts located in the Server PC. These commands including the batch script locations are located in an xml file therefore configuration doesn't require recompilation. Written using the Qt framework.
 
