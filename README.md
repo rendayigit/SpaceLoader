@@ -2,11 +2,8 @@
 
 ## Badges
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/rendayigit/SpaceLoader/ci.yml)
-[![Pull Request Welcome](https://img.shields.io/github/issues-pr/rendayigit/SpaceLoader)](https://github.com/rendayigit/SpaceLoader/pulls)
-[![Github issues](https://img.shields.io/github/issues-raw/rendayigit/SpaceLoader)](https://github.com/rendayigit/SpaceLoader/issues)
 [![Github Repo Size](https://img.shields.io/github/repo-size/rendayigit/SpaceLoader)](https://github.com/rendayigit/SpaceLoader)
 [![Github Repo Size in Bytes](https://img.shields.io/github/languages/code-size/rendayigit/SpaceLoader)](https://github.com/rendayigit/SpaceLoader)
-![Scrutinizer code quality (GitHub/Bitbucket)](https://img.shields.io/scrutinizer/quality/g/rendayigit/SpaceLoader/main)
 ![GitHub language count](https://img.shields.io/github/languages/count/rendayigit/SpaceLoader)
 ![GitHub contributors](https://img.shields.io/github/contributors/rendayigit/spaceloader)
 ![GitHub forks](https://img.shields.io/github/forks/rendayigit/spaceloader?style=flat)
@@ -16,6 +13,7 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/downloads/rendayigit/spaceloader/tag/total)
 ![GitHub issues](https://img.shields.io/github/issues-raw/rendayigit/spaceloader)
 ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/rendayigit/spaceloader)
+[![Pull Request Welcome](https://img.shields.io/github/issues-pr/rendayigit/SpaceLoader)](https://github.com/rendayigit/SpaceLoader/pulls)
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/rendayigit/spaceloader)
 ![GitHub watchers](https://img.shields.io/github/watchers/rendayigit/spaceloader)
 ![GitHub last commit](https://img.shields.io/github/last-commit/rendayigit/spaceloader)
