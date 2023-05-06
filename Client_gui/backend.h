@@ -2,7 +2,7 @@
 #define BACKEND_H
 
 #include "../lib/TCP/client/tcpClient.h"  // TODO - dont use relative include paths
-#include "Scoc3/TreeNode.h"
+#include "Scoc3/treeNode.h"
 
 class Backend : public TCPClient {
     Q_OBJECT

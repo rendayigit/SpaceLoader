@@ -270,21 +270,336 @@ Rectangle {
             color: "#FFFFFF"
         }
 
-        Text {
-            text: "Fields"
-            width: parent.width / 6
-            horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 11
-            color: "#FFFFFF"
-        }
+//        Rectangle {
+//            id: tryrect
+//            width: (parent.width / 6) + (parent.width / 2)
+//            color: "#FFFFFF"
+//            anchors.right: parent.right
 
-        Text {
-            text: "Field Configuration"
-            width: parent.width / 2
-            horizontalAlignment: Text.AlignHCenter
-            font.pointSize: 11
-            color: "#FFFFFF"
-        }
+//            Text {
+//                text: "Fields"
+//                width: parent.width / 6
+//                horizontalAlignment: Text.AlignHCenter
+//                font.pointSize: 11
+//                color: "#FFFFFF"
+//            }
+
+//            Text {
+//                text: "Field Configuration"
+//                width: parent.width / 2
+//                horizontalAlignment: Text.AlignHCenter
+//                font.pointSize: 11
+//                color: "#FFFFFF"
+//            }
+
+//        }
+        Rectangle {
+                    width: (parent.width / 6) + (parent.width / 2)
+                    height: 20
+                    color: rootObject.color
+
+                    Flickable {
+                        id: tabFlick
+                        width: parent.width
+                        height: 20
+                        clip: true
+
+                        // Set the scroll direction to horizontal
+                        contentWidth: row.width
+                        boundsBehavior: Flickable.StopAtBounds
+
+                        // Define a row of buttons
+                        Row {
+                            id: row
+                            spacing: 1
+
+                            // Create multiple buttons with different text
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+                            Button {
+                                text: "tabBtn"
+                                width: 90
+                                height: 20
+                                background: Rectangle {
+                                    color: "#4891d9"
+                                    radius: 10
+                                }
+                                onPressed: background.color = "#a3bed0"
+                                onReleased: { background.color = "#4891d9"
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+
+                                onHoveredChanged: {
+                                    if (hovered) {background.color = "#74a8db"}
+                                    else {background.color = "#4891d9"}
+                                }
+                            }
+
+                        }
+
+//                        MouseArea {
+//                                anchors.fill: parent
+//                                hoverEnabled: true
+//                                onWheel: {
+//                                    if (wheel.angleDelta.y > 0) {
+//                                        // Scroll left
+//                                        tabFlick.flick(10,0)
+//                                    } else if (wheel.angleDelta.y < 0) {
+//                                        // Scroll right
+//                                        tabFlick.flick(-10,0)
+//                                    }
+//                                }
+//                            }
+                    }
+
+                }
+
 
     }
 
