@@ -1,5 +1,5 @@
-#ifndef Operations_H
-#define Operations_H
+#ifndef COMMONCLIENTSERVER_H
+#define COMMONCLIENTSERVER_H
 
 #include <QtCore/QByteArray>
 #include <QtCore/QCoreApplication>
@@ -11,7 +11,7 @@
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QTcpSocket>
 
-#include "../common.h"
+#include "../commonUtil.h"
 #include "../lib/Logger/logger.h"
 #include "../lib/YAML/yaml.h"
 #include "./Cmd/AuthCmd.h"
@@ -21,10 +21,10 @@
 
 using namespace std;
 
-class Operations {
+class CommonClientServer {
    public:
-    explicit Operations(QString yamlFile);
-    virtual ~Operations() = default;
+    explicit CommonClientServer(QString yamlFile);
+    virtual ~CommonClientServer() = default;
     // TODO:
     // Never foget the virtual destructor of
     // a class with virtual functions. Do this for other classes.
@@ -62,4 +62,4 @@ class Operations {
     QList<BaseCmd *> cmdList;
 };
 
-#endif  // Operations_H
+#endif  // COMMONCLIENTSERVER_H

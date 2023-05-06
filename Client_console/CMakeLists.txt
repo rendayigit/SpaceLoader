@@ -21,8 +21,9 @@ set(PROJECT_SOURCES
         ../lib/Logger/logger.cpp
         ../lib/TCP/client/tcpClient.cpp
         ../lib/YAML/yaml.cpp
-        ../Operations/Operations.cpp
-        client.cpp
+        ../Common/CommonClientServer.cpp
+        ../Common/CommonClient.cpp
+        ClientConsole.cpp
         main.cpp
         )
 
@@ -30,7 +31,7 @@ add_executable(CONSOLE ${PROJECT_SOURCES})
 
 target_include_directories(CONSOLE PRIVATE
         "../lib/TCP/client/"
-        "../Operations/"
+        "../CommonClientServer/"
         )
 
 target_compile_definitions(CONSOLE PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)

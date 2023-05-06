@@ -1,11 +1,10 @@
 #ifndef BACKEND_H
 #define BACKEND_H
 
-#include "../lib/TCP/client/tcpClient.h"  // TODO - dont use relative include paths
-
-class Backend : public TCPClient {
+//#include "../Client_console/client.h" // TODO - dont use relative include paths
+#include "../lib/TCP/client/tcpClient.h"
+class Backend : public TCPClient /*Client*/ {
     Q_OBJECT
-
    public:
     Backend();
     void onReceived(QByteArray message) override;

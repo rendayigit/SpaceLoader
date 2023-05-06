@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "client.h"
+#include "ClientConsole.h"
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
@@ -26,9 +26,9 @@ int main(int argc, char *argv[]) {
     }
 
     /* Connect to server */
-    Client::getInstance().start(commandArguments);
+    ClientConsole::getInstance().start(commandArguments);
 
-    Client::getInstance().stopAllListeners();
+    // ClientConsole::getInstance().stopAllListeners();
 
     return a.exec();
 }
