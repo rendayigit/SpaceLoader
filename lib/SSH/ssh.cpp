@@ -89,12 +89,14 @@ int SSH::runCommand(std::string command) {
 
     returnCode = ssh_channel_open_session(channel);
     if (returnCode != SSH_OK) {
+        std::cout << "Unable to open SSH channel session - " << ssh_get_error(session); 
         ssh_channel_free(channel);
         return sessionCanNotOpenChannel;
     }
 
     returnCode = ssh_channel_request_exec(channel, command.c_str());
     if (returnCode != SSH_OK) {
+        std::cout << "Unable to execute command - " << ssh_get_error(session);
         ssh_channel_close(channel);
         ssh_channel_free(channel);
         return failExecRequest;
@@ -105,6 +107,7 @@ int SSH::runCommand(std::string command) {
     int nbytes = ssh_channel_read(channel, buffer, sizeof(buffer), 0);
     while (nbytes > 0) {
         if (fwrite(buffer, 1, nbytes, stdout) != nbytes) {
+            std::cout << "Error while writing to stdout - " << ssh_get_error(session);
             ssh_channel_close(channel);
             ssh_channel_free(channel);
             return errorWhileWriting;
@@ -116,6 +119,7 @@ int SSH::runCommand(std::string command) {
     ssh_channel_free(channel);
 
     if (nbytes < 0) {
+        std::cout << "Error while reading channel - " << ssh_get_error(session);
         return emptyNBytes;
     }
 
