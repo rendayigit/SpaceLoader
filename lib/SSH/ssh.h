@@ -9,11 +9,11 @@
 #include <string>
 
 int sessionIsNull = 0;
-int channelisNull = 1;
+int channelIsNull = 1;
 int sessionCanNotOpenChannel = 2;
 int failExecRequest = 3;
 int errorWhileWriting = 4;
-int emptyNbytes = 5;
+int emptyNBytes = 5;
 int succesfullRunCommand = 6;
 std::string outputBuffer = "";
 
@@ -29,8 +29,6 @@ class SSH {
     static int runCommand(std::string command);
     static ssh_session createSession();
     static std::string getOutputBuffer();
-
-   private:
 };
 
 #endif  // SSH_H

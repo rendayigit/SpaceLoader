@@ -76,12 +76,16 @@ int SSH::runCommand(std::string command) {
     int returnCode;
 
     if (session == nullptr) {
-        std::cout << "Session is null" << ssh_get_error(session);
+        std::cout << "Unable to create SSH session - " << ssh_get_error(session);
         return sessionIsNull;
     }
 
     channel = ssh_channel_new(session);
-    if (channel == NULL) return channelisNull;
+    if (channel == NULL)
+    {
+        std::cout << "Unable to create SSH channel session - " << ssh_get_error(session);
+        return channelIsNull;
+    } 
 
     returnCode = ssh_channel_open_session(channel);
     if (returnCode != SSH_OK) {
@@ -97,9 +101,8 @@ int SSH::runCommand(std::string command) {
     }
 
     char buffer[256];
-    int nbytes;
 
-    nbytes = ssh_channel_read(channel, buffer, sizeof(buffer), 0);
+    int nbytes = ssh_channel_read(channel, buffer, sizeof(buffer), 0);
     while (nbytes > 0) {
         if (fwrite(buffer, 1, nbytes, stdout) != nbytes) {
             ssh_channel_close(channel);
@@ -113,7 +116,7 @@ int SSH::runCommand(std::string command) {
     ssh_channel_free(channel);
 
     if (nbytes < 0) {
-        return emptyNbytes;
+        return emptyNBytes;
     }
 
     ssh_channel_send_eof(channel);
@@ -139,12 +142,12 @@ ssh_session SSH::createSession() {
     ssh_options_set(session, SSH_OPTIONS_USER, "pop");
 
     if (ssh_connect(session) != SSH_OK) {
-        std::cout << "Error connecting to host: " << ssh_get_error(session);
+        std::cout << "Error connecting to host - " << ssh_get_error(session);
         return nullptr;
     }
 
     if (ssh_userauth_password(session, "pop", "1") != SSH_OK) {
-        std::cout << "Error authenticating with password: " << ssh_get_error(session);
+        std::cout << "Error authenticating with password - " << ssh_get_error(session);
         return nullptr;
     }
 
