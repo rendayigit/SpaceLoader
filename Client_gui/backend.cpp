@@ -9,7 +9,7 @@
 
 #include "../common.h"
 #include "../lib/Logger/logger.h"
-#include "../lib/Ssh/ssh.h"
+#include "../lib/SSH/ssh.h"
 #include "egse.h"
 #include "listener.h"
 

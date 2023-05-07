@@ -9,13 +9,21 @@ int SSH::fileTransfer(std::string localFile, std::string serverPath) {
     ssh_session session = createSession();
 
     if (session == nullptr) {
-        std::cout << "Session is null";
+        std::cout << "Unable to create SSH session - " << ssh_get_error(session);
         return -1;
     }
 
     std::ifstream file(localFile, std::ios::binary);
     if (not file.is_open()) {
-        std::cout << "Error opening file";
+        std::string delimiter = "/";
+        size_t pos = 0;
+        std::string token;
+        while ((pos = localFile.find(delimiter)) != std::string::npos) {
+            token = localFile.substr(0, pos);
+            std::cout << token << std::endl;
+            localFile.erase(0, pos + delimiter.length());
+        }
+        std::cout << "Unable to access file for file transfer" << localFile << std::endl;
         return -1;
     }
 
@@ -28,12 +36,12 @@ int SSH::fileTransfer(std::string localFile, std::string serverPath) {
 
     sftp_session sftp = sftp_new(session);
     if (sftp == nullptr) {
-        std::cout << "Error allocating SFTP session: " << ssh_get_error(session);
+        std::cout << "Unable to create SFTP session - " << ssh_get_error(session);
         return -1;
     }
 
     if (sftp_init(sftp) != SSH_OK) {
-        std::cout << "Error initializing SFTP session: " << ssh_get_error(session);
+        std::cout << "Error initializing SFTP session - " << ssh_get_error(session);
         return -1;
     }
 
@@ -43,12 +51,12 @@ int SSH::fileTransfer(std::string localFile, std::string serverPath) {
     sftp_file fileHandle = sftp_open(sftp, remoteFilePath.c_str(), O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
 
     if (fileHandle == nullptr) {
-        std::cout << "Error opening file on remote server: " << ssh_get_error(session);
+        std::cout << "Error opening file on remote server - " << ssh_get_error(session);
         return -1;
     }
 
     if (sftp_write(fileHandle, buffer.get(), fileSize) < 0) {
-        std::cout << "Error writing file to remote server: " << ssh_get_error(session);
+        std::cout << "Error writing file to remote server - " << ssh_get_error(session);
         return -1;
     }
 
