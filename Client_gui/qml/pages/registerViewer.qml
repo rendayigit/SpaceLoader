@@ -305,281 +305,17 @@ Rectangle {
                         clip: true
 
                         // Set the scroll direction to horizontal
-                        contentWidth: row.width
+                        contentWidth: registerTabRow.width
                         boundsBehavior: Flickable.StopAtBounds
 
                         // Define a row of buttons
                         Row {
-                            id: row
+                            id: registerTabRow
                             spacing: 1
 
                             // Create multiple buttons with different text
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
 
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
 
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
-                            Button {
-                                text: "tabBtn"
-                                width: 90
-                                height: 20
-                                background: Rectangle {
-                                    color: "#4891d9"
-                                    radius: 10
-                                }
-                                onPressed: background.color = "#a3bed0"
-                                onReleased: { background.color = "#4891d9"
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-
-                                onHoveredChanged: {
-                                    if (hovered) {background.color = "#74a8db"}
-                                    else {background.color = "#4891d9"}
-                                }
-                            }
 
                         }
 
@@ -850,7 +586,21 @@ Rectangle {
         backend.setGlobalFieldId(-1)
         clearConf()
         createFieldButtons(registerId)
+        createRegisterTabAlias(registerId)
     }
+
+    function createRegisterTabAlias(registerId) {
+        var name = backend.getRegisterList()[registerId]
+        var registerItem = Qt.createComponent("../components/Scoc3/registerTab.qml")
+        .createObject(registerTabRow, {
+                          "registerId": registerId,
+                          "text": name,
+                          "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter,
+                          "alert": backend.checkAllConfigValues(1, (backend.getFileList()[backend.returnGlobalModuleId()].split(".")[0]+"."+name)),
+                      });
+        registerItem.registerClicked.connect(registerButtonClicked)
+    }
+
     //REGISTER BUTTONS END
 
     //FIELD BUTTONS END
