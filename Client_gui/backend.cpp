@@ -16,6 +16,7 @@
 #include "../lib/YAML/yaml.h"
 #include "egse.h"
 #include "listener.h"
+#include "Scoc3/pinClass.h"
 
 Listener *listener;
 Egse *egse;
@@ -233,7 +234,7 @@ void Backend::setDefaultConfigId(QString configName) {
         }
     }
 }
-void Backend::setGlobalModuleId(int moduleId) { globalModuleId = moduleId; }
+void Backend::setGlobalModuleId(int moduleId) { globalModuleId = moduleId; Backend::setFilePath(moduleId);}
 void Backend::setGlobalRegId(int regId) { globalRegId = QString::number(regId); }
 void Backend::setGlobalFieldId(int fieldId) { globalFieldId = QString::number(fieldId); }
 
@@ -1016,4 +1017,32 @@ QList<QString> Backend::vectorToQList(std::vector<std::string> vector) {
     }
 
     return qlist;
+}
+
+QList<QString> Backend::returnPinConfig(){
+    //READ FILE
+    ifstream infile;
+    infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/pinSlots.yaml");
+    std::vector<std::string> lines;
+    std::string buffer;
+
+    while (getline(infile, buffer)) {
+        lines.push_back(buffer);
+    }
+
+    infile.close();
+    //READ FILE
+
+
+    std::vector<pinClass> components;
+
+    for (int i=0; i < lines.size(); i++) {
+        //
+    }
+
+
+
+//    qDebug()<<QString::fromStdString(pinList.at(0).at(1));
+
+    return Backend::vectorToQList(lines);
 }

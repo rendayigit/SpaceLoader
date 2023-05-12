@@ -73,8 +73,8 @@
         <file>qml/components/Scoc3/confR.qml</file>
         <file>qml/components/Scoc3/confWCombo.qml</file>
         <file>qml/components/Scoc3/confWText.qml</file>
-        <file>assets/svg_images/push-pin.svg</file>
-        <file>assets/svg_images/push-pin-slash-fill.svg</file>
         <file>qml/components/Scoc3/registerTab.qml</file>
+        <file>assets/svg_images/push-pin-fill.svg</file>
+        <file>assets/svg_images/push-pin-bold.svg</file>
     </qresource>
 </RCC>

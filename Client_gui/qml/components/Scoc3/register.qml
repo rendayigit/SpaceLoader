@@ -45,31 +45,6 @@ Button {
         visible: alert
     }
 
-
-    Button {
-        anchors.right: parent.right
-
-        background: Rectangle{
-            color: "#4891d9"
-            radius: 10
-        }
-
-        height: parent.height
-        width: parent.height
-
-        text: "-"
-
-        onPressed: background.color = "#a3bed0"
-        onReleased: { background.color = "#4891d9"
-            if (hovered) {background.color = "#74a8db"}
-            else {background.color = "#4891d9"}
-        }
-
-        onClicked: {
-            console.writeline("small but 1 pressed")
-        }
-    }
-
     Button {
         anchors.left: parent.left
 
@@ -81,14 +56,15 @@ Button {
         height: parent.height
         width: parent.height
 
-        text: "+"
-//        Image {
-//            id: name
-//            source: "../assets/svg_images/push-pin.svg"
-//            width: parent.width
-//            height: parent.height
-//            anchors.centerIn: parent
-//        }
+//        text: "+"
+        Image {
+            id: svgdeneme
+            source: "../../../assets/svg_images/push-pin-bold.svg"
+            //source: "../../../assets/svg_images/push-pin-fill.svg"
+            width: parent.width-13
+            height: parent.height-13
+            anchors.centerIn: parent
+        }
 
         onPressed: background.color = "#a3bed0"
         onReleased: { background.color = "#4891d9"
@@ -97,7 +73,7 @@ Button {
         }
 
         onClicked: {
-            console.writeline("small but 2 pressed")
+            console.log("small but 2 pressed")
         }
     }
 

@@ -313,6 +313,9 @@ Rectangle {
                             id: registerTabRow
                             spacing: 1
 
+                            property var buttonNameList: [];
+                            property var buttonModuleList: [];
+
                             // Create multiple buttons with different text
 
 
@@ -342,7 +345,7 @@ Rectangle {
     ScrollView {
         id: moduleScrollView
         anchors.left: parent.left
-        anchors.bottom: parent.bottom
+        anchors.bottom: pinBoard.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
@@ -360,7 +363,7 @@ Rectangle {
     ScrollView {
         id: registerScrollView
         anchors.left: moduleScrollView.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: pinBoard.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
@@ -378,7 +381,7 @@ Rectangle {
     ScrollView {
         id: fieldScrollView
         anchors.left: registerScrollView.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: pinBoard.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
@@ -396,7 +399,7 @@ Rectangle {
     Rectangle {
         id: registerPlaceHolder
         anchors.left: moduleScrollView.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: pinBoard.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
@@ -422,7 +425,7 @@ Rectangle {
     Rectangle {
         id: fieldPlaceHolder
         anchors.left: registerScrollView.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: pinBoard.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
@@ -449,7 +452,7 @@ Rectangle {
     ScrollView {
         id: confScrollView
         anchors.left: fieldScrollView.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: pinBoard.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
@@ -467,7 +470,7 @@ Rectangle {
     Rectangle {
         id: confPlaceHolder
         anchors.left: fieldScrollView.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: pinBoard.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
@@ -487,6 +490,50 @@ Rectangle {
             wrapMode: Text.Wrap
             width: parent.width - 16
 
+        }
+    }
+
+    Rectangle {
+        id: pinBoard
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 4
+        anchors.bottomMargin: 4
+        anchors.topMargin: 4
+        height: 80
+        width: parent.width
+        color: "#4d4d63"
+        radius: 10
+        border.color: "#8f8fa8"
+
+        Rectangle {
+            id: pinBoardHeader
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: 120
+            height: 80
+
+            color: "#4d4d63"
+            radius: 10
+            border.color: "#8f8fa8"
+
+            //TRIAL AREA
+            Component.onCompleted: {
+                backend.returnPinConfig();
+
+            }
+            //TRIAL AREA
+
+            Text {
+                color: "#ffffff"
+                anchors.centerIn: parent
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                text: "Pin Board"
+                font.pointSize: 12
+            }
         }
     }
 
@@ -541,7 +588,6 @@ Rectangle {
         clearModules()
         backend.checkAllConfigValues(-1)
         var fileList = backend.getFileList()
-        console.log(fileList.length)
         for(var i = 0; i < fileList.length; i++) {
             var name = fileList[i].split(".")[0]
             var moduleItem = Qt.createComponent("../components/Scoc3/module.qml")
@@ -591,14 +637,41 @@ Rectangle {
 
     function createRegisterTabAlias(registerId) {
         var name = backend.getRegisterList()[registerId]
-        var registerItem = Qt.createComponent("../components/Scoc3/registerTab.qml")
-        .createObject(registerTabRow, {
-                          "registerId": registerId,
-                          "text": name,
-                          "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter,
-                          "alert": backend.checkAllConfigValues(1, (backend.getFileList()[backend.returnGlobalModuleId()].split(".")[0]+"."+name)),
-                      });
-        registerItem.registerClicked.connect(registerButtonClicked)
+
+        var duplicateAlert = false
+
+        for (var i=0; i<registerTabRow.children.length; i++) {
+            if ((name === registerTabRow.buttonNameList[i]) && (backend.returnGlobalModuleId() === registerTabRow.buttonModuleList[i])){duplicateAlert = true;}
+        }
+
+        if (!duplicateAlert) {
+            var registerItem = Qt.createComponent("../components/Scoc3/registerTab.qml")
+            .createObject(registerTabRow, {
+                              "registerId": registerId,
+                              "moduleId": backend.returnGlobalModuleId(),
+                              "text": name,
+                              "Layout.alignment": Qt.AlignHCenter | Qt.AlignVCenter,
+                              "alert": backend.checkAllConfigValues(1, (backend.getFileList()[backend.returnGlobalModuleId()].split(".")[0]+"."+name)),
+                          });
+            registerItem.registerClicked.connect(registerButtonClicked)
+            registerTabRow.buttonNameList.push(name)
+            registerTabRow.buttonModuleList.push(backend.returnGlobalModuleId())
+        }
+    }
+
+    function destroyRegisterTabAlias(registerId, moduleId) {
+        var name = backend.getRegisterList()[registerId]
+        console.log("PROCEEDING TO DESTROY", name)
+
+        for (var i=0; i<registerTabRow.children.length; i++) {
+            if ((name === registerTabRow.buttonNameList[i]) && (true)) {
+                //moduleId === registerTabRow.buttonModuleList[i] instead of true ^
+                registerTabRow.children[i].destroy()
+                console.log("FLAG")
+            }
+        }
+
+
     }
 
     //REGISTER BUTTONS END

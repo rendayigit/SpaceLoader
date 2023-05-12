@@ -4,6 +4,7 @@
 #include "../lib/TCP/client/tcpClient.h"  // TODO - dont use relative include paths
 #include "Scoc3/treeNode.h"
 
+
 class Backend : public TCPClient {
     Q_OBJECT
 
@@ -84,6 +85,7 @@ class Backend : public TCPClient {
     Q_INVOKABLE void setGlobalFieldId(int fieldId);
     Q_INVOKABLE int checkAllConfigValues(int mode, QString check = "");
     Q_INVOKABLE void checkAndSaveAll(QString newFileName);
+    Q_INVOKABLE QList<QString> returnPinConfig();
 
    signals:
     void getReceivedText(QString text);
