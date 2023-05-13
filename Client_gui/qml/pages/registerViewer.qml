@@ -501,7 +501,7 @@ Rectangle {
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
         anchors.topMargin: 4
-        height: 80
+        height: 73
         width: parent.width
         color: "#4d4d63"
         radius: 10
@@ -513,7 +513,7 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: 120
-            height: 80
+            height: parent.height
 
             color: "#4d4d63"
             radius: 10
@@ -521,7 +521,9 @@ Rectangle {
 
             //TRIAL AREA
             Component.onCompleted: {
-                backend.returnPinConfig();
+                createPinButtons()
+
+
 
             }
             //TRIAL AREA
@@ -535,7 +537,67 @@ Rectangle {
                 font.pointSize: 12
             }
         }
+
+        Flickable {
+                id: flickablePinBoard
+                width: parent.width
+                height: parent.height
+                anchors.left: pinBoardHeader.right
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.topMargin: 5
+                anchors.leftMargin: 5
+                anchors.rightMargin: 5
+
+                contentWidth: column.width
+                contentHeight: column.height
+                flickableDirection: Flickable.HorizontalFlick
+                boundsBehavior: Flickable.StopAtBounds
+                clip: true
+
+                Column {
+                    id: column
+                    spacing: 5
+                    height: parent.height
+
+                    Row {
+                        spacing: 5
+                        id: pinButtonRow0
+                    }
+
+                    Row {
+                        spacing: 5
+                        id: pinButtonRow1
+                    }
+                }
+
+            }
+
+        Rectangle {
+            id: pinBoardPlaceHolder
+            anchors.verticalCenter: pinBoard.verticalCenter
+            anchors.horizontalCenter: flickablePinBoard.horizontalCenter
+            width: flickablePinBoard.width-2
+            height: pinBoard.height-2
+            clip: true
+            color: "#4d4d63"
+            radius: 10
+
+            Text{
+                text: "Pinned buttons can be seen here."
+                horizontalAlignment: Text.AlignHCenter
+                color: "#FFFFFF"
+                font.pointSize: 10
+                anchors.centerIn: parent
+                wrapMode: Text.Wrap
+
+
+            }
+        }
     }
+
+
 
 
     function createConfScreen(fieldId) {
@@ -699,6 +761,92 @@ Rectangle {
         createConfScreen(fieldId)
     }
     //FIELD BUTTONS END
+
+    //PIN BUTTONS START
+    function createPinButtons() {
+        var pinButtonCount = backend.returnPinConfig("init")
+        if (pinButtonCount === 0) {
+            pinBoardPlaceHolder.visible = true
+        }
+        else {
+            pinBoardPlaceHolder.visible = false
+        }
+
+        for (var i=0; i<pinButtonCount; i++) {
+            var pinConfig = backend.returnPinConfig(i)
+            var pinType = parseInt(pinConfig[0])
+
+
+            if (i%2 == 0){
+                switch (pinType) {
+                    case 1:
+                        var pinItem00 = Qt.createComponent("../components/Scoc3/pinButton.qml")
+                        .createObject(pinButtonRow0, {
+                                        "text": pinConfig[pinType],
+                                        "type": pinType,
+                                        "module": pinConfig[1]
+                                      });
+                        break;
+                    case 2:
+                        var pinItem01 = Qt.createComponent("../components/Scoc3/pinButton.qml")
+                        .createObject(pinButtonRow0, {
+                                        "text": pinConfig[pinType],
+                                        "type": pinType,
+                                        "module": pinConfig[1],
+                                        "reg": pinConfig[2]
+                                      });
+                        break;
+                    case 3:
+                        var pinItem02 = Qt.createComponent("../components/Scoc3/pinButton.qml")
+                        .createObject(pinButtonRow0, {
+                                        "text": pinConfig[pinType],
+                                        "type": pinType,
+                                        "module": pinConfig[1],
+                                        "reg": pinConfig[2],
+                                        "field": pinConfig[3]
+                                      });
+                        break;
+                }
+
+            }
+            else {
+                switch (pinType) {
+                    case 1:
+                        var pinItem10 = Qt.createComponent("../components/Scoc3/pinButton.qml")
+                        .createObject(pinButtonRow1, {
+                                        "text": pinConfig[pinType],
+                                        "type": pinType,
+                                        "module": pinConfig[1]
+                                      });
+                        break;
+                    case 2:
+                        var pinItem11 = Qt.createComponent("../components/Scoc3/pinButton.qml")
+                        .createObject(pinButtonRow1, {
+                                        "text": pinConfig[pinType],
+                                        "type": pinType,
+                                        "module": pinConfig[1],
+                                        "reg": pinConfig[2]
+                                      });
+                        break;
+                    case 3:
+                        var pinItem12 = Qt.createComponent("../components/Scoc3/pinButton.qml")
+                        .createObject(pinButtonRow1, {
+                                        "text": pinConfig[pinType],
+                                        "type": pinType,
+                                        "module": pinConfig[1],
+                                        "reg": pinConfig[2],
+                                        "field": pinConfig[3]
+                                      });
+                        break;
+                }
+            }
+
+
+        }
+
+    }
+
+    //PIN BUTTONS END
 
     function clearModules() {
         for (var i = 0 ; i < moduleColumn.children.length; i++) {

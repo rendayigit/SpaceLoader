@@ -16,7 +16,7 @@
 #include "../lib/YAML/yaml.h"
 #include "egse.h"
 #include "listener.h"
-#include "Scoc3/pinClass.h"
+
 
 Listener *listener;
 Egse *egse;
@@ -1019,8 +1019,9 @@ QList<QString> Backend::vectorToQList(std::vector<std::string> vector) {
     return qlist;
 }
 
-QList<QString> Backend::returnPinConfig(){
-    //READ FILE
+
+int Backend::returnPinConfig(QString initSignal) {
+    // READ_FILE
     ifstream infile;
     infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/pinSlots.yaml");
     std::vector<std::string> lines;
@@ -1031,18 +1032,65 @@ QList<QString> Backend::returnPinConfig(){
     }
 
     infile.close();
-    //READ FILE
+    // READ_FILE
+
+    globalPinConfig.clear();
+
+    for (int i=0; i<lines.size(); i++) {
+        int dotCounter = 0;
+        std::vector<std::string> buffer;
+        buffer.push_back("0");
+        std::string temp;
+        for (int j=2; j<lines.at(i).size(); j++) {
+
+            if (lines.at(i).at(j)=='.') {
+                dotCounter++;
+                buffer.at(0) = std::to_string(dotCounter);
+                buffer.push_back(temp);
+                temp.clear();
 
 
-    std::vector<pinClass> components;
+            }
+            else {
+                temp.push_back(lines.at(i).at(j));
+                if (j==lines.at(i).size()-1) {
+                    dotCounter++;
+                    buffer.at(0) = std::to_string(dotCounter);
+                    buffer.push_back(temp);
+                    temp.clear();
+                }
+            }
+        }
 
-    for (int i=0; i < lines.size(); i++) {
-        //
+        globalPinConfig.push_back(Backend::vectorToQList(buffer));
+
     }
 
-
-
-//    qDebug()<<QString::fromStdString(pinList.at(0).at(1));
-
-    return Backend::vectorToQList(lines);
+    return globalPinConfig.size();
 }
+
+QList<QString> Backend::returnPinConfig(int index) {
+    return globalPinConfig.at(index);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

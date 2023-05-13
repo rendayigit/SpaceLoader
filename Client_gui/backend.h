@@ -85,7 +85,8 @@ class Backend : public TCPClient {
     Q_INVOKABLE void setGlobalFieldId(int fieldId);
     Q_INVOKABLE int checkAllConfigValues(int mode, QString check = "");
     Q_INVOKABLE void checkAndSaveAll(QString newFileName);
-    Q_INVOKABLE QList<QString> returnPinConfig();
+    Q_INVOKABLE int returnPinConfig(QString initSignal);
+    Q_INVOKABLE QList<QString> returnPinConfig(int index);
 
    signals:
     void getReceivedText(QString text);
@@ -122,6 +123,7 @@ class Backend : public TCPClient {
     int globalConfigId = 0;
     std::string filePath;
     std::string configFilePath = "../src/conf/default.yaml";
+    std::vector<QList<QString>> globalPinConfig;
 };
 
 #endif  // BACKEND_H
