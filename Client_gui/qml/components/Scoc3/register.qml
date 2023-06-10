@@ -14,6 +14,7 @@ Button {
     width: rootObject.width / 6
 
     background: Rectangle {
+        id: registerButtonBackground
         color: "#4891d9"
         radius: 10
     }
@@ -56,7 +57,6 @@ Button {
         height: parent.height
         width: parent.height
 
-//        text: "+"
         Image {
             id: svgdeneme
             source: "../../../assets/svg_images/push-pin-bold.svg"
@@ -72,8 +72,22 @@ Button {
             else {background.color = "#4891d9"}
         }
 
+        onHoveredChanged: {
+            if (hovered) {
+                background.color = "#74a8db"
+                registerButtonBackground.color = "#4891d9"
+            }
+            else {
+                background.color = "#4891d9"
+                if (parent.hovered) {
+                    registerButtonBackground.color = "#74a8db"
+                }
+            }
+        }
+
         onClicked: {
             console.log("small but 2 pressed")
+            backend.addToPinConfig("reg", registerId);
         }
     }
 

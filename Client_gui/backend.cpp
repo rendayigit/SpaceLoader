@@ -1061,7 +1061,6 @@ int Backend::returnPinConfig(QString initSignal) {
                 }
             }
         }
-
         globalPinConfig.push_back(Backend::vectorToQList(buffer));
 
     }
@@ -1071,6 +1070,107 @@ int Backend::returnPinConfig(QString initSignal) {
 
 QList<QString> Backend::returnPinConfig(int index) {
     return globalPinConfig.at(index);
+}
+
+void Backend::addToPinConfig(QString componentType, QString componentId) {
+    int componentTypeInt;
+    if (componentType.toStdString() == "module") {componentTypeInt = 1;}
+    else if (componentType.toStdString() == "reg") {componentTypeInt = 2;}
+    else if (componentType.toStdString() == "field") {componentTypeInt = 3;}
+    else {componentTypeInt = componentType.toInt();}
+
+    std::string componentPath;
+    bool found = false;
+    switch (componentTypeInt) {
+    case 1: {
+        std::string tempModuleName = Backend::getFileList().at(componentId.toInt()).toStdString();
+        std::string moduleName;
+        foreach (char it, tempModuleName) {
+            if (it == '.'){break;}
+            moduleName.push_back(it);
+        }
+        componentPath = "- " + moduleName;
+
+        for (int i = 0; i < Backend::returnPinConfig("init"); i++) {
+            if(globalPinConfig.at(i).at(0) == "1"){
+                if (globalPinConfig.at(i).at(1).split('\r').at(0) == QString::fromStdString(moduleName)){
+                    found = true;
+                }
+            }
+        }
+
+        break;
+    }
+    case 2: {
+        std::string tempModuleName = Backend::getFileList().at(globalModuleId).toStdString();
+        std::string moduleName;
+        foreach (char it, tempModuleName) {
+            if (it == '.'){break;}
+            moduleName.push_back(it);
+        }
+
+        std::string regName = Backend::getRegisterList().at(componentId.toInt()).toStdString();
+        componentPath = "- " + moduleName + '.' + regName;
+
+        for (int i = 0; i < Backend::returnPinConfig("init"); i++) {
+            if(globalPinConfig.at(i).at(0) == "2"){
+                if ((globalPinConfig.at(i).at(1) == QString::fromStdString(moduleName))
+                    && (globalPinConfig.at(i).at(2).split('\r').at(0) == QString::fromStdString(regName))){
+                    found = true;
+                }
+            }
+        }
+
+        break;
+    }
+    case 3: {
+        std::string tempModuleName = Backend::getFileList().at(globalModuleId).toStdString();
+        std::string moduleName;
+        foreach (char it, tempModuleName) {
+            if (it == '.'){break;}
+            moduleName.push_back(it);
+        }
+
+        std::string regName = Backend::getRegisterList().at(globalRegId.toInt()).toStdString();
+
+        std::string fieldName = Backend::getFieldList(globalRegId).at(componentId.toInt()).toStdString();
+
+        componentPath = "- " + moduleName + '.' + regName + '.' + fieldName;
+
+        for (int i = 0; i < Backend::returnPinConfig("init"); i++) {
+            if(globalPinConfig.at(i).at(0) == "3"){
+                if ((globalPinConfig.at(i).at(1) == QString::fromStdString(moduleName))
+                    && (globalPinConfig.at(i).at(2) == QString::fromStdString(regName))
+                    && (globalPinConfig.at(i).at(3).split('\r').at(0) == QString::fromStdString(fieldName))){
+                    found = true;
+                }
+            }
+        }
+
+        break;
+    }
+    }
+
+    if (!found) {
+        qDebug()<< QString::fromStdString(componentPath)<< "WILL BE ADDED TO PIN AREA";
+        std::ofstream outFile;
+        outFile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/pinSlots.yaml", std::ios::app);
+        if (outFile.is_open()) {
+            // Write the line at the end of the file
+            outFile << componentPath << std::endl; //ENDLINE SILMEYI DENE !!!!!!
+
+
+            outFile.close();
+            qDebug() << "Line added successfully.";
+        } else {
+            qDebug() << "Failed to open the file.";
+        }
+    }
+    else {
+        qDebug()<< "COMPONENT IS ALREADY IN THE PIN LIST";
+    }
+
+
 }
 
 
