@@ -1072,15 +1072,14 @@ QList<QString> Backend::returnPinConfig(int index) {
     return globalPinConfig.at(index);
 }
 
-void Backend::addToPinConfig(QString componentType, QString componentId) {
+int Backend::findPinConfig(QString componentType, QString componentId) {
     int componentTypeInt;
     if (componentType.toStdString() == "module") {componentTypeInt = 1;}
     else if (componentType.toStdString() == "reg") {componentTypeInt = 2;}
     else if (componentType.toStdString() == "field") {componentTypeInt = 3;}
     else {componentTypeInt = componentType.toInt();}
 
-    std::string componentPath;
-    bool found = false;
+    int foundOn = -1;
     switch (componentTypeInt) {
     case 1: {
         std::string tempModuleName = Backend::getFileList().at(componentId.toInt()).toStdString();
@@ -1089,12 +1088,11 @@ void Backend::addToPinConfig(QString componentType, QString componentId) {
             if (it == '.'){break;}
             moduleName.push_back(it);
         }
-        componentPath = "- " + moduleName;
 
         for (int i = 0; i < Backend::returnPinConfig("init"); i++) {
             if(globalPinConfig.at(i).at(0) == "1"){
                 if (globalPinConfig.at(i).at(1).split('\r').at(0) == QString::fromStdString(moduleName)){
-                    found = true;
+                    foundOn = i;
                 }
             }
         }
@@ -1110,13 +1108,12 @@ void Backend::addToPinConfig(QString componentType, QString componentId) {
         }
 
         std::string regName = Backend::getRegisterList().at(componentId.toInt()).toStdString();
-        componentPath = "- " + moduleName + '.' + regName;
 
         for (int i = 0; i < Backend::returnPinConfig("init"); i++) {
             if(globalPinConfig.at(i).at(0) == "2"){
                 if ((globalPinConfig.at(i).at(1) == QString::fromStdString(moduleName))
                     && (globalPinConfig.at(i).at(2).split('\r').at(0) == QString::fromStdString(regName))){
-                    found = true;
+                    foundOn = i;
                 }
             }
         }
@@ -1135,14 +1132,13 @@ void Backend::addToPinConfig(QString componentType, QString componentId) {
 
         std::string fieldName = Backend::getFieldList(globalRegId).at(componentId.toInt()).toStdString();
 
-        componentPath = "- " + moduleName + '.' + regName + '.' + fieldName;
 
         for (int i = 0; i < Backend::returnPinConfig("init"); i++) {
             if(globalPinConfig.at(i).at(0) == "3"){
                 if ((globalPinConfig.at(i).at(1) == QString::fromStdString(moduleName))
                     && (globalPinConfig.at(i).at(2) == QString::fromStdString(regName))
                     && (globalPinConfig.at(i).at(3).split('\r').at(0) == QString::fromStdString(fieldName))){
-                    found = true;
+                    foundOn = i;
                 }
             }
         }
@@ -1151,13 +1147,69 @@ void Backend::addToPinConfig(QString componentType, QString componentId) {
     }
     }
 
-    if (!found) {
+    return foundOn;
+}
+
+void Backend::addToPinConfig(QString componentType, QString componentId) {
+    int componentTypeInt;
+    if (componentType.toStdString() == "module") {componentTypeInt = 1;}
+    else if (componentType.toStdString() == "reg") {componentTypeInt = 2;}
+    else if (componentType.toStdString() == "field") {componentTypeInt = 3;}
+    else {componentTypeInt = componentType.toInt();}
+
+    int foundOn = Backend::findPinConfig(componentType, componentId);
+
+    if(foundOn == -1) {
+        std::string componentPath;
+        switch (componentTypeInt) {
+        case 1: {
+            std::string tempModuleName = Backend::getFileList().at(componentId.toInt()).toStdString();
+            std::string moduleName;
+            foreach (char it, tempModuleName) {
+                if (it == '.'){break;}
+                moduleName.push_back(it);
+            }
+            componentPath = "- " + moduleName;
+
+            break;
+        }
+        case 2: {
+            std::string tempModuleName = Backend::getFileList().at(globalModuleId).toStdString();
+            std::string moduleName;
+            foreach (char it, tempModuleName) {
+                if (it == '.'){break;}
+                moduleName.push_back(it);
+            }
+
+            std::string regName = Backend::getRegisterList().at(componentId.toInt()).toStdString();
+            componentPath = "- " + moduleName + '.' + regName;
+
+            break;
+        }
+        case 3: {
+            std::string tempModuleName = Backend::getFileList().at(globalModuleId).toStdString();
+            std::string moduleName;
+            foreach (char it, tempModuleName) {
+                if (it == '.'){break;}
+                moduleName.push_back(it);
+            }
+
+            std::string regName = Backend::getRegisterList().at(globalRegId.toInt()).toStdString();
+
+            std::string fieldName = Backend::getFieldList(globalRegId).at(componentId.toInt()).toStdString();
+
+            componentPath = "- " + moduleName + '.' + regName + '.' + fieldName;
+
+            break;
+        }
+        }
+
         qDebug()<< QString::fromStdString(componentPath)<< "WILL BE ADDED TO PIN AREA";
         std::ofstream outFile;
         outFile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/pinSlots.yaml", std::ios::app);
         if (outFile.is_open()) {
             // Write the line at the end of the file
-            outFile << componentPath << std::endl; //ENDLINE SILMEYI DENE !!!!!!
+            outFile << componentPath << std::endl;
 
 
             outFile.close();
@@ -1166,14 +1218,99 @@ void Backend::addToPinConfig(QString componentType, QString componentId) {
             qDebug() << "Failed to open the file.";
         }
     }
+
     else {
         qDebug()<< "COMPONENT IS ALREADY IN THE PIN LIST";
     }
 
-
 }
 
+void Backend::removeFromPinConfig(QString componentType, QString componentId) {
+    int lineNumber = Backend::findPinConfig(componentType, componentId);
+    if (lineNumber != -1){
+        std::string filename = Path::getInstance().getSetupDir().toStdString() + "/Scoc3/pinSlots.yaml";
+        std::ifstream inputFile(filename);
+        std::vector<std::string> lines;
 
+        if (inputFile.is_open()) {
+            std::string line;
+
+                    // Read all lines from the file
+            while (std::getline(inputFile, line)) {
+                lines.push_back(line);
+            }
+
+            inputFile.close();
+
+                    // Check if the line number is valid
+            if (lineNumber >= 0 && lineNumber <= lines.size()) {
+                // Remove the line from the vector
+                lines.erase(lines.begin() + lineNumber);
+
+                std::ofstream outputFile(filename);
+
+                if (outputFile.is_open()) {
+                    // Write the modified content back to the file
+                    for (const auto& line : lines) {
+                        outputFile << line << std::endl;
+                    }
+
+                    outputFile.close();
+                    qDebug() << "Line " << lineNumber << " deleted successfully.";
+                } else {
+                    qDebug() << "pinConfig.yaml: Failed to open the file for writing.";
+                }
+            } else {
+                qDebug() << "pinConfig.yaml: Invalid line number.";
+            }
+        } else {
+            qDebug() << "pinConfig.yaml: Failed to open the file for reading.";
+        }
+    }
+}
+
+void Backend::removeFromPinConfig(int lineNumber) {
+    if (lineNumber != -1){
+        std::string filename = Path::getInstance().getSetupDir().toStdString() + "/Scoc3/pinSlots.yaml";
+        std::ifstream inputFile(filename);
+        std::vector<std::string> lines;
+
+        if (inputFile.is_open()) {
+            std::string line;
+
+                    // Read all lines from the file
+            while (std::getline(inputFile, line)) {
+                lines.push_back(line);
+            }
+
+            inputFile.close();
+
+                    // Check if the line number is valid
+            if (lineNumber >= 0 && lineNumber <= lines.size()) {
+                // Remove the line from the vector
+                lines.erase(lines.begin() + lineNumber);
+
+                std::ofstream outputFile(filename);
+
+                if (outputFile.is_open()) {
+                    // Write the modified content back to the file
+                    for (const auto& line : lines) {
+                        outputFile << line << std::endl;
+                    }
+
+                    outputFile.close();
+                    qDebug() << "Line " << lineNumber << " deleted successfully.";
+                } else {
+                    qDebug() << "pinConfig.yaml: Failed to open the file for writing.";
+                }
+            } else {
+                qDebug() << "pinConfig.yaml: Invalid line number.";
+            }
+        } else {
+            qDebug() << "pinConfig.yaml: Failed to open the file for reading.";
+        }
+    }
+}
 
 
 

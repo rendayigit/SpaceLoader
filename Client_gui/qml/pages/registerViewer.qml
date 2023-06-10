@@ -203,17 +203,7 @@ Rectangle {
             }
 
             onClicked: {
-                createModuleButtons()
-                if (!registerPlaceHolder.visible) {
-                    createRegisterButtons(backend.returnGlobalModuleId())
-                    if (!fieldPlaceHolder.visible) {
-                        createFieldButtons(backend.returnGlobalRegId())
-                        if (!confPlaceHolder.visible) {
-                            createConfScreen(backend.returnGlobalFieldId())
-                        }
-                    }
-                }
-
+                refresh()
             }
         }
 
@@ -598,7 +588,19 @@ Rectangle {
     }
 
 
-
+    function refresh() {
+        createPinButtons()
+        createModuleButtons()
+        if (!registerPlaceHolder.visible) {
+            createRegisterButtons(backend.returnGlobalModuleId())
+            if (!fieldPlaceHolder.visible) {
+                createFieldButtons(backend.returnGlobalRegId())
+                if (!confPlaceHolder.visible) {
+                    createConfScreen(backend.returnGlobalFieldId())
+                }
+            }
+        }
+    }
 
     function createConfScreen(fieldId) {
         clearConf()
@@ -764,6 +766,7 @@ Rectangle {
 
     //PIN BUTTONS START
     function createPinButtons() {
+        clearPinBoard()
         var pinButtonCount = backend.returnPinConfig("init")
         if (pinButtonCount === 0) {
             pinBoardPlaceHolder.visible = true
@@ -782,6 +785,7 @@ Rectangle {
                     case 1:
                         var pinItem00 = Qt.createComponent("../components/Scoc3/pinButton.qml")
                         .createObject(pinButtonRow0, {
+                                        "pinId": i,
                                         "text": pinConfig[pinType],
                                         "type": pinType,
                                         "module": pinConfig[1]
@@ -790,6 +794,7 @@ Rectangle {
                     case 2:
                         var pinItem01 = Qt.createComponent("../components/Scoc3/pinButton.qml")
                         .createObject(pinButtonRow0, {
+                                        "pinId": i,
                                         "text": pinConfig[pinType],
                                         "type": pinType,
                                         "module": pinConfig[1],
@@ -799,6 +804,7 @@ Rectangle {
                     case 3:
                         var pinItem02 = Qt.createComponent("../components/Scoc3/pinButton.qml")
                         .createObject(pinButtonRow0, {
+                                        "pinId": i,
                                         "text": pinConfig[pinType],
                                         "type": pinType,
                                         "module": pinConfig[1],
@@ -814,6 +820,7 @@ Rectangle {
                     case 1:
                         var pinItem10 = Qt.createComponent("../components/Scoc3/pinButton.qml")
                         .createObject(pinButtonRow1, {
+                                        "pinId": i,
                                         "text": pinConfig[pinType],
                                         "type": pinType,
                                         "module": pinConfig[1]
@@ -822,6 +829,7 @@ Rectangle {
                     case 2:
                         var pinItem11 = Qt.createComponent("../components/Scoc3/pinButton.qml")
                         .createObject(pinButtonRow1, {
+                                        "pinId": i,
                                         "text": pinConfig[pinType],
                                         "type": pinType,
                                         "module": pinConfig[1],
@@ -831,6 +839,7 @@ Rectangle {
                     case 3:
                         var pinItem12 = Qt.createComponent("../components/Scoc3/pinButton.qml")
                         .createObject(pinButtonRow1, {
+                                        "pinId": i,
                                         "text": pinConfig[pinType],
                                         "type": pinType,
                                         "module": pinConfig[1],
@@ -873,6 +882,15 @@ Rectangle {
         backend.resetConfigId()
         for (var i = 0 ; i < confColumn.children.length; i++) {
             confColumn.children[i].destroy()
+        }
+    }
+
+    function clearPinBoard(){
+        for (var i = 0 ; i < pinButtonRow0.children.length; i++) {
+            pinButtonRow0.children[i].destroy()
+        }
+        for (var i = 0 ; i < pinButtonRow1.children.length; i++) {
+            pinButtonRow1.children[i].destroy()
         }
     }
 

@@ -56,9 +56,7 @@ Button {
         width: parent.height
 
         Image {
-            id: svgdeneme
-            source: "../../../assets/svg_images/push-pin-bold.svg"
-            //source: "../../../assets/svg_images/push-pin-fill.svg"
+            id: pinButtonImage
             width: parent.width-13
             height: parent.height-13
             anchors.centerIn: parent
@@ -85,7 +83,26 @@ Button {
 
         onClicked: {
             console.log("small but 2 pressed")
-            backend.addToPinConfig("module", moduleId);
+            if (backend.findPinConfig("module", moduleId) !== -1) {
+                backend.removeFromPinConfig("module", moduleId);
+                pinButtonImage.source = "../../../assets/svg_images/push-pin-fill.svg"
+            }
+            else {
+                backend.addToPinConfig("module", moduleId);
+                pinButtonImage.source = "../../../assets/svg_images/push-pin-bold.svg"
+            }
+
+            createModuleButtons()
+            createPinButtons()
+        }
+
+        Component.onCompleted: {
+            if (backend.findPinConfig("module", moduleId) !== -1) {
+                pinButtonImage.source = "../../../assets/svg_images/push-pin-fill.svg"
+            }
+            else {
+                pinButtonImage.source = "../../../assets/svg_images/push-pin-bold.svg"
+            }
         }
     }
 }

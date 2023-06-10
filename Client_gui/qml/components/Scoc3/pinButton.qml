@@ -12,10 +12,12 @@ Button {
     property string reg
     property var regId
     property string field
+    property string pinId
 
     width: rootObject.width / 6
 
     background: Rectangle {
+        id: pinButtonBackground
         color: "#4891d9"
         radius: 10
     }
@@ -65,6 +67,81 @@ Button {
         case 3:
             ToolTip.text = qsTr(module+" > "+reg+" > "+field)
             break;
+        }
+    }
+
+    Button {
+        anchors.left: parent.left
+
+        background: Rectangle{
+            color: "#4891d9"
+            radius: 10
+        }
+
+        height: parent.height
+        width: parent.height
+
+        Image {
+            source: "../../../assets/svg_images/push-pin-fill.svg"
+            width: parent.width-13
+            height: parent.height-13
+            anchors.centerIn: parent
+        }
+
+        onPressed: background.color = "#a3bed0"
+        onReleased: { background.color = "#4891d9"
+            if (hovered) {background.color = "#74a8db"}
+            else {background.color = "#4891d9"}
+        }
+
+        onHoveredChanged: {
+            if (hovered) {
+                background.color = "#74a8db"
+                pinButtonBackground.color = "#4891d9"
+            }
+            else {
+                background.color = "#4891d9"
+                if (parent.hovered) {
+                    pinButtonBackground.color = "#74a8db"
+                }
+            }
+        }
+
+        onClicked: {
+            console.log("pin small but 2 pressed")
+            backend.removeFromPinConfig(pinId);
+//            createPinButtons()
+            refresh()
+
+//            var tempModuleId = backend.returnGlobalModuleId()
+//            var tempRegisterId = backend.returnGlobalRegId()
+//            var tempFieldId = backend.returnGlobalFieldId()
+
+//            switch (type) {
+//            case 1:
+////                var tempModuleId = backend.returnGlobalModuleId()
+//                createModuleButtons()
+////                backend.setGlobalModuleId(tempModuleId)
+//                break;
+//            case 2:
+//                if (!registerPlaceHolder.visible){
+////                   var tempRegisterId = backend.returnGlobalRegId()
+//                   createRegisterButtons()
+////                   backend.setGlobalRegId(tempRegisterId)
+//                }
+//                break;
+//            case 3:
+//                if (!fieldPlaceHolder.visible){
+////                    var tempFieldId = backend.returnGlobalFieldId()
+//                    createFieldButtons()
+////                    backend.setGlobalFieldId(tempFieldId)
+//                }
+//                break;
+//            }
+
+//            backend.setGlobalModuleId(tempModuleId)
+//            backend.setGlobalRegId(tempRegisterId)
+//            backend.setGlobalFieldId(tempFieldId)
         }
     }
 

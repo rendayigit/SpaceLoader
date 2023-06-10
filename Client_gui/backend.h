@@ -87,7 +87,10 @@ class Backend : public TCPClient {
     Q_INVOKABLE void checkAndSaveAll(QString newFileName);
     Q_INVOKABLE int returnPinConfig(QString initSignal);
     Q_INVOKABLE QList<QString> returnPinConfig(int index);
+    Q_INVOKABLE int findPinConfig(QString componentType, QString componentId);
     Q_INVOKABLE void addToPinConfig(QString componentType, QString componentId);
+    Q_INVOKABLE void removeFromPinConfig(QString componentType, QString componentId);
+    Q_INVOKABLE void removeFromPinConfig(int lineNumber);
 
    signals:
     void getReceivedText(QString text);
