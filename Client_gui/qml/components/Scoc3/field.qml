@@ -94,7 +94,7 @@ Button {
                 pinButtonImage.source = "../../../assets/svg_images/push-pin-bold.svg"
             }
 
-            createFieldButtons()
+            createFieldButtons(backend.returnGlobalRegId())
             createPinButtons()
         }
 
