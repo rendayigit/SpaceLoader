@@ -709,6 +709,8 @@ Rectangle {
                 registerTabRow.children[i].destroy()
             }
         }
+        
+        
     }
 
     //REGISTER BUTTONS END

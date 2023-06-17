@@ -77,5 +77,6 @@
         <file>assets/svg_images/push-pin-fill.svg</file>
         <file>assets/svg_images/push-pin-bold.svg</file>
         <file>qml/components/Scoc3/pinButton.qml</file>
+        <file>assets/svg_images/close-outline.svg</file>
     </qresource>
 </RCC>

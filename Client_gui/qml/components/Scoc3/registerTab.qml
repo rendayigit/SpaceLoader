@@ -10,8 +10,6 @@ Button {
     property string moduleId;
     property bool alert;
 
-    signal registerClicked(string registerId);
-
     width: 150
     height: 20
     background: Rectangle {
@@ -30,12 +28,18 @@ Button {
     }
 
     onClicked: {
-        //console.log(registerId)
         backend.setGlobalFieldId(-1)
-        console.log(moduleId)
         backend.setGlobalModuleId(parseInt(moduleId))
         clearConf()
         createFieldButtons(registerId)
+    }
+
+    ToolTip.delay: 500
+    ToolTip.timeout: 5000
+    ToolTip.visible: hovered
+
+    Component.onCompleted: {
+        ToolTip.text = qsTr(backend.getFileList()[moduleId].split(".")[0] + " > " + backend.getRegisterList()[registerId])
     }
 
     Button {
@@ -44,7 +48,13 @@ Button {
 
         anchors.right: parent.right
 
-        text: "X"
+//        text: "X"
+        Image {
+            source: "../../../assets/svg_images/close-outline.svg"
+            width: parent.width
+            height: parent.height
+            anchors.centerIn: parent
+        }
 
         background: Rectangle {
             color: "#4891d9"
@@ -62,7 +72,7 @@ Button {
         }
 
         onClicked: {
-            destroyRegisterTabAlias(registerId, moduleId)
+            destroyRegisterTabAlias(moduleId, registerId)
         }
     }
 }

@@ -1312,22 +1312,3 @@ void Backend::removeFromPinConfig(int lineNumber) {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
