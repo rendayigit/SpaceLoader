@@ -302,7 +302,6 @@ Rectangle {
                         Row {
                             id: registerTabRow
                             spacing: 1
-
                         }
                     }
 
@@ -579,6 +578,8 @@ Rectangle {
                 }
             }
         }
+
+
     }
 
     function createConfScreen(fieldId) {
@@ -703,11 +704,30 @@ Rectangle {
     }
 
     function destroyRegisterTabAlias(moduleId, registerId) {
+        var destroyedId
 
         for (var i=0; i<registerTabRow.children.length; i++) {
             if(registerTabRow.children[i].moduleId === moduleId && registerTabRow.children[i].registerId === registerId){
                 registerTabRow.children[i].destroy()
+                destroyedId = i
             }
+        }
+        refresh()
+
+//        if (registerTabRow.children.length-1 === 0){
+//            backend.setGlobalRegId(-1)
+//            clearFields()
+//            clearConf()
+//        }
+
+        if (backend.returnGlobalModuleId()===parseInt(moduleId) && parseInt(backend.returnGlobalRegId())===parseInt(registerId)){
+            backend.setGlobalRegId(-1)
+            clearFields()
+            clearConf()
+        }
+
+        else {
+            //SELECT CLOSEST TAB !!!!!!!!!!!!!!!!!!!!!!!!1
         }
     }
 
