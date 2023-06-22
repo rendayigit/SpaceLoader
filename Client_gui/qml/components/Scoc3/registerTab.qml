@@ -16,22 +16,23 @@ Button {
         color: "#4891d9"
         radius: 10
     }
-    onPressed: background.color = "#a3bed0"
-    onReleased: { background.color = "#4891d9"
-        if (hovered) {background.color = "#74a8db"}
-        else {background.color = "#4891d9"}
-    }
+//    onPressed: background.color = "#a3bed0"
+//    onReleased: { background.color = "#4891d9"
+//        if (hovered) {background.color = "#74a8db"}
+//        else {background.color = "#4891d9"}
+//    }
 
-    onHoveredChanged: {
-        if (hovered) {background.color = "#74a8db"}
-        else {background.color = "#4891d9"}
-    }
+//    onHoveredChanged: {
+//        if (hovered) {background.color = "#74a8db"}
+//        else {background.color = "#4891d9"}
+//    }
 
     onClicked: {
         backend.setGlobalFieldId(-1)
         backend.setGlobalModuleId(parseInt(moduleId))
         clearConf()
         createFieldButtons(registerId)
+        refresh()
     }
 
     ToolTip.delay: 500

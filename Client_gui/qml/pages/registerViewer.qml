@@ -579,7 +579,7 @@ Rectangle {
             }
         }
 
-
+        checkSelectedRegisterTabAlias()
     }
 
     function createConfScreen(fieldId) {
@@ -701,6 +701,7 @@ Rectangle {
                               "alert": backend.checkAllConfigValues(1, (backend.getFileList()[backend.returnGlobalModuleId()].split(".")[0]+"."+name)),
                           });
         }
+        refresh()
     }
 
     function destroyRegisterTabAlias(moduleId, registerId) {
@@ -729,6 +730,21 @@ Rectangle {
         else {
             //SELECT CLOSEST TAB !!!!!!!!!!!!!!!!!!!!!!!!1
         }
+    }
+
+    function checkSelectedRegisterTabAlias() {
+        var selectedRegisterTab;
+        for(var i=0; i<registerTabRow.children.length; i++){
+            if(parseInt(registerTabRow.children[i].moduleId) === backend.returnGlobalModuleId() && registerTabRow.children[i].registerId === backend.returnGlobalRegId()) {
+//                console.log(i)
+                registerTabRow.children[i].background.color = "#a3bed0"
+                selectedRegisterTab = i
+            }
+            else {
+                registerTabRow.children[i].background.color = "#4891d9"
+            }
+        }
+        return i
     }
 
     //REGISTER BUTTONS END
