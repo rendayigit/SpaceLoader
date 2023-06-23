@@ -14,7 +14,7 @@ Button {
     height: 20
     background: Rectangle {
         color: "#4891d9"
-        radius: 10
+        radius: 3
     }
 //    onPressed: background.color = "#a3bed0"
 //    onReleased: { background.color = "#4891d9"
@@ -51,26 +51,30 @@ Button {
 
 //        text: "X"
         Image {
-            source: "../../../assets/svg_images/close-outline.svg"
-            width: parent.width
-            height: parent.height
+            source: "../../../assets/svg_images/close-filled.svg"
+
+            width: parent.width-4
+            height: parent.height-4
             anchors.centerIn: parent
         }
 
-        background: Rectangle {
-            color: "#4891d9"
-            radius: 10
-        }
-        onPressed: background.color = "#a3bed0"
-        onReleased: { background.color = "#4891d9"
-            if (hovered) {background.color = "#74a8db"}
-            else {background.color = "#4891d9"}
-        }
 
-        onHoveredChanged: {
-            if (hovered) {background.color = "#74a8db"}
-            else {background.color = "#4891d9"}
+        background: Rectangle {
+            color: "transparent"
+            radius: 10
+            width: parent.width-4
+            height: parent.height-4
         }
+//        onPressed: background.color = "#a3bed0"
+//        onReleased: { background.color = "#4891d9"
+//            if (hovered) {background.color = "#74a8db"}
+//            else {background.color = "#4891d9"}
+//        }
+
+//        onHoveredChanged: {
+//            if (hovered) {background.color = "#74a8db"}
+//            else {background.color = "#4891d9"}
+//        }
 
         onClicked: {
             destroyRegisterTabAlias(moduleId, registerId)
