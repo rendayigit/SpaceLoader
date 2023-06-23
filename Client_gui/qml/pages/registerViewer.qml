@@ -715,12 +715,6 @@ Rectangle {
         }
         refresh()
 
-//        if (registerTabRow.children.length-1 === 0){
-//            backend.setGlobalRegId(-1)
-//            clearFields()
-//            clearConf()
-//        }
-
         if (backend.returnGlobalModuleId()===parseInt(moduleId) && parseInt(backend.returnGlobalRegId())===parseInt(registerId)){
             backend.setGlobalRegId(-1)
             clearFields()
@@ -728,7 +722,7 @@ Rectangle {
         }
 
         else {
-            //SELECT CLOSEST TAB !!!!!!!!!!!!!!!!!!!!!!!!1
+            //SELECT CLOSEST TAB !!!!!!!!!!!!!!!!!!!!!!!!
         }
     }
 

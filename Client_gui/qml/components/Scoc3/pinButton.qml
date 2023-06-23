@@ -10,7 +10,7 @@ Button {
     property int type
     property string module
     property string reg
-    property var regId
+    property string regId
     property string field
     property string pinId
 
@@ -110,38 +110,7 @@ Button {
         onClicked: {
             console.log("pin small but 2 pressed")
             backend.removeFromPinConfig(pinId);
-//            createPinButtons()
             refresh()
-
-//            var tempModuleId = backend.returnGlobalModuleId()
-//            var tempRegisterId = backend.returnGlobalRegId()
-//            var tempFieldId = backend.returnGlobalFieldId()
-
-//            switch (type) {
-//            case 1:
-////                var tempModuleId = backend.returnGlobalModuleId()
-//                createModuleButtons()
-////                backend.setGlobalModuleId(tempModuleId)
-//                break;
-//            case 2:
-//                if (!registerPlaceHolder.visible){
-////                   var tempRegisterId = backend.returnGlobalRegId()
-//                   createRegisterButtons()
-////                   backend.setGlobalRegId(tempRegisterId)
-//                }
-//                break;
-//            case 3:
-//                if (!fieldPlaceHolder.visible){
-////                    var tempFieldId = backend.returnGlobalFieldId()
-//                    createFieldButtons()
-////                    backend.setGlobalFieldId(tempFieldId)
-//                }
-//                break;
-//            }
-
-//            backend.setGlobalModuleId(tempModuleId)
-//            backend.setGlobalRegId(tempRegisterId)
-//            backend.setGlobalFieldId(tempFieldId)
         }
     }
 
@@ -150,7 +119,6 @@ Button {
         for (var i = 0; i < fileList.length; i++) {
             if (fileList[i].split(".")[0].split("\r")[0] === module.split("\r")[0]) {
                 moduleButtonClicked(i)
-                console.log("f1")
                 break;
             }
         }
@@ -161,9 +129,8 @@ Button {
         var regList = backend.getRegisterList()
         for (var i = 0; i < regList.length; i++) {
             if (regList[i] === reg.split("\r")[0]) {
-                regId = i;
-                registerButtonClicked(i)
-                console.log("f2")
+                regId = i.toString();
+                registerButtonClicked(i.toString())
                 break;
             }
         }
@@ -174,7 +141,6 @@ Button {
         for (var i = 0; i < fieldList.length; i++) {
             if (fieldList[i] === field.split("\r")[0]) {
                 fieldButtonClicked(i)
-                console.log("f3")
                 break;
             }
         }
