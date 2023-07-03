@@ -346,10 +346,79 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: registerDataView
+        anchors.left: registerScrollView.right
+        anchors.right: parent.right
+        anchors.bottom: pinBoard.top
+        anchors.leftMargin: 4
+        anchors.bottomMargin: 4
+        anchors.topMargin: 4
+        height: 40
+        width: parent.width
+        color: "#4d4d63"
+        radius: 10
+        border.color: "#8f8fa8"
+
+        Text {
+            id: registerDataViewHeader
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 4
+
+            width: 140
+            color: "white"
+            text: qsTr("Current Register Data:")
+            verticalAlignment: Text.AlignVCenter
+            font.pointSize: 10
+            horizontalAlignment: Text.AlignHCenter
+        }
+
+        TextField {
+            id: registerDataViewTextBox
+            anchors.left: registerDataViewHeader.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: sendButton.left
+            anchors.margins: 5
+        }
+
+        Button {
+            id: sendButton
+            anchors.right: parent.right
+            anchors.margins: 5
+            anchors.verticalCenter: parent.verticalCenter
+            text: "Send"
+            width: 60
+            height: parent.height-10
+
+            background: Rectangle {
+                color: "#4891d9"
+                radius: 10
+            }
+            onPressed: background.color = "#a3bed0"
+            onReleased: { background.color = "#4891d9"
+                if (hovered) {background.color = "#74a8db"}
+                else {background.color = "#4891d9"}
+            }
+
+            onHoveredChanged: {
+                if (hovered) {background.color = "#74a8db"}
+                else {background.color = "#4891d9"}
+            }
+
+            onClicked: {
+                console.log("RegisterValue sent.")
+            }
+        }
+    }
+
+
     ScrollView {
         id: fieldScrollView
         anchors.left: registerScrollView.right
-        anchors.bottom: pinBoard.top
+        anchors.bottom: registerDataView.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
@@ -363,6 +432,8 @@ Rectangle {
             spacing: 2
         }
     }
+
+
 
     Rectangle {
         id: registerPlaceHolder
@@ -393,7 +464,7 @@ Rectangle {
     Rectangle {
         id: fieldPlaceHolder
         anchors.left: registerScrollView.right
-        anchors.bottom: pinBoard.top
+        anchors.bottom: registerDataView.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
@@ -420,7 +491,7 @@ Rectangle {
     ScrollView {
         id: confScrollView
         anchors.left: fieldScrollView.right
-        anchors.bottom: pinBoard.top
+        anchors.bottom: registerDataView.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
@@ -438,7 +509,7 @@ Rectangle {
     Rectangle {
         id: confPlaceHolder
         anchors.left: fieldScrollView.right
-        anchors.bottom: pinBoard.top
+        anchors.bottom: registerDataView.top
         anchors.top: topBar.bottom
         anchors.leftMargin: 4
         anchors.bottomMargin: 4
