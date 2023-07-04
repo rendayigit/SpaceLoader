@@ -101,7 +101,7 @@ Rectangle {
                 }
                 else {
                     lastSent = desiredValue
-                    backend.sshSet(addr, desiredValue);
+                    backend.fieldSet(addr, desiredValue);
                     lastSentText.text = "Last Sent¹: " + lastSent
                 }
 
@@ -135,7 +135,7 @@ Rectangle {
                 desiredValue = resetValue
                 valueTextField.text = desiredValue
                 lastSent = desiredValue
-                backend.sshSet(addr, desiredValue);
+                backend.fieldSet(addr, desiredValue);
 
                 checkConf()
 

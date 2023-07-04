@@ -118,7 +118,7 @@ Rectangle {
                     invalidValueDialog.open()
                 }
                 else {
-                    backend.sshSet(addr, desiredValue);
+                    backend.fieldSet(addr, desiredValue);
                 }
                 checkConfCurrent()
 
@@ -148,7 +148,7 @@ Rectangle {
             }
             onClicked: {
                 desiredValue = resetValue
-                backend.sshSet(addr, desiredValue)
+                backend.fieldSet(addr, desiredValue)
 
                 checkConfCurrent()
 

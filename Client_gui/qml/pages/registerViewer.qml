@@ -347,6 +347,34 @@ Rectangle {
     }
 
     Rectangle {
+        id: registerDataViewPlaceHolder
+        anchors.left: registerScrollView.right
+        anchors.right: parent.right
+        anchors.bottom: pinBoard.top
+        anchors.leftMargin: 4
+        anchors.bottomMargin: 4
+        anchors.topMargin: 4
+        height: 40
+        width: parent.width
+//        color: "#4d4d63"
+        color: "grey"
+        radius: 10
+        z: 1
+        opacity: 0.3
+
+        onVisibleChanged: {
+            if (visible) {
+                registerTextBox.clear()
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            enabled: true
+        }
+    }
+
+    Rectangle {
         id: registerDataView
         anchors.left: registerScrollView.right
         anchors.right: parent.right
@@ -376,12 +404,26 @@ Rectangle {
         }
 
         TextField {
-            id: registerDataViewTextBox
+            id: registerTextBox
             anchors.left: registerDataViewHeader.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: sendButton.left
             anchors.margins: 5
+            property var regAddr
+            property var targetData
+
+            onTextChanged: {
+                if (!registerDataViewPlaceHolder.visible) {
+                    backend.bufferSet(regAddr, text)
+                    if (text === targetData){
+                        color = "black"
+                    }
+                    else {
+                        color = "red"
+                    }
+                }
+            }
         }
 
         Button {
@@ -409,7 +451,18 @@ Rectangle {
             }
 
             onClicked: {
-                console.log("RegisterValue sent.")
+                if (!registerDataViewPlaceHolder.visible) {
+                    console.log("RegisterValue sent.")
+                    backend.sshSet(registerTextBox.regAddr, registerTextBox.text)
+                    updateRegisterTextBox()
+                    if (registerTextBox.text === registerTextBox.targetData){
+                        registerTextBox.color = "black"
+                    }
+                    else {
+                        registerTextBox.color = "red"
+                        console.log("REGISTER WRITEMEM ERROR: CHECK sshSet() function of backend or connection.")
+                    }
+                }
             }
         }
     }
@@ -474,6 +527,15 @@ Rectangle {
         color: "#4d4d63"
         radius: 10
         border.color: "#8f8fa8"
+
+        onVisibleChanged: {
+            if (visible){
+                registerDataViewPlaceHolder.visible = true
+            }
+            else {
+                registerDataViewPlaceHolder.visible = false
+            }
+        }
 
         Text{
             text: "Please select a register to list its fields."
@@ -748,6 +810,20 @@ Rectangle {
         clearConf()
         createFieldButtons(registerId)
         createRegisterTabAlias(registerId)
+        updateRegisterTextBox()
+    }
+
+    function updateRegisterTextBox() {
+        registerTextBox.regAddr = backend.getRegAddr()
+        var bufferData = backend.checkBuffer(registerTextBox.regAddr)
+        registerTextBox.targetData = backend.sshGet(registerTextBox.regAddr)
+
+        if (bufferData === "-1") {
+            registerTextBox.text = registerTextBox.targetData
+        }
+        else {
+            registerTextBox.text = bufferData
+        }
     }
 
     function createRegisterTabAlias(registerId) {

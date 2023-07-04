@@ -84,7 +84,7 @@ Button {
         }
 
         onClicked: {
-            console.log("small but 2 pressed")
+
             if (backend.findPinConfig("reg", registerId) !== -1) {
                 backend.removeFromPinConfig("reg", registerId);
                 pinButtonImage.source = "../../../assets/svg_images/push-pin-fill.svg"

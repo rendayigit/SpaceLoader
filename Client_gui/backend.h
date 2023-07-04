@@ -69,11 +69,15 @@ class Backend : public TCPClient {
     Q_INVOKABLE int getWriteable(QString fieldId);
     Q_INVOKABLE QString getResetValue(QString fieldId);
     Q_INVOKABLE QList<QString> getValueDescriptions(QString fieldId);
+    Q_INVOKABLE QString getRegAddr();
     Q_INVOKABLE QString getFieldAddr();
     Q_INVOKABLE void saveConfig(QString writeValue, int base);
     Q_INVOKABLE QString getValueFromConfigFile();
     Q_INVOKABLE QString returnHex(QString num);
     Q_INVOKABLE void sshSet(QString address, QString value);
+    Q_INVOKABLE void fieldSet(QString address, QString value);
+    Q_INVOKABLE void bufferSet(QString address, QString value);
+    Q_INVOKABLE QString checkBuffer(QString address);
     Q_INVOKABLE QString sshGet(QString address);
     Q_INVOKABLE int returnGlobalModuleId();
     Q_INVOKABLE QString returnGlobalRegId();

@@ -12,6 +12,7 @@ Rectangle {
     property var configList: backend.getConfFileList()
     property var resetValue
     property var addr: backend.getFieldAddr()
+    property var regAddr: backend.getRegAddr()
     property var currentValue: backend.sshGet(addr)
     property var desiredValue: currentValue
 
@@ -132,7 +133,7 @@ Rectangle {
                     invalidValueDialog.open()
                 }
                 else {
-                    backend.sshSet(addr, backend.returnHex(desiredValue))
+                    backend.fieldSet(addr, backend.returnHex(desiredValue))
                 }
 
                 checkConfCurrent()
@@ -162,7 +163,7 @@ Rectangle {
             }
             onClicked: {
                 desiredValue = parseInt(resetValue, 16)
-                backend.sshSet(addr, backend.returnHex(desiredValue))
+                backend.fieldSet(addr, backend.returnHex(desiredValue))
 
                 checkConfCurrent()
 

@@ -112,7 +112,7 @@ Rectangle {
                     invalidValueDialog.open()
                 }
                 else {
-                    backend.sshSet(addr, backend.returnHex(desiredValue))
+                    backend.fieldSet(addr, backend.returnHex(desiredValue))
                     lastSent = desiredValue
                     lastSentText.text = "Last Sent¹: " + backend.returnHex(lastSent)
                 }
@@ -145,7 +145,7 @@ Rectangle {
             }
             onClicked: {
                 desiredValue = parseInt(resetValue, 16)
-                backend.sshSet(addr, backend.returnHex(desiredValue))
+                backend.fieldSet(addr, backend.returnHex(desiredValue))
                 lastSent = desiredValue
 
                 checkConf()

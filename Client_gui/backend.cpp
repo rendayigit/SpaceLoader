@@ -329,6 +329,22 @@ QString Backend::getResetValue(QString fieldId) {
         .at(fieldId.toInt());
 }
 
+QString Backend::getRegAddr() {
+    std::string moduleAddr = Yaml::getValue(filePath, "Module_ADDR");
+    QString regAddr =
+        Backend::vectorToQList(Yaml::getValueList(filePath, "ADDR")).at(globalRegId.toInt());
+
+    int moduleAddrInt = std::stoi(moduleAddr, 0, 16);
+    int regAddrInt = std::stoi(regAddr.toStdString(), 0, 16);
+    int sum = moduleAddrInt + regAddrInt;
+
+    std::stringstream temp;
+    temp << std::hex << sum;
+
+    QString sumStr = QString::fromStdString("0x" + temp.str());
+    return sumStr;
+}
+
 QString Backend::getFieldAddr() {
     std::string moduleAddr = Yaml::getValue(filePath, "Module_ADDR");
     QString regName = Backend::getRegisterList().at(globalRegId.toInt());
@@ -349,6 +365,7 @@ QString Backend::getFieldAddr() {
     temp << std::hex << sum;
 
     QString sumStr = QString::fromStdString("0x" + temp.str());
+    qDebug()<<getRegAddr()<<fieldRangeStart;
     return sumStr;
 }
 
@@ -361,7 +378,6 @@ int Backend::getRangeStart(std::string str) {
     str.erase(0, 1);
     std::stoi(str);
     return std::stoi(str);
-    ;
 }
 
 void Backend::saveConfig(QString writeValue, int base) {
@@ -851,6 +867,130 @@ void Backend::sshSet(QString address, QString value) {
     }
 
     outfile.close();
+}
+
+void Backend::fieldSet(QString address, QString value) {
+    ifstream infile;
+    infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/TargetMocks/target.yaml");
+    std::vector<std::string> lines;
+    std::string buffer;
+
+    while (std::getline(infile, buffer)) {
+        lines.push_back(buffer);
+    }
+
+    infile.close();
+    int i;
+    std::string temp;
+    bool found = false;
+
+    for (i = 0; i < lines.size(); i++) {
+        std::string line = lines.at(i);
+        temp.clear();
+        for (int j = 0; j < line.size(); j++) {
+            if (line.at(j) == ':') {
+                break;
+            }
+            temp.push_back(line[j]);
+        }
+
+        if (temp == address.toStdString()) {
+            found = true;
+            break;
+        }
+    }
+
+    if (found) {
+        lines.at(i) = temp + ": " + value.toStdString();
+    }
+
+    else {
+        lines.push_back(address.toStdString() + ": " + value.toStdString());
+    }
+
+    ofstream outfile;
+    outfile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/TargetMocks/target.yaml");
+
+    foreach (std::string line, lines) {
+        outfile << line << endl;
+    }
+
+    outfile.close();
+}
+
+void Backend::bufferSet(QString address, QString value) {
+    ifstream infile;
+    infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/buffer.yaml");
+    std::vector<std::string> lines;
+    std::string buffer;
+
+    while (std::getline(infile, buffer)) {
+        lines.push_back(buffer);
+    }
+
+    infile.close();
+    int i;
+    std::string temp;
+    bool found = false;
+
+    for (i = 0; i < lines.size(); i++) {
+        std::string line = lines.at(i);
+        temp.clear();
+        for (int j = 0; j < line.size(); j++) {
+            if (line.at(j) == ':') {
+                break;
+            }
+            temp.push_back(line[j]);
+        }
+
+        if (temp == address.toStdString()) {
+            found = true;
+            break;
+        }
+    }
+
+    if (found) {
+        lines.at(i) = temp + ": " + value.toStdString();
+    }
+
+    else {
+        lines.push_back(address.toStdString() + ": " + value.toStdString());
+    }
+
+    ofstream outfile;
+    outfile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/buffer.yaml");
+
+    foreach (std::string line, lines) {
+        outfile << line << endl;
+    }
+
+    outfile.close();
+}
+
+QString Backend::checkBuffer(QString address) {
+    ifstream infile;
+    infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/buffer.yaml");
+    std::string buffer;
+
+    while (std::getline(infile, buffer)) {
+        std::string temp;
+        int i;
+        for (i = 0; i < buffer.size(); i++) {
+            char letter = buffer.at(i);
+            if (letter == ':') {
+                break;
+            }
+            temp.push_back(letter);
+        }
+        if (temp == address.toStdString()) {
+            buffer.erase(0, (i + 2));
+            infile.close();
+            return QString::fromStdString(buffer);
+        }
+    }
+
+    infile.close();
+    return "-1";
 }
 
 QString Backend::sshGet(QString address) {
