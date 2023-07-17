@@ -114,6 +114,7 @@ class Backend : public TCPClient {
     void parse(QString text);
     QList<QString> vectorToQList(std::vector<std::string> vector);
     int getRangeStart(std::string str);
+    int getRangeEnd(std::string str);
     int countSpaces(std::string data);
     std::string deleteNonAlphaNumerical(std::string data);
     std::vector<std::string> deleteNonAlphaNumerical_Field(std::string data);
@@ -122,6 +123,11 @@ class Backend : public TCPClient {
     bool getIsFieldWriteOnlyByPath(std::string path);
     int searchNodeVector(std::vector<TreeNode> container, std::string key);
     TreeNode parseConfig(std::string configFilePath);
+    std::string hexToBinaryWithPadding(const std::string& hexString);
+    std::string hexToBinaryWithPadding(const std::string& hexString, int bitSize);
+    std::string binaryToHex(const std::string& binaryString);
+    std::string reverseString(std::string str);
+
 
     QString serverIp = "";
     QString localIp = "";

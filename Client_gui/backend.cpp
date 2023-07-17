@@ -10,6 +10,7 @@
 #include <QtCore/QThread>
 #include <filesystem>
 #include <fstream>
+#include <bitset>
 
 #include "../common.h"
 #include "../lib/Logger/logger.h"
@@ -22,7 +23,7 @@ Listener *listener;
 Egse *egse;
 
 using namespace std;
-namespace fs = std::filesystem;
+// namespace fs = std::filesystem;
 
 Backend::Backend() : localIp(GetLocalIp().last()) {
     listener = new Listener(this);
@@ -342,6 +343,7 @@ QString Backend::getRegAddr() {
     temp << std::hex << sum;
 
     QString sumStr = QString::fromStdString("0x" + temp.str());
+    qDebug()<<sumStr;
     return sumStr;
 }
 
@@ -359,6 +361,7 @@ QString Backend::getFieldAddr() {
     int moduleAddrInt = std::stoi(moduleAddr, 0, 16);
     int regAddrInt = std::stoi(regAddr.toStdString(), 0, 16);
     int fieldRangeStart = getRangeStart(fieldRange);
+    int fieldRangeEnd = getRangeEnd(fieldRange);
     int sum = moduleAddrInt + regAddrInt + fieldRangeStart;
 
     std::stringstream temp;
@@ -376,7 +379,19 @@ int Backend::getRangeStart(std::string str) {
         }
     }
     str.erase(0, 1);
-    std::stoi(str);
+    return std::stoi(str);
+}
+
+int Backend::getRangeEnd(std::string str) {
+    int delimiter;
+    for (int i = 0; i <= str.length(); ++i) {
+        if(str[i]==','){
+            delimiter = i;
+            break;
+        }
+    }
+    str.erase(0,delimiter+1);
+    str.erase(str.length()-1, str.length());
     return std::stoi(str);
 }
 
@@ -433,7 +448,7 @@ void Backend::saveConfig(QString writeValue, int base) {
         }
     }
 
-    ofstream outfile;
+    std::ofstream outfile;
     outfile.open(configFilePath);
     bool is_firstLine = true;
 
@@ -458,7 +473,7 @@ void Backend::saveConfig(QString writeValue, int base) {
 
 TreeNode Backend::parseConfig(std::string configFilePath) {
     // READ_FILE
-    ifstream infile;
+    std::ifstream infile;
     infile.open(configFilePath);
     std::vector<std::string> lines;
     std::string buffer;
@@ -821,7 +836,7 @@ int Backend::countSpaces(std::string data) {
 }
 
 void Backend::sshSet(QString address, QString value) {
-    ifstream infile;
+    std::ifstream infile;
     infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/TargetMocks/target.yaml");
     std::vector<std::string> lines;
     std::string buffer;
@@ -859,7 +874,7 @@ void Backend::sshSet(QString address, QString value) {
         lines.push_back(address.toStdString() + ": " + value.toStdString());
     }
 
-    ofstream outfile;
+    std::ofstream outfile;
     outfile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/TargetMocks/target.yaml");
 
     foreach (std::string line, lines) {
@@ -869,23 +884,87 @@ void Backend::sshSet(QString address, QString value) {
     outfile.close();
 }
 
+// void Backend::fieldSet(QString address, QString value) {
+//     std::ifstream infile;
+//     infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/TargetMocks/target.yaml");
+//     std::vector<std::string> lines;
+//     std::string buffer;
+
+//     while (std::getline(infile, buffer)) {
+//         lines.push_back(buffer);
+//     }
+
+//     infile.close();
+//     int i;
+//     std::string temp;
+//     bool found = false;
+
+//     for (i = 0; i < lines.size(); i++) {
+//         std::string line = lines.at(i);
+//         temp.clear();
+//         for (int j = 0; j < line.size(); j++) {
+//             if (line.at(j) == ':') {
+//                 break;
+//             }
+//             temp.push_back(line[j]);
+//         }
+
+//         if (temp == address.toStdString()) {
+//             found = true;
+//             break;
+//         }
+//     }
+
+//     std::vector<YAML::Node> nodeList = Yaml::getNodeListByKey(filePath, "Fields");
+//     std::string fieldRange =
+//         vectorToQList(Yaml::getValueList(nodeList.at(globalRegId.toInt()), "Range"))
+//             .at(globalFieldId.toInt())
+//             .toStdString();
+
+// //    int regAddrInt = std::stoi(address.toStdString(), 0, 16);
+//     int fieldRangeStart = getRangeStart(fieldRange);
+//     int fieldRangeEnd = getRangeEnd(fieldRange);
+
+//     qDebug()<<fieldRangeStart<<"\t"<<fieldRangeEnd;
+
+
+// //    if (found) {
+// //        lines.at(i) = temp + ": " + value.toStdString();
+// //    }
+
+// //    else {
+// //        lines.push_back(address.toStdString() + ": " + value.toStdString());
+// //    }
+
+// //    std::ofstream outfile;
+// //    outfile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/TargetMocks/target.yaml");
+
+// //    foreach (std::string line, lines) {
+// //        outfile << line << endl;
+// //    }
+
+// //    outfile.close();
+// }
+
 void Backend::fieldSet(QString address, QString value) {
-    ifstream infile;
-    infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/TargetMocks/target.yaml");
-    std::vector<std::string> lines;
+
+    // GET BUFFER FILE LINES AND CHECK IF THE ADDRESS EXISTS
+    std::ifstream bufferFile;
+    bufferFile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/buffer.yaml");
+    std::vector<std::string> bufferLines;
     std::string buffer;
 
-    while (std::getline(infile, buffer)) {
-        lines.push_back(buffer);
+    while (std::getline(bufferFile, buffer)) {
+        bufferLines.push_back(buffer);
     }
 
-    infile.close();
+    bufferFile.close();
     int i;
     std::string temp;
-    bool found = false;
+    bool foundBuffer = false;
 
-    for (i = 0; i < lines.size(); i++) {
-        std::string line = lines.at(i);
+    for (i = 0; i < bufferLines.size(); i++) {
+        std::string line = bufferLines.at(i);
         temp.clear();
         for (int j = 0; j < line.size(); j++) {
             if (line.at(j) == ':') {
@@ -895,31 +974,167 @@ void Backend::fieldSet(QString address, QString value) {
         }
 
         if (temp == address.toStdString()) {
-            found = true;
+            foundBuffer = true;
             break;
         }
     }
+    std::string line; //Common variable to store line.
 
-    if (found) {
-        lines.at(i) = temp + ": " + value.toStdString();
+    if (foundBuffer) { //IF ADDRESS FOUND IN BUFFER, COPY FOUND LINE TO THE COMMON VARIABLE
+        line = bufferLines.at(i);
+    } else { //IF NOT SEARCH THE TARGET FILE !!!WILL BE REPLACED WITH GRMON SCRIPTS OR VIA OR NOT VIA SSH!!!
+        std::ifstream targetFile;
+        targetFile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/target.yaml");
+        std::vector<std::string> targetLines;
+        std::string buffer;
+
+        while (std::getline(targetFile, buffer)) {
+            targetLines.push_back(buffer);
+        }
+
+        targetFile.close();
+        int i;
+        std::string temp;
+        bool foundTarget = false;
+
+        for (i = 0; i < targetLines.size(); i++) {
+            std::string line = targetLines.at(i);
+            temp.clear();
+            for (int j = 0; j < line.size(); j++) {
+                if (line.at(j) == ':') {
+                    break;
+                }
+                temp.push_back(line[j]);
+            }
+
+            if (temp == address.toStdString()) {
+                foundTarget = true;
+                break;
+            }
+        }
+
+        if (foundTarget){ //IF ADDRESS FOUND ON TARGET, COPY FOUND LINE TO THE COMMON VARIABLE
+            line = targetLines.at(i);
+        } else { //IF NOT FOUND ON BOTH RESOURCES, LOG AN ERROR AND EXIT FUNCTION.
+            qDebug()<< "REGISTER ADDRESS NOT FOUND.";
+            qDebug()<< address;
+            return;
+        }
     }
 
-    else {
-        lines.push_back(address.toStdString() + ": " + value.toStdString());
+    //IF ADDRESS FOUND ON EITHER OF RESOURCES APPLY FIELD VALUE ON THE RELEVANT PLACE OF REGISTER VALUE
+    temp.clear();
+    bool valueSwitch = false;
+    for (int j = 0; j < line.size(); j++) {
+        if (line[j] == ' ') {
+            continue;
+        }
+        if (valueSwitch) {
+            temp.push_back(line[j]);
+        }
+        if (line.at(j) == ':') {
+            valueSwitch = true;
+        }
+    }
+    std::string initialHex = temp;
+    std::string initialBin = Backend::hexToBinaryWithPadding(initialHex);
+    initialBin = Backend::reverseString(initialBin); //REVERSED BINARY VALUE FOR ENDIANNESS
+    std::vector<YAML::Node> nodeList = Yaml::getNodeListByKey(filePath, "Fields");
+    std::string fieldRange = vectorToQList(Yaml::getValueList(nodeList.at(globalRegId.toInt()), "Range")).at(globalFieldId.toInt()).toStdString();
+    int fieldRangeStart = getRangeStart(fieldRange);
+    int fieldRangeEnd = getRangeEnd(fieldRange);
+
+    std::string binaryValue = Backend::hexToBinaryWithPadding(value.toStdString(), (fieldRangeEnd-fieldRangeStart));
+
+    std::string resultBin = initialBin;
+
+    for(int i=0; i<(fieldRangeEnd-fieldRangeStart); i++){
+        resultBin[fieldRangeStart+i]=binaryValue[i];
+    }
+    resultBin = Backend::reverseString(resultBin); //REVERSED BACK BINARY VALUE FOR ENDIANNESS
+    std::string resultHex = Backend::binaryToHex(resultBin);
+    Backend::bufferSet(address, QString::fromStdString(resultHex));
+}
+
+std::string Backend::hexToBinaryWithPadding(const std::string& hexString) {
+    // Remove the "0x" prefix if it exists
+    std::string hexValue = hexString;
+    if (hexString.size() >= 2 && hexString.substr(0, 2) == "0x") {
+        hexValue = hexString.substr(2);
     }
 
-    ofstream outfile;
-    outfile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/TargetMocks/target.yaml");
-
-    foreach (std::string line, lines) {
-        outfile << line << endl;
+    // Convert the hexadecimal string to binary
+    unsigned long long int decimalValue;
+    try {
+        decimalValue = std::stoull(hexValue, nullptr, 16);
+    } catch (const std::invalid_argument& e) {
+        qDebug()<< "Invalid hexadecimal string: " << QString::fromStdString(hexString);
+        return "";
+    } catch (const std::out_of_range& e) {
+        qDebug()<< "Hexadecimal value out of range: " << QString::fromStdString(hexString);
+        return "";
     }
 
-    outfile.close();
+    // Convert decimal value to 32-bit binary
+    std::string binaryString = std::bitset<32>(decimalValue).to_string();
+
+    return binaryString;
+}
+
+std::string Backend::hexToBinaryWithPadding(const std::string& hexString, int bitSize) {
+    std::string hexValue = hexString;
+    if (hexString.size() >= 2 && hexString.substr(0, 2) == "0x") {
+        hexValue = hexString.substr(2);
+    }
+
+            // Convert the hexadecimal string to binary
+    unsigned long long int decimalValue;
+    try {
+        decimalValue = std::stoull(hexValue, nullptr, 16);
+    } catch (const std::invalid_argument& e) {
+        qDebug()<< "Invalid hexadecimal string: " << QString::fromStdString(hexString);
+        return "";
+    } catch (const std::out_of_range& e) {
+        qDebug()<< "Hexadecimal value out of range: " << QString::fromStdString(hexString);
+        return "";
+    }
+
+            // Convert decimal value to 32-bit binary
+    std::string binaryString = std::bitset<32>(decimalValue).to_string();
+
+    binaryString.erase(0,(32-bitSize));
+
+    return binaryString;
+}
+
+std::string Backend::binaryToHex(const std::string& binaryString) {
+    if (binaryString.size() != 32) {
+        qDebug() << "Input binary string should be exactly 32 bits.";
+        return "";
+    }
+
+            // Convert binary string to decimal value
+    unsigned long int decimalValue = std::bitset<32>(binaryString).to_ulong();
+
+            // Convert decimal value to hexadecimal string
+    std::stringstream ss;
+    ss << "0x" << std::hex << std::uppercase << decimalValue;
+
+    return ss.str();
+}
+
+std::string Backend::reverseString(std::string str){
+    int halfLength = (str.length()/2)+(0.5);
+    for (int i = 0; i < halfLength; i++) {
+        char temp = str[i];
+        str[i] = str[str.length()-(i+1)];
+        str[str.length()-(i+1)] = temp;
+    }
+    return str;
 }
 
 void Backend::bufferSet(QString address, QString value) {
-    ifstream infile;
+    std::ifstream infile;
     infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/buffer.yaml");
     std::vector<std::string> lines;
     std::string buffer;
@@ -957,7 +1172,7 @@ void Backend::bufferSet(QString address, QString value) {
         lines.push_back(address.toStdString() + ": " + value.toStdString());
     }
 
-    ofstream outfile;
+    std::ofstream outfile;
     outfile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/buffer.yaml");
 
     foreach (std::string line, lines) {
@@ -968,7 +1183,7 @@ void Backend::bufferSet(QString address, QString value) {
 }
 
 QString Backend::checkBuffer(QString address) {
-    ifstream infile;
+    std::ifstream infile;
     infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/buffer.yaml");
     std::string buffer;
 
@@ -994,7 +1209,7 @@ QString Backend::checkBuffer(QString address) {
 }
 
 QString Backend::sshGet(QString address) {
-    ifstream infile;
+    std::ifstream infile;
     infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/TargetMocks/target.yaml");
     std::string buffer;
 
@@ -1021,7 +1236,7 @@ QString Backend::sshGet(QString address) {
 
 void Backend::checkAndSaveAll(QString newFileName) {
     // READ_FILE
-    ifstream infile;
+    std::ifstream infile;
     infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/config.yaml");
     std::vector<std::string> lines;
     std::string buffer;
@@ -1032,7 +1247,7 @@ void Backend::checkAndSaveAll(QString newFileName) {
 
     infile.close();
     // WRITE_FILE
-    ofstream outfile;
+    std::ofstream outfile;
     outfile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/SavedConfigs/" + newFileName.toStdString());
     bool is_firstLine = true;
 
@@ -1162,7 +1377,7 @@ QList<QString> Backend::vectorToQList(std::vector<std::string> vector) {
 
 int Backend::returnPinConfig(QString initSignal) {
     // READ_FILE
-    ifstream infile;
+    std::ifstream infile;
     infile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/pinSlots.yaml");
     std::vector<std::string> lines;
     std::string buffer;
@@ -1451,4 +1666,3 @@ void Backend::removeFromPinConfig(int lineNumber) {
         }
     }
 }
-

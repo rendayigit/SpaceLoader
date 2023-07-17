@@ -413,6 +413,11 @@ Rectangle {
             property var regAddr
             property var targetData
 
+            ToolTip.delay: 500
+//            ToolTip.timeout: 5000
+            ToolTip.visible: hovered
+            ToolTip.text: hexToBinary(text)
+
             onTextChanged: {
                 if (!registerDataViewPlaceHolder.visible) {
                     backend.bufferSet(regAddr, text)
@@ -424,6 +429,15 @@ Rectangle {
                     }
                 }
             }
+
+            function hexToBinary(hex) {
+                    var binary = parseInt(hex, 16).toString(2);
+                    if (binary !== "NaN" && binary.length <= 32) {
+                        binary = ("0".repeat((32-(binary.length)))) + binary;
+                    }
+                    binary = "Bin: " + binary
+                    return binary;
+                }
         }
 
         Button {
@@ -721,7 +735,7 @@ Rectangle {
         var isReadable = backend.getReadable(fieldId);
         var isWriteable = backend.getWriteable(fieldId);
         var resetValue = backend.getResetValue(fieldId);
-        var currentValue = backend.sshGet(backend.getFieldAddr());
+        var currentValue = "0"//backend.sshGet(backend.getFieldAddr());
 
         var itemName
         var values
@@ -756,6 +770,7 @@ Rectangle {
                           "valueList": values,
                           "resetValue": resetValue,
                           "currentValue": currentValue
+
                       });
         confPlaceHolder.visible = false
     }

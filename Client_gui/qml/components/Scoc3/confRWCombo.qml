@@ -11,44 +11,46 @@ Rectangle {
     property var valueList
     property var configList: backend.getConfFileList()
     property var resetValue
-    property var addr: backend.getFieldAddr()
+
     property var regAddr: backend.getRegAddr()
-    property var currentValue: backend.sshGet(addr)
-    property var desiredValue: currentValue
+//    property var currentValue: "0"//backend.sshGet(addr)
+//    property var desiredValue: currentValue
+    property var currentValue: -1
+    property var desiredValue: -1
 
-    function checkCurrent(){
-        currentValue = backend.sshGet(addr)
-        currentText.text = "Current Value:" + currentValue
-    }
+//    function checkCurrent(){
+//        currentValue = backend.sshGet(addr)
+//        currentText.text = "Current Value:" + currentValue
+//    }
 
-    function checkConfCurrent() {
-        checkCurrent()
-        var configValue = backend.getValueFromConfigFile()
+//    function checkConfCurrent() {
+////        checkCurrent()
+//        var configValue = backend.getValueFromConfigFile()
 
-        if (configValue === "-1"){
-            configValue0.visible = false
-            configValue1.visible = false
-            configValue2.visible = true
-        }
-        else if (configValue === currentValue){
-            configValue0.visible = true
-            configValue1.visible = false
-            configValue2.visible = false
-        }
-        else if (configValue !== currentValue){
-            configValue0.visible = false
-            configValue1.text = "Warning: value in the selected configuration is: " + configValue
-            configValue1.visible = true
-            configValue2.visible = false
-        }
-    }
+//        if (configValue === "-1"){
+//            configValue0.visible = false
+//            configValue1.visible = false
+//            configValue2.visible = true
+//        }
+//        else if (configValue === currentValue){
+//            configValue0.visible = true
+//            configValue1.visible = false
+//            configValue2.visible = false
+//        }
+//        else if (configValue !== currentValue){
+//            configValue0.visible = false
+//            configValue1.text = "Warning: value in the selected configuration is: " + configValue
+//            configValue1.visible = true
+//            configValue2.visible = false
+//        }
+//    }
 
     width: (rootObject.width / 2) - 20
     id: parentRectangle
 
-    Component.onCompleted: {
-        checkConfCurrent()
-    }
+//    Component.onCompleted: {
+////        checkConfCurrent()
+//    }
 
     MessageDialog {
         id: invalidValueDialog
@@ -74,7 +76,7 @@ Rectangle {
             for (var i=0; i< valueList.length; i++){
                 comboContent.append({text:valueList[i]})
             }
-            valueComboBox.currentIndex = parseInt(backend.sshGet(addr),16)
+//            valueComboBox.currentIndex = parseInt(backend.sshGet(addr),16)
         }
     }
 
@@ -133,10 +135,11 @@ Rectangle {
                     invalidValueDialog.open()
                 }
                 else {
-                    backend.fieldSet(addr, backend.returnHex(desiredValue))
+                    backend.fieldSet(regAddr, backend.returnHex(desiredValue))
+                    Promise.resolve().then(updateRegisterTextBox)
                 }
 
-                checkConfCurrent()
+//                checkConfCurrent()
                 createModuleButtons()
                 createRegisterButtons(backend.returnGlobalModuleId())
                 createFieldButtons(backend.returnGlobalRegId())
@@ -162,15 +165,15 @@ Rectangle {
                 else {background.color = "#4891d9"}
             }
             onClicked: {
-                desiredValue = parseInt(resetValue, 16)
-                backend.fieldSet(addr, backend.returnHex(desiredValue))
+//                desiredValue = parseInt(resetValue, 16)
+//                backend.fieldSet(addr, backend.returnHex(desiredValue))
 
-                checkConfCurrent()
+////                checkConfCurrent()
 
                 createModuleButtons()
                 createRegisterButtons(backend.returnGlobalModuleId())
                 createFieldButtons(backend.returnGlobalRegId())
-                valueComboBox.currentIndex = desiredValue
+//                valueComboBox.currentIndex = desiredValue
             }
         }
 
@@ -193,8 +196,8 @@ Rectangle {
                 else {background.color = "#4891d9"}
             }
             onClicked: {
-                backend.saveConfig(currentValue, 16)
-                checkConfCurrent()
+//                backend.saveConfig(currentValue, 16)
+//                checkConfCurrent()
 
                 createModuleButtons()
                 createRegisterButtons(backend.returnGlobalModuleId())

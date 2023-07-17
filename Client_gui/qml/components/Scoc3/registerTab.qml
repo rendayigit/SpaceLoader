@@ -32,6 +32,7 @@ Button {
         backend.setGlobalModuleId(parseInt(moduleId))
         clearConf()
         createFieldButtons(registerId)
+        Promise.resolve().then(updateRegisterTextBox)
         refresh()
     }
 
