@@ -945,6 +945,116 @@ void Backend::sshSet(QString address, QString value) {
 
 // //    outfile.close();
 // }
+QString Backend::fieldGet(QString address) {
+
+    // GET BUFFER FILE LINES AND CHECK IF THE ADDRESS EXISTS
+    std::ifstream bufferFile;
+    bufferFile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/buffer.yaml");
+    std::vector<std::string> bufferLines;
+    std::string buffer;
+
+    while (std::getline(bufferFile, buffer)) {
+        bufferLines.push_back(buffer);
+    }
+
+    bufferFile.close();
+    int i;
+    std::string temp;
+    bool foundBuffer = false;
+
+    for (i = 0; i < bufferLines.size(); i++) {
+        std::string line = bufferLines.at(i);
+        temp.clear();
+        for (int j = 0; j < line.size(); j++) {
+            if (line.at(j) == ':') {
+                break;
+            }
+            temp.push_back(line[j]);
+        }
+
+        if (temp == address.toStdString()) {
+            foundBuffer = true;
+            break;
+        }
+    }
+    std::string line; //Common variable to store line.
+
+    if (foundBuffer) { //IF ADDRESS FOUND IN BUFFER, COPY FOUND LINE TO THE COMMON VARIABLE
+        line = bufferLines.at(i);
+    } else { //IF NOT, SEARCH THE TARGET FILE !!!WILL BE REPLACED WITH GRMON SCRIPTS OR VIA OR NOT VIA SSH!!!
+        std::ifstream targetFile;
+        targetFile.open(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/target.yaml");
+        std::vector<std::string> targetLines;
+        std::string buffer;
+
+        while (std::getline(targetFile, buffer)) {
+            targetLines.push_back(buffer);
+        }
+
+        targetFile.close();
+        int i;
+        std::string temp;
+        bool foundTarget = false;
+
+        for (i = 0; i < targetLines.size(); i++) {
+            std::string line = targetLines.at(i);
+            temp.clear();
+            for (int j = 0; j < line.size(); j++) {
+                if (line.at(j) == ':') {
+                    break;
+                }
+                temp.push_back(line[j]);
+            }
+
+            if (temp == address.toStdString()) {
+                foundTarget = true;
+                break;
+            }
+        }
+
+        if (foundTarget){ //IF ADDRESS FOUND ON TARGET, COPY FOUND LINE TO THE COMMON VARIABLE
+            line = targetLines.at(i);
+        } else { //IF NOT FOUND ON BOTH RESOURCES, LOG AN ERROR AND EXIT FUNCTION.
+            qDebug()<< "REGISTER ADDRESS NOT FOUND.";
+            qDebug()<< address;
+            return "-1";
+        }
+    }
+
+    //IF ADDRESS FOUND ON EITHER OF RESOURCES GET FIELD VALUE FROM THE RELEVANT PLACE OF REGISTER VALUE
+    temp.clear();
+    bool valueSwitch = false;
+    for (int j = 0; j < line.size(); j++) {
+        if (line[j] == ' ') {
+            continue;
+        }
+        if (valueSwitch) {
+            temp.push_back(line[j]);
+        }
+        if (line.at(j) == ':') {
+            valueSwitch = true;
+        }
+    }
+    std::string initialHex = temp;
+    std::string initialBin = Backend::hexToBinaryWithPadding(initialHex);
+    initialBin = Backend::reverseString(initialBin); //REVERSED BINARY VALUE FOR ENDIANNESS
+    std::vector<YAML::Node> nodeList = Yaml::getNodeListByKey(filePath, "Fields");
+    std::string fieldRange = vectorToQList(Yaml::getValueList(nodeList.at(globalRegId.toInt()), "Range")).at(globalFieldId.toInt()).toStdString();
+    int fieldRangeStart = getRangeStart(fieldRange);
+    int fieldRangeEnd = getRangeEnd(fieldRange);
+
+    std::string binaryValue;
+
+    for(int i=0; i<(fieldRangeEnd-fieldRangeStart); i++){
+        binaryValue.push_back(initialBin[fieldRangeStart+i]);
+    }
+    for (int i = 0; i < 32-(fieldRangeEnd-fieldRangeStart); i++) {
+        binaryValue.push_back('0');
+    }
+    binaryValue = Backend::reverseString(binaryValue); //REVERSED BACK BINARY VALUE FOR ENDIANNESS
+    std::string hexValue = Backend::binaryToHex(binaryValue);
+    return QString::fromStdString(hexValue);
+}
 
 void Backend::fieldSet(QString address, QString value) {
 

@@ -13,18 +13,16 @@ Rectangle {
     property var resetValue
 
     property var regAddr: backend.getRegAddr()
-//    property var currentValue: "0"//backend.sshGet(addr)
-//    property var desiredValue: currentValue
-    property var currentValue: -1
-    property var desiredValue: -1
+    property var currentValue: backend.fieldGet(regAddr)
+    property var desiredValue: currentValue
 
-//    function checkCurrent(){
-//        currentValue = backend.sshGet(addr)
-//        currentText.text = "Current Value:" + currentValue
-//    }
+    function checkCurrent(){
+        currentValue = backend.fieldGet(regAddr)
+        currentText.text = "Current Value:" + currentValue
+    }
 
-//    function checkConfCurrent() {
-////        checkCurrent()
+    function checkConfCurrent() {
+        checkCurrent()
 //        var configValue = backend.getValueFromConfigFile()
 
 //        if (configValue === "-1"){
@@ -43,14 +41,14 @@ Rectangle {
 //            configValue1.visible = true
 //            configValue2.visible = false
 //        }
-//    }
+    }
 
     width: (rootObject.width / 2) - 20
     id: parentRectangle
 
-//    Component.onCompleted: {
-////        checkConfCurrent()
-//    }
+    Component.onCompleted: {
+        checkConfCurrent()
+    }
 
     MessageDialog {
         id: invalidValueDialog
@@ -76,7 +74,7 @@ Rectangle {
             for (var i=0; i< valueList.length; i++){
                 comboContent.append({text:valueList[i]})
             }
-//            valueComboBox.currentIndex = parseInt(backend.sshGet(addr),16)
+            valueComboBox.currentIndex = parseInt(backend.fieldGet(regAddr),16)
         }
     }
 
@@ -139,7 +137,7 @@ Rectangle {
                     Promise.resolve().then(updateRegisterTextBox)
                 }
 
-//                checkConfCurrent()
+                checkConfCurrent()
                 createModuleButtons()
                 createRegisterButtons(backend.returnGlobalModuleId())
                 createFieldButtons(backend.returnGlobalRegId())
@@ -166,9 +164,9 @@ Rectangle {
             }
             onClicked: {
 //                desiredValue = parseInt(resetValue, 16)
-//                backend.fieldSet(addr, backend.returnHex(desiredValue))
+//                backend.fieldSet(regAddr, backend.returnHex(desiredValue))
 
-////                checkConfCurrent()
+//                checkConfCurrent()
 
                 createModuleButtons()
                 createRegisterButtons(backend.returnGlobalModuleId())
