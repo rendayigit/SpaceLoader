@@ -34,15 +34,12 @@ Button {
         fieldClicked(fieldId)
     }
 
-    Text {
-        width: rootObject.width / 6
+    Image {
+        source: "../../../assets/svg_images/warning.svg"
+        width: rootObject.width / 6 / 8
+        anchors.right: parent.right
+        anchors.rightMargin: 5
         height: 25
-        color: "#ffb22d"
-        text: "⚠  "
-        font.bold: true
-        font.pointSize: 12
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignRight
         visible: alert
     }
 
