@@ -13,6 +13,7 @@ Button {
     property string regId
     property string field
     property string pinId
+    property bool alert
 
     width: rootObject.width / 6
 
@@ -50,6 +51,15 @@ Button {
             fieldFunct()
             break;
         }
+    }
+
+    Image {
+        source: "../../../assets/svg_images/warning.svg"
+        width: rootObject.width / 6 / 8
+        anchors.right: parent.right
+        anchors.rightMargin: 5
+        height: 25
+        visible: alert
     }
 
     ToolTip.delay: 500

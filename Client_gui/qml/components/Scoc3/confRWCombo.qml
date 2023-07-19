@@ -23,24 +23,26 @@ Rectangle {
 
     function checkConfCurrent() {
         checkCurrent()
-//        var configValue = backend.getValueFromConfigFile()
+//        console.log(backend.getValueFromConfigFile())
 
-//        if (configValue === "-1"){
-//            configValue0.visible = false
-//            configValue1.visible = false
-//            configValue2.visible = true
-//        }
-//        else if (configValue === currentValue){
-//            configValue0.visible = true
-//            configValue1.visible = false
-//            configValue2.visible = false
-//        }
-//        else if (configValue !== currentValue){
-//            configValue0.visible = false
-//            configValue1.text = "Warning: value in the selected configuration is: " + configValue
-//            configValue1.visible = true
-//            configValue2.visible = false
-//        }
+        var configValue = backend.getValueFromConfigFile()
+
+        if (configValue === "-1"){
+            configValue0.visible = false
+            configValue1.visible = false
+            configValue2.visible = true
+        }
+        else if (configValue === currentValue){
+            configValue0.visible = true
+            configValue1.visible = false
+            configValue2.visible = false
+        }
+        else if (configValue !== currentValue){
+            configValue0.visible = false
+            configValue1.text = "Warning: value in the selected configuration is: " + configValue
+            configValue1.visible = true
+            configValue2.visible = false
+        }
     }
 
     width: (rootObject.width / 2) - 20
@@ -196,10 +198,25 @@ Rectangle {
             onClicked: {
 //                backend.saveConfig(currentValue, 16)
 //                checkConfCurrent()
-
+                createPinButtons()
                 createModuleButtons()
                 createRegisterButtons(backend.returnGlobalModuleId())
                 createFieldButtons(backend.returnGlobalRegId())
+
+//TEST DRIVER BUTTON
+//                backend.checkAllConfigValues2(-1)
+//                console.log("CHECKING FOR DENEME MODULE:")
+//                console.log(backend.checkAllConfigValues2(0, "DENEME"))
+//                console.log("CHECKING FOR DENEME1 MODULE:")
+//                console.log(backend.checkAllConfigValues2(0, "DENEME1"))
+//                console.log("CHECKING FOR DENEMEREG REGISTER:")
+//                console.log(backend.checkAllConfigValues2(1, "DENEME.DENEMEREG"))
+//                console.log("CHECKING FOR DENEMEREG1 REGISTER:")
+//                console.log(backend.checkAllConfigValues2(1, "DENEME1.DENEMEREG1"))
+//                console.log("CHECKING FOR RWCOMBO FIELD:")
+//                console.log(backend.checkAllConfigValues2(2, "DENEME.DENEMEREG.RWCOMBO"))
+//                console.log("CHECKING FOR RWCOMBO1 FIELD:")
+//                console.log(backend.checkAllConfigValues2(2, "DENEME1.DENEMEREG1.RWCOMBO1"))
             }
         }
     }

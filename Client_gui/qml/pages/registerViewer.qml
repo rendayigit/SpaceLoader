@@ -465,9 +465,11 @@ Rectangle {
             }
 
             onClicked: {
+
                 if (!registerDataViewPlaceHolder.visible) {
                     console.log("RegisterValue sent.")
                     backend.sshSet(registerTextBox.regAddr, registerTextBox.text)
+                    Promise.resolve().then(refresh)
                     updateRegisterTextBox()
                     if (registerTextBox.text === registerTextBox.targetData){
                         registerTextBox.color = "black"
@@ -953,7 +955,8 @@ Rectangle {
                                         "pinId": i,
                                         "text": pinConfig[pinType],
                                         "type": pinType,
-                                        "module": pinConfig[1]
+                                        "module": pinConfig[1],
+                                        "alert": backend.checkAllConfigValues(0, pinConfig[1])
                                       });
                         break;
                     case 2:
@@ -963,7 +966,8 @@ Rectangle {
                                         "text": pinConfig[pinType],
                                         "type": pinType,
                                         "module": pinConfig[1],
-                                        "reg": pinConfig[2]
+                                        "reg": pinConfig[2],
+                                        "alert": backend.checkAllConfigValues(1, (pinConfig[1]+'.'+pinConfig[2]))
                                       });
                         break;
                     case 3:
@@ -974,7 +978,8 @@ Rectangle {
                                         "type": pinType,
                                         "module": pinConfig[1],
                                         "reg": pinConfig[2],
-                                        "field": pinConfig[3]
+                                        "field": pinConfig[3],
+                                        "alert": backend.checkAllConfigValues(2, (pinConfig[1]+'.'+pinConfig[2]+'.'+pinConfig[3]))
                                       });
                         break;
                 }
@@ -988,7 +993,8 @@ Rectangle {
                                         "pinId": i,
                                         "text": pinConfig[pinType],
                                         "type": pinType,
-                                        "module": pinConfig[1]
+                                        "module": pinConfig[1],
+                                        "alert": backend.checkAllConfigValues(0, pinConfig[1].split('\r')[0])
                                       });
                         break;
                     case 2:
@@ -998,7 +1004,8 @@ Rectangle {
                                         "text": pinConfig[pinType],
                                         "type": pinType,
                                         "module": pinConfig[1],
-                                        "reg": pinConfig[2]
+                                        "reg": pinConfig[2],
+                                        "alert": backend.checkAllConfigValues(1, (pinConfig[1]+'.'+pinConfig[2].split('\r')[0]))
                                       });
                         break;
                     case 3:
@@ -1009,7 +1016,8 @@ Rectangle {
                                         "type": pinType,
                                         "module": pinConfig[1],
                                         "reg": pinConfig[2],
-                                        "field": pinConfig[3]
+                                        "field": pinConfig[3],
+                                        "alert": backend.checkAllConfigValues(2, (pinConfig[1]+'.'+pinConfig[2]+'.'+pinConfig[3].split('\r')[0]))
                                       });
                         break;
                 }

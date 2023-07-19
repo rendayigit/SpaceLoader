@@ -280,6 +280,63 @@ QList<QString> Backend::getFieldList(QString regId) {
     return vectorToQList(Yaml::getValueList(nodeList.at(regId.toInt()), "Name"));
 }
 
+std::vector<std::string> Backend::getFieldListByPath(std::string path){
+    std::string moduleName;
+    std::string regName;
+
+    // SPLIT PATH START
+    int nameSwitch = 0;
+    for (int i = 0; i < path.size(); i++) {
+        if (path[i] != '.') {
+            switch (nameSwitch) {
+            case 0:
+                moduleName.push_back(path[i]);
+                break;
+            case 1:
+                regName.push_back(path[i]);
+                break;
+            }
+        } else {
+            nameSwitch++;
+        }
+    }
+    // SPLIT PATH START
+
+    // GET COMPONENT IDs START
+    int moduleId = -1;
+    QList<QString> fileList = Backend::getFileList();
+    for (int i = 0; i < fileList.size(); i++) {
+        std::string temp = fileList.at(i).toStdString();
+        for (int j = 0; j < 5; ++j) {
+            temp.pop_back();
+        }
+        if (moduleName == temp) {
+            moduleId = i;
+            break;
+        }
+    }
+
+    int regId = -1;
+    QList<QString> regList = vectorToQList(
+        Yaml::getValueList(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/Registers/" + getFileList()[moduleId].toStdString(), "RegName"));
+    for (int i = 0; i < regList.size(); i++) {
+        if (regList.at(i).toStdString() == regName) {
+            regId = i;
+        }
+    }
+
+    if (moduleId == -1) {
+        qDebug() << "INVALID MODULE on function Backend::getFieldAddrByPath()";
+    }
+    if (regId == -1) {
+        qDebug() << "INVALID REGISTER on function Backend::getFieldAddrByPath()";
+    }
+    // GET COMPONENT IDs END
+    std::string filePath = Path::getInstance().getSetupDir().toStdString() + "/Scoc3/Registers/" + moduleName + ".yaml";
+    std::vector<YAML::Node> nodeList = Yaml::getNodeListByKey(filePath, "Fields");
+    return Yaml::getValueList(nodeList.at(regId), "Name");
+}
+
 int Backend::getConfType(QString fieldId) {
     globalFieldId = fieldId;
     std::vector<YAML::Node> nodeList = Yaml::getNodeListByKey(filePath, "Fields");
@@ -471,6 +528,10 @@ void Backend::saveConfig(QString writeValue, int base) {
     outfile.close();
 }
 
+void Backend::saveRegConfig(QString writeValueHex){
+
+}
+
 TreeNode Backend::parseConfig(std::string configFilePath) {
     // READ_FILE
     std::ifstream infile;
@@ -487,10 +548,9 @@ TreeNode Backend::parseConfig(std::string configFilePath) {
     // INSERT INTO TREE
     TreeNode root("ROOT", -1);
     TreeNode *modulePtrHolder;
-    TreeNode *regPtrHolder;
 
     foreach (std::string line, lines) {
-        if (line == "") {
+        if (Backend::isEmptySpace(line)) {
             continue;
         }
         int degree = Backend::countSpaces(line);
@@ -501,28 +561,32 @@ TreeNode Backend::parseConfig(std::string configFilePath) {
             TreeNode newNode(&root, name, degree);
             root.addChild(newNode);
             modulePtrHolder = &root.children.at(root.children.size() - 1);
-
         }
 
         // REGISTER INSERT
         else if (degree == 1) {
-            std::string name = Backend::deleteNonAlphaNumerical(line);
-            TreeNode newNode(modulePtrHolder, name, degree);
+            std::string name = Backend::deleteNonAlphaNumerical_Reg(line).at(0);
+            std::string value = Backend::deleteNonAlphaNumerical_Reg(line).at(1);
+            TreeNode newNode(modulePtrHolder, name, degree, value);
             modulePtrHolder->addChild(newNode);
-            regPtrHolder = &modulePtrHolder->children.at((modulePtrHolder->children.size()) - 1);
-        }
-
-        // FIELD INSERT
-        else if (degree == 2) {
-            std::string name = Backend::deleteNonAlphaNumerical_Field(line).at(0);
-            std::string value = Backend::deleteNonAlphaNumerical_Field(line).at(1);
-            TreeNode newNode(regPtrHolder, name, degree, value);
-            regPtrHolder->addChild(newNode);
         }
     }
 
     // RETURN ROOT NODE OF THE TREE
     return root;
+}
+
+bool Backend::isEmptySpace(std::string data){
+    if (data == ""){
+        return true;
+    } else {
+        foreach (char character, data){
+            if (character != ' '){
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 QString Backend::getValueFromConfigFile() {
@@ -539,17 +603,97 @@ QString Backend::getValueFromConfigFile() {
         if (module.name == moduleName) {
             foreach (TreeNode reg, module.children) {
                 if (reg.name == regName) {
-                    foreach (TreeNode field, reg.children) {
-                        if (field.name == fieldName) {
-                            return QString::fromStdString(field.value);
-                        }
+                    //fieldcheck
+                    std::string regValue = reg.value;
+                    std::string regValue_Bin = Backend::hexToBinaryWithPadding(regValue);
+                    std::string regValue_Bin_Reversed = Backend::reverseString(regValue_Bin);
+
+                    std::vector<std::string> fieldList = Backend::getFieldListByPath(moduleName + '.' + regName);
+                    std::vector<int> fieldRange = Backend::getFieldRangeByPath(moduleName + '.' + regName + '.' + fieldName);
+                    std::string value;
+                    for(int i = fieldRange[0]; i<fieldRange[1]; i++){
+                        value.push_back(regValue_Bin_Reversed.at(i));
                     }
+                    return QString::fromStdString(Backend::binaryToHex(Backend::reverseString(value)));
                 }
             }
         }
     }
 
     return "-1";
+}
+
+std::string Backend::getRegAddrByPath(std::string path) {
+    std::string moduleName;
+    std::string regName;
+
+    // SPLIT PATH START
+    int nameSwitch = 0;
+    for (int i = 0; i < path.size(); i++) {
+        if (path[i] != '.') {
+            switch (nameSwitch) {
+            case 0:
+                moduleName.push_back(path[i]);
+                break;
+            case 1:
+                regName.push_back(path[i]);
+                break;
+            }
+        } else {
+            nameSwitch++;
+        }
+    }
+    // SPLIT PATH END
+
+    // GET COMPONENT IDs START
+    int moduleId = -1;
+    QList<QString> fileList = Backend::getFileList();
+    for (int i = 0; i < fileList.size(); i++) {
+        std::string temp = fileList.at(i).toStdString();
+        for (int j = 0; j < 5; ++j) {
+            temp.pop_back();
+        }
+        if (moduleName == temp) {
+            moduleId = i;
+            break;
+        }
+    }
+
+    int regId = -1;
+    QList<QString> regList = vectorToQList(
+        Yaml::getValueList(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/Registers/" + getFileList()[moduleId].toStdString(), "RegName"));
+    for (int i = 0; i < regList.size(); i++) {
+        if (regList.at(i).toStdString() == regName) {
+            regId = i;
+        }
+    }
+
+    if (moduleId == -1) {
+        qDebug() << "INVALID MODULE on function Backend::getFieldAddrByPath()";
+    }
+    if (regId == -1) {
+        qDebug() << "INVALID REGISTER on function Backend::getFieldAddrByPath()";
+    }
+    // GET COMPONENT IDs END
+
+    // CALCULATE ADDR START
+    std::string moduleAddr =
+        Yaml::getValue(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/Registers/" + getFileList()[moduleId].toStdString(), "Module_ADDR");
+    QString regAddr =
+        Backend::vectorToQList(
+            Yaml::getValueList(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/Registers/" + getFileList()[moduleId].toStdString(), "ADDR"))
+            .at(regId);
+
+    int moduleAddrInt = std::stoi(moduleAddr, 0, 16);
+    int regAddrInt = std::stoi(regAddr.toStdString(), 0, 16);
+
+    int sum = moduleAddrInt + regAddrInt;
+    // CALCULATE ADDR END
+
+    std::stringstream temp;
+    temp << std::hex << sum;
+
+    return ("0x" + temp.str());
 }
 
 std::string Backend::getFieldAddrByPath(std::string path) {
@@ -645,6 +789,87 @@ std::string Backend::getFieldAddrByPath(std::string path) {
     return ("0x" + temp.str());
 }
 
+std::vector<int> Backend::getFieldRangeByPath(std::string path) {
+    std::string moduleName;
+    std::string regName;
+    std::string fieldName;
+
+    // SPLIT PATH START
+    int nameSwitch = 0;
+    for (int i = 0; i < path.size(); i++) {
+        if (path[i] != '.') {
+            switch (nameSwitch) {
+            case 0:
+                moduleName.push_back(path[i]);
+                break;
+            case 1:
+                regName.push_back(path[i]);
+                break;
+            case 2:
+                fieldName.push_back(path[i]);
+                break;
+            }
+        } else {
+            nameSwitch++;
+        }
+    }
+    // SPLIT PATH END
+
+    // GET COMPONENT IDs START
+    int moduleId = -1;
+    QList<QString> fileList = Backend::getFileList();
+    for (int i = 0; i < fileList.size(); i++) {
+        std::string temp = fileList.at(i).toStdString();
+        for (int j = 0; j < 5; ++j) {
+            temp.pop_back();
+        }
+        if (moduleName == temp) {
+            moduleId = i;
+            break;
+        }
+    }
+
+    int regId = -1;
+    QList<QString> regList = vectorToQList(
+        Yaml::getValueList(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/Registers/" + getFileList()[moduleId].toStdString(), "RegName"));
+    for (int i = 0; i < regList.size(); i++) {
+        if (regList.at(i).toStdString() == regName) {
+            regId = i;
+        }
+    }
+
+    int fieldId = -1;
+    QList<QString> fieldList;
+    std::vector<YAML::Node> nodeList =
+        Yaml::getNodeListByKey(Path::getInstance().getSetupDir().toStdString() + "/Scoc3/Registers/" + getFileList()[moduleId].toStdString(), "Fields");
+    fieldList = vectorToQList(Yaml::getValueList(nodeList.at(regId), "Name"));
+    for (int i = 0; i < fieldList.size(); i++) {
+        if (fieldList.at(i).toStdString() == fieldName) {
+            fieldId = i;
+        }
+    }
+
+    if (moduleId == -1) {
+        qDebug() << "INVALID MODULE on function Backend::getFieldRangeByPath()";
+    }
+    if (regId == -1) {
+        qDebug() << "INVALID REGISTER on function Backend::getFieldRangeByPath()";
+    }
+    if (fieldId == -1) {
+        qDebug() << "INVALID FIELD on function Backend::getFieldRangeByPath()";
+    }
+    // GET COMPONENT IDs END
+
+    std::string fieldRange =
+        vectorToQList(Yaml::getValueList(nodeList.at(regId), "Range")).at(fieldId).toStdString();
+
+    std::vector<int> rangeResult;
+    rangeResult.push_back(getRangeStart(fieldRange));
+    rangeResult.push_back(getRangeEnd(fieldRange));
+
+    return rangeResult;
+}
+
 bool Backend::getIsFieldWriteOnlyByPath(std::string path) {
     std::string moduleName;
     std::string regName;
@@ -728,11 +953,107 @@ bool Backend::getIsFieldWriteOnlyByPath(std::string path) {
     return (is_writeable && !is_readable);
 }
 
-int Backend::checkAllConfigValues(int mode, QString check) {
+//int Backend::checkAllConfigValues(int mode, QString check) {
+//    static std::vector<std::string> redModules;
+//    static std::vector<std::string> redRegs;
+//    static std::vector<std::string> redFields;
+
+//    if (mode == -1) {
+//        TreeNode root = parseConfig(configFilePath);
+
+//        redModules.clear();
+//        redRegs.clear();
+//        redFields.clear();
+
+//        for (int moduleIt = 0; moduleIt < root.children.size(); moduleIt++) {
+//            for (int regIt = 0; regIt < root.children.at(moduleIt).children.size(); regIt++) {
+//                for (int fieldIt = 0;
+//                     fieldIt < root.children.at(moduleIt).children.at(regIt).children.size();
+//                     ++fieldIt) {
+//                    std::string moduleName = root.children.at(moduleIt).name;
+//                    std::string regName = root.children.at(moduleIt).children.at(regIt).name;
+//                    std::string fieldName =
+//                        root.children.at(moduleIt).children.at(regIt).children.at(fieldIt).name;
+//                    std::string fieldValue =
+//                        root.children.at(moduleIt).children.at(regIt).children.at(fieldIt).value;
+//                    if (getIsFieldWriteOnlyByPath(moduleName + '.' + regName + '.' + fieldName)) {
+//                        continue;
+//                    } else if (QString::fromStdString(fieldValue) !=
+//                               Backend::sshGet(QString::fromStdString(getFieldAddrByPath(
+//                                   moduleName + '.' + regName + '.' + fieldName)))) {
+//                        redFields.push_back(moduleName + '.' + regName + '.' + fieldName);
+
+//                        bool isAvailable = false;
+//                        foreach (std::string reg, redRegs) {
+//                            if (reg == (moduleName + '.' + regName)) {
+//                                isAvailable = true;
+//                                break;
+//                            }
+//                        }
+
+//                        if (!isAvailable) {
+//                            redRegs.push_back((moduleName + '.' + regName));
+//                        }
+
+//                        isAvailable = false;
+
+//                        foreach (std::string mod, redModules) {
+//                            if (mod == moduleName) {
+//                                isAvailable = true;
+//                                break;
+//                            }
+//                        }
+
+//                        if (!isAvailable) {
+//                            redModules.push_back(moduleName);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return -1;
+//    }
+
+//    else if (mode == 0) {
+//        foreach (QString module, Backend::vectorToQList(redModules)) {
+//            if (module == check) {
+//                return 1;
+//            }
+//        }
+//        return 0;
+//    }
+
+//    else if (mode == 1) {
+//        foreach (QString reg, Backend::vectorToQList(redRegs)) {
+//            if (reg == check) {
+//                return 1;
+//            }
+//        }
+//        return 0;
+//    }
+
+//    else if (mode == 2) {
+//        foreach (QString field, Backend::vectorToQList(redFields)) {
+//            if (field == check) {
+//                return 1;
+//            }
+//        }
+//        return 0;
+//    }
+
+//    else {
+//        return -1;
+//    }
+//}
+
+int Backend::checkAllConfigValues(int mode, QString checkPath) {
     static std::vector<std::string> redModules;
     static std::vector<std::string> redRegs;
     static std::vector<std::string> redFields;
 
+//    qDebug()<<checkPath;
+
+    //INITIALIZING MODE
     if (mode == -1) {
         TreeNode root = parseConfig(configFilePath);
 
@@ -742,45 +1063,38 @@ int Backend::checkAllConfigValues(int mode, QString check) {
 
         for (int moduleIt = 0; moduleIt < root.children.size(); moduleIt++) {
             for (int regIt = 0; regIt < root.children.at(moduleIt).children.size(); regIt++) {
-                for (int fieldIt = 0;
-                     fieldIt < root.children.at(moduleIt).children.at(regIt).children.size();
-                     ++fieldIt) {
-                    std::string moduleName = root.children.at(moduleIt).name;
-                    std::string regName = root.children.at(moduleIt).children.at(regIt).name;
-                    std::string fieldName =
-                        root.children.at(moduleIt).children.at(regIt).children.at(fieldIt).name;
-                    std::string fieldValue =
-                        root.children.at(moduleIt).children.at(regIt).children.at(fieldIt).value;
-                    if (getIsFieldWriteOnlyByPath(moduleName + '.' + regName + '.' + fieldName)) {
-                        continue;
-                    } else if (QString::fromStdString(fieldValue) !=
-                               Backend::sshGet(QString::fromStdString(getFieldAddrByPath(
-                                   moduleName + '.' + regName + '.' + fieldName)))) {
-                        redFields.push_back(moduleName + '.' + regName + '.' + fieldName);
+                std::string moduleName = root.children.at(moduleIt).name;
+                std::string regName = root.children.at(moduleIt).children.at(regIt).name;
+                std::string regValue = root.children.at(moduleIt).children.at(regIt).value;
+                std::string regTargetValue = Backend::sshGet(QString::fromStdString(getRegAddrByPath(moduleName + '.' + regName))).toStdString();
 
-                        bool isAvailable = false;
-                        foreach (std::string reg, redRegs) {
-                            if (reg == (moduleName + '.' + regName)) {
-                                isAvailable = true;
-                                break;
-                            }
+                if (regValue != regTargetValue){
+                    redRegs.push_back(moduleName + '.' + regName);
+
+                    bool isAvailable = false;
+                    foreach (std::string mod, redModules) {
+                        if (mod == moduleName) {
+                            isAvailable = true;
+                            break;
                         }
+                    }
 
-                        if (!isAvailable) {
-                            redRegs.push_back((moduleName + '.' + regName));
-                        }
+                    if (!isAvailable) {
+                        redModules.push_back(moduleName);
+                    }
+                }
 
-                        isAvailable = false;
+                //FIELD CHECK
+                std::string regTargetValue_Bin = Backend::hexToBinaryWithPadding(regTargetValue);
+                std::string regValue_Bin = Backend::hexToBinaryWithPadding(regValue);
 
-                        foreach (std::string mod, redModules) {
-                            if (mod == moduleName) {
-                                isAvailable = true;
-                                break;
-                            }
-                        }
-
-                        if (!isAvailable) {
-                            redModules.push_back(moduleName);
+                std::vector<std::string> fieldList = Backend::getFieldListByPath(moduleName + '.' + regName);
+                foreach (std::string fieldName, fieldList) {
+                    std::vector<int> fieldRange = Backend::getFieldRangeByPath(moduleName + '.' + regName + '.' + fieldName);
+                    for(int i = fieldRange[0]; i<fieldRange[1]; i++){
+                        if (Backend::reverseString(regValue_Bin)[i] != Backend::reverseString(regTargetValue_Bin)[i]){
+                            redFields.push_back(moduleName + '.' + regName + '.' + fieldName);
+                            break;
                         }
                     }
                 }
@@ -789,33 +1103,37 @@ int Backend::checkAllConfigValues(int mode, QString check) {
         return -1;
     }
 
+    //MODULE CHECK MODE
     else if (mode == 0) {
         foreach (QString module, Backend::vectorToQList(redModules)) {
-            if (module == check) {
+            if (module == checkPath) {
                 return 1;
             }
         }
         return 0;
     }
 
+    //REGISTER CHECK MODE
     else if (mode == 1) {
         foreach (QString reg, Backend::vectorToQList(redRegs)) {
-            if (reg == check) {
+            if (reg == checkPath) {
                 return 1;
             }
         }
         return 0;
     }
 
+    //FIELD CHECK MODE
     else if (mode == 2) {
         foreach (QString field, Backend::vectorToQList(redFields)) {
-            if (field == check) {
+            if (field == checkPath) {
                 return 1;
             }
         }
         return 0;
     }
 
+    //INVALID MODE SELECTION
     else {
         return -1;
     }
@@ -1218,13 +1536,25 @@ std::string Backend::hexToBinaryWithPadding(const std::string& hexString, int bi
 }
 
 std::string Backend::binaryToHex(const std::string& binaryString) {
-    if (binaryString.size() != 32) {
-        qDebug() << "Input binary string should be exactly 32 bits.";
+    // Calculate the number of bits in the input binary string
+    size_t numBits = binaryString.size();
+
+            // Ensure that the input binary string has at least 1 bit
+    if (numBits < 1) {
+        qDebug() << "Input binary string should have at least 1 bit.";
         return "";
     }
 
             // Convert binary string to decimal value
-    unsigned long int decimalValue = std::bitset<32>(binaryString).to_ulong();
+    unsigned long int decimalValue = 0;
+    for (size_t i = 0; i < numBits; ++i) {
+        if (binaryString[i] == '1') {
+            decimalValue |= (1 << (numBits - i - 1));
+        } else if (binaryString[i] != '0') {
+            qDebug() << "Invalid character in the input binary string.";
+            return "";
+        }
+    }
 
             // Convert decimal value to hexadecimal string
     std::stringstream ss;
@@ -1414,7 +1744,7 @@ std::string Backend::deleteNonAlphaNumerical(std::string data) {
     return newData;
 }
 
-std::vector<std::string> Backend::deleteNonAlphaNumerical_Field(std::string data) {
+std::vector<std::string> Backend::deleteNonAlphaNumerical_Reg(std::string data) {
     std::vector<std::string> newData;
     newData.push_back("");
     newData.push_back("");
@@ -1428,10 +1758,6 @@ std::vector<std::string> Backend::deleteNonAlphaNumerical_Field(std::string data
                 newData.at(switchKeyValue).push_back(character);
             }
         }
-    }
-
-    if (newData.at(0).at(0) == '-') {
-        newData.at(0).erase(0, 1);
     }
 
     return newData;

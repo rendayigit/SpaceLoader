@@ -72,6 +72,7 @@ class Backend : public TCPClient {
     Q_INVOKABLE QString getRegAddr();
     Q_INVOKABLE QString getFieldAddr();
     Q_INVOKABLE void saveConfig(QString writeValue, int base);
+    Q_INVOKABLE void saveRegConfig(QString writeValueHex);
     Q_INVOKABLE QString getValueFromConfigFile();
     Q_INVOKABLE QString returnHex(QString num);
     Q_INVOKABLE void sshSet(QString address, QString value);
@@ -88,7 +89,8 @@ class Backend : public TCPClient {
     Q_INVOKABLE void setGlobalModuleId(int moduleId);
     Q_INVOKABLE void setGlobalRegId(int regId);
     Q_INVOKABLE void setGlobalFieldId(int fieldId);
-    Q_INVOKABLE int checkAllConfigValues(int mode, QString check = "");
+//    Q_INVOKABLE int checkAllConfigValues(int mode, QString check = "");
+    Q_INVOKABLE int checkAllConfigValues(int mode, QString checkPath = "");
     Q_INVOKABLE void checkAndSaveAll(QString newFileName);
     Q_INVOKABLE int returnPinConfig(QString initSignal);
     Q_INVOKABLE QList<QString> returnPinConfig(int index);
@@ -96,6 +98,7 @@ class Backend : public TCPClient {
     Q_INVOKABLE void addToPinConfig(QString componentType, QString componentId);
     Q_INVOKABLE void removeFromPinConfig(QString componentType, QString componentId);
     Q_INVOKABLE void removeFromPinConfig(int lineNumber);
+
 
    signals:
     void getReceivedText(QString text);
@@ -118,12 +121,16 @@ class Backend : public TCPClient {
     int getRangeEnd(std::string str);
     int countSpaces(std::string data);
     std::string deleteNonAlphaNumerical(std::string data);
-    std::vector<std::string> deleteNonAlphaNumerical_Field(std::string data);
+    std::vector<std::string> deleteNonAlphaNumerical_Reg(std::string data);
     int getIdByName(std::string component, std::string name);
     std::string getFieldAddrByPath(std::string path);
+    std::vector<int> getFieldRangeByPath(std::string path);
+    std::string getRegAddrByPath(std::string path);
+    std::vector<std::string> getFieldListByPath(std::string path);
     bool getIsFieldWriteOnlyByPath(std::string path);
     int searchNodeVector(std::vector<TreeNode> container, std::string key);
     TreeNode parseConfig(std::string configFilePath);
+    bool isEmptySpace(std::string data);
     std::string hexToBinaryWithPadding(const std::string& hexString);
     std::string hexToBinaryWithPadding(const std::string& hexString, int bitSize);
     std::string binaryToHex(const std::string& binaryString);
