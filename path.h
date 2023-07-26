@@ -10,51 +10,37 @@
 
 class Path {
    public:
-    Path(const Path &) = delete;
-    Path &operator=(const Path &) = delete;
-    Path(Path &&) = delete;
-    Path &operator=(Path &&) = delete;
-    ~Path() = default;
-
-    static auto &getInstance() {
-        static Path instance;
-        return instance;
-    }
-
-    QString getExecutablePath() const {
+    [[nodiscard]] static QString getExecutablePath() {
         QString bin =
             QString::fromStdWString(QCoreApplication::applicationFilePath().toStdWString());
         return bin.mid(0, bin.lastIndexOf(QChar('/')) + 1);
     }
 
-    QString getProjectRoot() const { return getExecutablePath() + "../"; }
+    [[nodiscard]] static QString getProjectRoot() { return getExecutablePath() + "../"; }
 
-    QString getSetupDir() const { return getExecutablePath() + "Setup/"; }
+    [[nodiscard]] static QString getSetupDir() { return getExecutablePath() + "Setup/"; }
 
-    QString getPathsYaml() const { return getSetupDir() + "Paths.yaml"; }
+    [[nodiscard]] static QString getPathsYaml() { return getSetupDir() + "Paths.yaml"; }
 
-    QString getCmdsDir() const {
+    [[nodiscard]] static QString getCmdsDir() {
         return getSetupDir() +
                QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "cmd_lib_Dir"));
     }
 
-    QString getServerCmdsYaml() const {
+    [[nodiscard]] static QString getServerCmdsYaml() {
         return getSetupDir() + QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(),
                                                                      "server_cmds_Yaml"));
     }
 
-    QString getClientCmdsYaml() const {
+    [[nodiscard]] static QString getClientCmdsYaml() {
         return getSetupDir() + QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(),
                                                                      "client_cmds_Yaml"));
     }
 
-    QString getConfigYaml() const {
+    [[nodiscard]] static QString getConfigYaml() {
         return getSetupDir() +
                QString::fromStdString(Yaml::getValue(getPathsYaml().toStdString(), "config_Yaml"));
     }
-
-   private:
-    Path() = default;
 };
 
 #endif  // PATH_H

@@ -13,7 +13,7 @@
 
 using namespace std;
 
-Client::Client() : Operations(Paths().getClientCmdsYaml()) {}
+Client::Client() : Operations(Path::getClientCmdsYaml()) {}
 
 void Client::onReceived(QByteArray message) {
     qInfo().noquote() << message;
@@ -123,7 +123,7 @@ void Client::listenTo(QString msg) {
     QString port;
 
     vector<YAML::Node> nodeList = Yaml::getNodeListByKey(
-        Paths().getConfigYaml().toStdString(), "name", msg.mid(idx1, msg.size()).toStdString());
+        Path::getConfigYaml().toStdString(), "name", msg.mid(idx1, msg.size()).toStdString());
     if (nodeList.size() < 1) {
         int idx2 = msg.indexOf(":", idx1, Qt::CaseInsensitive);
         int idx3 = msg.size();
@@ -148,7 +148,7 @@ void Client::stopListen(QString ipPort) {
     int idx1 = ipPort.indexOf(" ", QString("StopListen").size(), Qt::CaseInsensitive) + 1;
 
     vector<YAML::Node> nodeList =
-        Yaml::getNodeListByKey(Paths().getConfigYaml().toStdString(), "name",
+        Yaml::getNodeListByKey(Path::getConfigYaml().toStdString(), "name",
                                ipPort.mid(idx1, ipPort.size()).toStdString());
     if (nodeList.size() < 1) {
         int idx2 = ipPort.indexOf(":", idx1, Qt::CaseInsensitive);

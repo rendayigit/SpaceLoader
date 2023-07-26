@@ -77,9 +77,9 @@ static QList<QString> getDlibs(QString path) {
 }
 
 static void runDynamicCmd(QTcpSocket *sender, QByteArray message) {
-    QList<QString> commandLibs = getDlibs(Paths().getCmdsDir());
+    QList<QString> commandLibs = getDlibs(Path::getCmdsDir());
     if (commandLibs.isEmpty()) {
-        Log().Error("no libs found at " + Paths().getCmdsDir());
+        Log().Error("no libs found at " + Path::getCmdsDir());
     } else {
         for (auto &lib : commandLibs) {
             if (lib.contains(GetCmd(message), Qt::CaseInsensitive)) {

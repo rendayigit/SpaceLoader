@@ -16,7 +16,7 @@ void exit() { /*Log().Flush();*/ }  // TODO - logDir value gone at program exit
 
 Logger::Logger()
     : isLoggingEnabled(true),
-      logDir(Path::getInstance().getExecutablePath() + "Logs" + QDir::separator()),
+      logDir(Path::getExecutablePath() + "Logs" + QDir::separator()),
       logFileName(""),
       flushRate(100000),
       buffer({}),
