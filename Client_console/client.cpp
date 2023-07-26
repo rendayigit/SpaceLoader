@@ -255,5 +255,5 @@ void Client::parseInternalCmd([[maybe_unused]] QTcpSocket *sender, QByteArray me
 
 void Client::connectProcess(QTcpSocket * /*sender*/, QProcess *process) {
     connect(process, &QProcess::readyReadStandardOutput, this,
-            [=]() { cout << process->readLine().toStdString() << endl; });
+            [=]() { cout << process->readAllStandardOutput().toStdString() << endl; });
 }

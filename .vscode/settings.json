@@ -40,7 +40,5 @@
   "clangd.arguments": [
     "--compile-commands-dir=${workspaceFolder}/build/compile_commands.json"
   ],
-  "docwriter.style": "Doxygen",
   "testMate.cpp.test.executables": "{build}/**/*{tests}*",
-  "sonarlint.pathToCompileCommands": "${workspaceFolder}\\build\\compile_commands.json"
 }

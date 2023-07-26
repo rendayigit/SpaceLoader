@@ -6,12 +6,8 @@
 #include <QtCore/QTimer>
 #include <QtNetwork/QTcpSocket>
 
-#include "../Client_console/client.h"
 #include "../Operations/Operations.h"
-#include "../constants.h"
 #include "../lib/TCP/server/tcpServer.h"
-#include "../lib/YAML/yaml.h"
-#include "../path.h"
 
 class Server : public TCPServer, public Operations {
    public:
@@ -34,9 +30,9 @@ class Server : public TCPServer, public Operations {
    private:
     Server();
     void fileTransfer(QTcpSocket *sender, QString localFile, QString serverPath);
-    void parseInternalCmd(QTcpSocket *sender, QByteArray message);
+    void parseInternalCmd(QTcpSocket *sender, QByteArray message) override;
     void clearUserAuths(QTcpSocket *sender);
-    void connectProcess(QTcpSocket *sender, QProcess *process);
+    void connectProcess(QTcpSocket *sender, QProcess *process) override;
 
     QString transferredFileName;
     QString transferredFileLocation;

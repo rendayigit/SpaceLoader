@@ -3,9 +3,9 @@
 #include <iostream>
 
 #include "../Commands/cmd_plugin_interface.h"
-#include "../version.h"
 #include "User/userOperations.h"
 #include "logging.h"
+#include "../constants.h"
 
 Server::Server() : Operations(Paths().getServerCmdsYaml()) {
     isFileTransferInProgress = false;
@@ -189,5 +189,5 @@ void Server::clearUserAuths(QTcpSocket *sender) {
 void Server::connectProcess(QTcpSocket *sender, QProcess *process) {
     Transmit(sender, "Script execution successful. Forwarding output: ");
     connect(process, &QProcess::readyReadStandardOutput, this,
-            [=]() { Transmit(sender, process->readLine()); });
+            [=]() { Transmit(sender, process->readAllStandardOutput()); });
 }

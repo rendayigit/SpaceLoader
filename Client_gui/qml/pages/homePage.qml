@@ -12,12 +12,12 @@ Item {
 
     MediaPlayer {
         id: sfxStarkitReady
-        source: "../../assets/sfx/starkit_ready.mp3"
+        source: "../../assets/sfx/starkit_ready.wav"
     }
 
     MediaPlayer {
         id: sfxServerConnectionLost
-        source: "../../assets/sfx/server_connection_lost.mp3"
+        source: "../../assets/sfx/server_connection_lost.wav"
     }
 
     Flickable {
