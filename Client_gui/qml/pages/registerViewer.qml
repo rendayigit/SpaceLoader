@@ -442,11 +442,11 @@ Rectangle {
 
         Button {
             id: sendButton
-            anchors.right: parent.right
+            anchors.right: registerConfigSaveButton.left
             anchors.margins: 5
             anchors.verticalCenter: parent.verticalCenter
             text: "Send"
-            width: 60
+            width: 80
             height: parent.height-10
 
             background: Rectangle {
@@ -478,6 +478,39 @@ Rectangle {
                         registerTextBox.color = "red"
                         console.log("REGISTER WRITEMEM ERROR: CHECK sshSet() function of backend or connection.")
                     }
+                }
+            }
+        }
+
+        Button {
+            id: registerConfigSaveButton
+            anchors.right: parent.right
+            anchors.margins: 5
+            anchors.verticalCenter: parent.verticalCenter
+            text: "Override Config"
+            width: 80
+            height: parent.height-10
+
+            background: Rectangle {
+                color: "#4891d9"
+                radius: 10
+            }
+            onPressed: background.color = "#a3bed0"
+            onReleased: { background.color = "#4891d9"
+                if (hovered) {background.color = "#74a8db"}
+                else {background.color = "#4891d9"}
+            }
+
+            onHoveredChanged: {
+                if (hovered) {background.color = "#74a8db"}
+                else {background.color = "#4891d9"}
+            }
+
+            onClicked: {
+                if (!registerDataViewPlaceHolder.visible){
+                    console.log("Save Config Pressed")
+                    backend.saveRegConfig(registerTextBox.text)
+                    refresh()
                 }
             }
         }

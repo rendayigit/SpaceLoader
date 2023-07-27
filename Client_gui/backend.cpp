@@ -530,6 +530,60 @@ void Backend::saveConfig(QString writeValue, int base) {
 
 void Backend::saveRegConfig(QString writeValueHex){
 
+    std::string moduleName = Backend::getFileList().at(globalModuleId).toStdString();
+
+    for (int i = moduleName.length(); i >= 0; --i) {
+        if (moduleName[i] == '.') {
+            moduleName.erase(i);
+        }
+    }
+
+    std::string regName = Backend::getRegisterList().at(globalRegId.toInt()).toStdString();
+
+    TreeNode root = parseConfig(configFilePath);
+
+    bool found = false;
+    for (int moduleNo = 0; moduleNo < root.children.size(); moduleNo++) {
+        TreeNode *module = &root.children.at(moduleNo);
+        if (module->name == moduleName) {
+            for (int regNo = 0; regNo < module->children.size(); regNo++) {
+                TreeNode *reg = &module->children.at(regNo);
+                if (reg->name == regName) {
+                    if (writeValueHex != "-1") {
+                        reg->value = writeValueHex.toStdString();
+                    }
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                if (writeValueHex != "-1") {
+                    TreeNode newReg(module, regName, 2, writeValueHex.toStdString());
+                    module->addChild(newReg);
+                }
+            }
+            break;
+        }
+    }
+
+    std::ofstream outfile;
+    outfile.open(configFilePath);
+    bool is_firstLine = true;
+
+    foreach (TreeNode module, root.children) {
+        if (is_firstLine) {
+            is_firstLine = false;
+        } else {
+            outfile << endl;
+        }
+
+        outfile << module.name + ':' << endl;
+        foreach (TreeNode reg, module.children) {
+            outfile << ' ' + reg.name + ": " << reg.value << endl;
+        }
+    }
+
+    outfile.close();
 }
 
 TreeNode Backend::parseConfig(std::string configFilePath) {
