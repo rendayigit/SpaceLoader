@@ -9,6 +9,11 @@ Rectangle {
     radius: 10
     color: "#27273a"
 
+    Component.onCompleted: {
+        textDeviceIp.text = backend.getConfigValue("Config.Ips.egse.ip", "ip")
+        textDeviceTcPort.text = backend.getConfigValue("Config.Ips.egse.port", "port")
+    }
+
     Label {
         id: labelEgse
         anchors.top: parent.top
@@ -84,7 +89,11 @@ Rectangle {
 
         text: "Connect"
 
-        onClicked: backend.egseConnect(textDeviceIp.text, textDeviceTcPort.text)
+        onClicked: {
+            backend.updateYamlFile("Config.Ips.egse.ip", textDeviceIp.text)
+            backend.updateYamlFile("Config.Ips.egse.port", textDeviceTcPort.text)
+            backend.egseConnect(textDeviceIp.text, textDeviceTcPort.text)
+        }
     }
 
     Label {

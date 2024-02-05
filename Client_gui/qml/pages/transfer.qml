@@ -13,6 +13,10 @@ Rectangle {
     radius: 10
     color: "#27273a"
 
+    Component.onCompleted: {
+        serverPath.text = backend.getConfigValue("Config.FileTransfer.remotePath", "remotePath")
+    }
+
     Rectangle {
         id: remoteArea
         
@@ -97,9 +101,8 @@ Rectangle {
                 print("server path: " + serverPath.text)
 
                 if (serverPath.text.length > 0 && fileToUploadPath.length > 0) {
-                    // TODO - implement
-                    // backend.changeYamlFile("Config.FileTransfer.remotePath", serverPath.text)
                     backend.fileTransfer(fileToUploadPath, serverPath.text)
+                    backend.updateYamlFile("Config.FileTransfer.remotePath", serverPath.text)
                 } else {
                     print("Upload Error, Set server path and select a file to upload first.")
                 }

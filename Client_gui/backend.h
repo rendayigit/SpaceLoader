@@ -23,9 +23,12 @@ class Backend : public TCPClient {
     Q_INVOKABLE static void stopListen();
     Q_INVOKABLE void setServerIp(QString ip);
     Q_INVOKABLE QString getLocalIp();
+    Q_INVOKABLE void updateYamlFile(QString path, QString value);
+    Q_INVOKABLE QString getConfigValue(QString path, QString key);
     Q_INVOKABLE void transmitEgseTc(QString tc);
     Q_INVOKABLE void egseConnect(QString deviceIp, QString devicePort);
     Q_INVOKABLE int fileTransfer(QString localFile, QString serverPath);
+    Q_INVOKABLE int authenticate(QString password);
 
    signals:
     void getReceivedText(QString text);
@@ -44,6 +47,7 @@ class Backend : public TCPClient {
 
     QString serverIp = "";
     QString localIp = "";
+    QString sshPassword = "";
 };
 
 #endif  // BACKEND_H

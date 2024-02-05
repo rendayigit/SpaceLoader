@@ -25,6 +25,7 @@ Window {
 
     Component.onCompleted: {
         labelLocalIp.text += backend.getLocalIp()
+        textServerIp.text = backend.getConfigValue("Config.Ips.targetPc.ip", "ip");
     }
 
     Timer {
@@ -46,14 +47,14 @@ Window {
 
         // Verify Login
         function checkLogin() {
-            // TODO - This is the password
-            if (loginTextField.text == "1") {
+            if (backend.authenticate(loginTextField.text) == 0) {
                 loginTextField.borderColor = "#00ff7f"
                 labelPassword.visible = false
                 loginAnimationFrameMarginTop.running = true
                 timer.running = true
                 backend.setServerIp(textServerIp.text)
-            } else {
+                backend.updateYamlFile("Config.Ips.targetPc.ip", textServerIp.text)
+            } else{
                 loginTextField.borderColor = "#55aaff"
                 labelPassword.visible = true
             }

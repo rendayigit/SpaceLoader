@@ -1,16 +1,17 @@
 #include "backend.h"
 
-#include <QtConcurrent/QtConcurrent>
 #include <fcntl.h>
 #include <libssh/libssh.h>
 #include <libssh/sftp.h>
 #include <sys/stat.h>
 
+#include <QtConcurrent/QtConcurrent>
 #include <QtCore/QThread>
 #include <fstream>
 
 #include "../common.h"
 #include "../lib/Logger/logger.h"
+#include "../lib/YAML/yaml.h"
 #include "egse.h"
 #include "listener.h"
 
@@ -112,6 +113,17 @@ void Backend::parse(QString text) {
     }
 }
 
+void Backend::updateYamlFile(QString path, QString value) {
+    Yaml::setValueByPath(Path::getInstance().getConfigYaml().toStdString(), path.toStdString(),
+                         value.toStdString());
+}
+
+QString Backend::getConfigValue(QString path, QString key) {
+    return QString::fromStdString(Yaml::getValue(
+        Yaml::getNodeByPath(Path::getInstance().getConfigYaml().toStdString(), path.toStdString()),
+        key.toStdString()));
+}
+
 // TODO - implement to console client as well.
 // TODO - Log ssh operations on the server side as well and not just the client side.
 int Backend::fileTransfer(QString localFile, QString serverPath) {
@@ -120,8 +132,11 @@ int Backend::fileTransfer(QString localFile, QString serverPath) {
 
         ssh_session session = ssh_new();
 
-        ssh_options_set(session, SSH_OPTIONS_HOST, "192.168.1.2");
-        ssh_options_set(session, SSH_OPTIONS_USER, "Administrator");
+        QString host = Backend::getConfigValue("Config.Ips.targetPc.ip", "ip");
+        QString username = Backend::getConfigValue("Config.Ips.targetPc.username", "username");
+
+        ssh_options_set(session, SSH_OPTIONS_HOST, host.toStdString().c_str());
+        ssh_options_set(session, SSH_OPTIONS_USER, username.toStdString().c_str());
 
         int rc = ssh_connect(session);
 
@@ -133,7 +148,8 @@ int Backend::fileTransfer(QString localFile, QString serverPath) {
             return -1;
         }
 
-        rc = ssh_userauth_password(session, "Administrator", "uyssw");
+        rc = ssh_userauth_password(session, username.toStdString().c_str(),
+                                   sshPassword.toStdString().c_str());
         if (rc != SSH_OK) {
             QString errorMessage = "Error authenticating with password: " +
                                    QString::fromStdString(ssh_get_error(session));
@@ -205,6 +221,42 @@ int Backend::fileTransfer(QString localFile, QString serverPath) {
         ssh_free(session);
 
         emit setTransferProgress(false);
+        return 0;
+    });
+
+    return 0;
+}
+
+int Backend::authenticate(QString password) {
+    QtConcurrent::run([=]() {
+        ssh_session session = ssh_new();
+
+        QString host = Backend::getConfigValue("Config.Ips.targetPc.ip", "ip");
+        QString username = Backend::getConfigValue("Config.Ips.targetPc.username", "username");
+
+        ssh_options_set(session, SSH_OPTIONS_HOST, host.toStdString().c_str());
+        ssh_options_set(session, SSH_OPTIONS_USER, username.toStdString().c_str());
+
+        int rc = ssh_connect(session);
+
+        if (rc != SSH_OK) {
+            QString errorMessage =
+                "Error connecting to host: " + QString::fromStdString(ssh_get_error(session));
+            Log().Error(errorMessage);
+            emit setTransferError(true, errorMessage);
+            return -1;
+        }
+
+        rc = ssh_userauth_password(session, username.toStdString().c_str(),
+                                   password.toStdString().c_str());
+        if (rc != SSH_OK) {
+            QString errorMessage = "Error authenticating with password: " +
+                                   QString::fromStdString(ssh_get_error(session));
+            Log().Error(errorMessage);
+            emit setTransferError(true, errorMessage);
+            return -1;
+        }
+        sshPassword = password;
         return 0;
     });
 

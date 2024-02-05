@@ -1,6 +1,12 @@
 Config:
   Ips:
-    debugpc:
-      ip: 192.168.1.2
-      port: '1234'
-      name: debugpc
+    targetPc:
+      ip: 127.0.0.1
+      port: 1234
+      username: Administrator
+    egse:
+      ip: 192.168.1.250
+      port: 5004
+    listenTo: 127.0.0.1:1235
+  FileTransfer:
+    remotePath: D:/
